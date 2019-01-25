@@ -45,6 +45,21 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DevExpress.Data.v18.1, Version=18.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <HintPath>..\packages\DevExpress.Data.18.1.5\lib\net40\DevExpress.Data.v18.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Xpo.v18.1, Version=18.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <HintPath>..\packages\DevExpress.Xpo.18.1.5\lib\net40\DevExpress.Xpo.v18.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DX.Data.Xpo, Version=18.1.4.3, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\DX.Data.Xpo.18.1.4.3\lib\net461\DX.Data.Xpo.dll</HintPath>
+    </Reference>
+    <Reference Include="DX.Data.Xpo.Identity, Version=18.1.4.3, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\DX.Data.Xpo.Identity.18.1.4.3\lib\net461\DX.Data.Xpo.Identity.dll</HintPath>
+    </Reference>
+    <Reference Include="DX.Utils, Version=1.0.0.7, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\DX.Utils.1.0.0.7\lib\net461\DX.Utils.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
