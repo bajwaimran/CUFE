@@ -3797,10 +3797,13 @@
     <Content Include="Views\Shared\_LayoutBackend.cshtml" />
     <Content Include="Views\Shared\_PartialLayoutBackend.cshtml" />
     <Content Include="Views\Shared\Message.cshtml" />
+    <Content Include="Views\Admin\UserManagement.cshtml" />
+    <Content Include="Views\Admin\_GridViewPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Helpers\" />
+    <Folder Include="Views\Users\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

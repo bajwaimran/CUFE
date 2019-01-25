@@ -1,0 +1,202 @@
+@using CUFE.Extensions
+@using CUFE.Controllers
+
+@{
+    IEnumerable<CUFE.Models.Company> list = ViewBag.CompanyList;
+    //IEnumerable<Cargo_Europe_Freight_Exchange.Models.Company> list;
+    //int companyId =int.Parse( User.Identity.GetCompanyId());
+
+    //if (User.IsInRole("SuperAdmin"))
+    //{
+    //    list = companyList;
+    //}else if (User.IsInRole("Admin"))
+    //{
+
+    //    list = companyList.Where(c => c.CompanyId == companyId).ToList();
+    //}
+}
+@{
+    var grid = Html.DevExpress().GridView(settings =>
+    {
+        settings.Name = "GridView";
+        settings.CallbackRouteValues = new { Controller = "Users", Action = "GridViewPartial" };
+
+        settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "Users", Action = "GridViewPartialAddNew" };
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "Users", Action = "GridViewPartialUpdate" };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "Users", Action = "GridViewPartialDelete" };
+
+        settings.SettingsSearchPanel.CustomEditorName = "tbSearch";
+        settings.Settings.ShowTitlePanel = true;
+        settings.SetTitlePanelTemplateContent(content =>
+        {
+            Html.DevExpress().Label(label =>
+            {
+
+                label.Text = "User Management";
+                label.Style["font-weight"] = "bold";
+
+            }).Render();
+
+        });
+
+
+        settings.SettingsEditing.Mode = GridViewEditingMode.EditFormAndDisplayRow;
+        settings.SettingsBehavior.ConfirmDelete = true;
+
+        settings.CommandColumn.Visible = true;
+        settings.CommandColumn.ShowNewButton = true;
+        settings.CommandColumn.ShowDeleteButton = true;
+        settings.CommandColumn.ShowEditButton = true;
+
+        settings.Width = System.Web.UI.WebControls.Unit.Percentage(100);
+
+
+
+
+        settings.KeyFieldName = "Id";
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "Company";
+
+
+            c.SetEditItemTemplateContent(i =>
+            {
+                if (User.IsInRole("SuperAdmin"))
+                {
+                    var extension = Html.DevExpress().ComboBox(comboBoxSettings =>
+                    {
+                        comboBoxSettings.Name = "Company";
+                        ComboBoxProperties comboBoxProperties = comboBoxSettings.Properties;
+                        comboBoxProperties.TextField = "CompanyName";
+                        comboBoxProperties.ValueField = "Oid";
+                        comboBoxProperties.ValueType = typeof(int);
+                        comboBoxProperties.DropDownStyle = DropDownStyle.DropDown;
+
+                    }).BindList(list).Bind(DataBinder.Eval(i.DataItem, "Oid"));
+                    extension.Render();
+                }
+                else
+                {
+                    Html.DevExpress().TextBox(tbs =>
+                    {
+                        tbs.Name = "Oid";
+                        tbs.Text = i.Text;
+                    }).Render();
+                }
+
+
+
+
+                //Html.DevExpress().ComboBox(s =>
+                //{
+                //    s.Name = "CompanyId";
+                //    s.Properties.TextField = "CompanyName";
+                //    s.Properties.ValueField = "CompanyId";
+                //    s.PreRender = (sender, e) =>
+                //    {
+                //        ASPxComboBox cmb = (ASPxComboBox)sender;
+                //        //if((sender as MVCxGridView).IsNewRowEditing)
+                //        //{
+
+                //        //}
+                //        //else
+                //        //{
+
+                //        //}
+                //        if (i.Text != null && i.Text != "")
+                //        {
+                //            int indexValue = Convert.ToInt32(i.Text);
+                //            List<Cargo_Europe_Freight_Exchange.Models.Company> newList = list.ToList();
+
+                //            int num = 0;
+
+                //            //foreach ( var item in list)
+                //            //{
+                //            //    if(item.CompanyId == indexValue)
+                //            //    {
+                //            //        break;
+                //            //    }
+                //            //    num++;
+                //            //}
+                //            num = newList.FindIndex(x => x.CompanyId == indexValue);
+                //            cmb.SelectedIndex = num;
+                //        }
+
+                //    };
+                //}).BindList(list).GetHtml();
+            });
+        });
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "Email";
+        });
+
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "PasswordHash";
+            c.Caption = "Password";
+            c.Visible = false;
+            c.EditFormSettings.Visible = DefaultBoolean.True;
+
+        });
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "PhoneNumber";
+        });
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "UserName";
+        });
+        //settings.Columns.Add(c =>
+        //{
+        //    c.FieldName = "Address1";
+        //    c.Visible = false;
+        //    c.EditFormSettings.Visible = DefaultBoolean.True;
+        //});
+        //settings.Columns.Add(c =>
+        //{
+        //    c.FieldName = "Address2";
+        //    c.Visible = false;
+        //    c.EditFormSettings.Visible = DefaultBoolean.True;
+        //});
+        //settings.Columns.Add(c =>
+        //{
+        //    c.FieldName = "Birthdate";
+        //    c.ColumnType = MVCxGridViewColumnType.DateEdit;
+        //});
+        //settings.Columns.Add(c =>
+        //{
+        //    c.FieldName = "FirstName";
+        //});
+        //settings.Columns.Add(c =>
+        //{
+        //    c.FieldName = "LastName";
+        //});
+
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "EmailConfirmed";
+            c.Caption = "Active";
+            c.Visible = true;
+            c.EditFormSettings.Visible = DefaultBoolean.True;
+            c.ColumnType = MVCxGridViewColumnType.CheckBox;
+        });
+
+        settings.SettingsPager.Visible = true;
+        settings.Settings.ShowGroupPanel = true;
+        settings.Settings.ShowFilterRow = true;
+        settings.SettingsBehavior.AllowSelectByRowClick = true;
+
+        settings.SettingsAdaptivity.AdaptivityMode = GridViewAdaptivityMode.Off;
+        settings.SettingsAdaptivity.AdaptiveColumnPosition = GridViewAdaptiveColumnPosition.Right;
+        settings.SettingsAdaptivity.AdaptiveDetailColumnCount = 1;
+        settings.SettingsAdaptivity.AllowOnlyOneAdaptiveDetailExpanded = false;
+        settings.SettingsAdaptivity.HideDataCellsAtWindowInnerWidth = 0;
+
+    });
+    if (ViewData["EditError"] != null)
+    {
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+@grid.Bind(Model).GetHtml()

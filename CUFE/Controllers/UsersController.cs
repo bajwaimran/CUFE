@@ -58,7 +58,7 @@ namespace CUFE.Controllers
         public ActionResult GridViewPartial()
         {
             using(UnitOfWork uow = new UnitOfWork())
-            {
+            {                
                 ViewBag.CompanyList = uow.Query<Company>().ToList();
                 var model = uow.Query<XpoApplicationUser>();
                 return PartialView("~/Views/Admin/_GridViewPartial.cshtml", model.ToList());
@@ -91,6 +91,7 @@ namespace CUFE.Controllers
         {
             using(UnitOfWork uow = new UnitOfWork())
             {
+                ViewBag.CompanyList = uow.Query<Company>().ToList();
                 var model = uow.Query<ApplicationUser>();
                 if (ModelState.IsValid)
                 {
@@ -117,6 +118,7 @@ namespace CUFE.Controllers
         {
             using(UnitOfWork uow = new UnitOfWork())
             {
+                ViewBag.CompanyList = uow.Query<Company>().ToList();
                 var model = uow.Query<ApplicationUser>();
                 if (ModelState.IsValid)
                 {                    
@@ -144,6 +146,7 @@ namespace CUFE.Controllers
         {
             using( UnitOfWork uow = new UnitOfWork())
             {
+                ViewBag.CompanyList = uow.Query<Company>().ToList();
                 var model = uow.Query<ApplicationUser>();
                 //var user = uow.FindObject<ApplicationUser>(CriteriaOperator.Parse("Id==?", Id));
                 var user = model.First(m => m.Id == Id);
