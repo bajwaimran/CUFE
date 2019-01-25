@@ -1,0 +1,59 @@
+﻿
+@using Microsoft.AspNet.Identity
+@if (Request.IsAuthenticated)
+{
+    if (User.IsInRole("SuperAdmin"))
+    {
+        <li class="heading">SuperAdmin Menu</li>
+        <li>
+            <a href=""><span class="icon-home"></span></a>
+        </li>
+        <li><a href="@Url.Action("Index","Admin")"><i class="fa fa-caret-right"></i> Super Admin Menu </a></li>
+        <li><a href="@Url.Action("Blogs","Admin")"><i class="fa fa-caret-right"></i> Blogs </a></li>
+        <li><a href="@Url.Action("Blogs","Admin")"><i class="fa fa-caret-right"></i> Reviews </a></li>
+        <li><a href="@Url.Action("Blogs","Admin")"><i class="fa fa-caret-right"></i> Messages </a></li>
+        <li><a href="@Url.Action("AddNewBlog","Admin")"><i class="fa fa-caret-right"></i> New Blog </a></li>
+        <li><a href="@Url.Action("BroadcastMessage","Admin")"><i class="fa fa-caret-right"></i>Broadcast Message </a></li>
+        <li><a href="@Url.Action("UserManagement","Admin")"><i class="icon-user"></i>User Management</a></li>
+        <li><a href="@Url.Action("CompanyManagement","Admin")"><i class="icon-drawer"></i>Company Management</a></li>
+        <li><a href="@Url.Action("TruckTypes","Admin")"><i class="fa fa-truck"></i>Truck Types Management</a></li>
+        <li><a href="@Url.Action("LoadTypesManagement","Admin")"><i class="icon-anchor"></i>Load Types Management</a></li>
+        <li><a href="@Url.Action("RoleManagement","Admin")"><i class="icon-badge"></i>Role Management</a></li>
+    }
+    if (User.IsInRole("Admin"))
+    {
+        <li class="heading">Admin Menu</li>
+        <li><a href="@Url.Action("Index","Dashboard")"><i class="icon-home"></i><span>Dashboard</span></a></li>
+        <li><a href="@Url.Action("AddNew","Loads")"><i class="fa fa-plus-square"></i><span>Add New Load</span></a></li>
+        <li><a href="@Url.Action("AddFreightForm","Freights")"><i class="fa fa-plus-square-o"></i><span>Add New Freight</span></a></li>
+
+
+        <li><a href="@Url.Action("Index","Trucks")"><i class="fa fa-truck"></i><span>Vehicles</span></a></li>
+        @*<li><a href="#"><i class="fa fa-shopping-cart"></i><span>My Orders</span></a></li>*@
+        <li><a href="@Url.Action("UserManagement","Admin")"><i class="icon-user"></i>User Management</a></li>
+        @*<li><a href="#"><i class="fa fa-lock"></i><span>Security</span></a></li>*@
+
+
+    }
+
+    if (User.IsInRole("User") || User.IsInRole("Admin"))
+    {
+        <li class="heading">User Menu</li>
+        <li><a href="@Url.Action("Search","Dashboard")"><i class="fa fa-search"></i><span>Search</span></a></li>
+        <li><a href="@Url.Action("Advancesearch","Dashboard")"><i class="fa fa-search"></i><span>Search*</span></a></li>
+        <li><a href="@Url.Action("My","Loads")"><i class="icon-cloud-download"></i><span>My Loads</span></a></li>
+        <li><a href="@Url.Action("My","Freights")"><i class="fa fa-truck"></i><span>My Freights</span></a></li>
+        <li><a href="@Url.Action("Chat","Common")"><i class="icon-bubbles"></i><span>Chat</span></a></li>
+    }
+
+
+
+
+
+
+}
+
+@*<li>
+        <img srcset="~/Content/images/logo-cargoeurope.svg" alt="" style="max-height:70px" />
+    </li>*@
+

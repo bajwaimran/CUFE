@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace CUFE.Models
@@ -79,6 +80,50 @@ namespace CUFE.Models
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
+        [Required]
+        [Display(Name = "Company Tax Id")]
+        public string Vat { get; set; }
+        [Required]
+        [Display(Name = "Company Name")]
+        public string CompanyName { get; set; }
+
+        [Required]
+        [Display(Name = "Username")]
+        public string UserName { get; set; }
+
+
+        //new feilds
+
+        [Required]
+        [StringLength(100)]
+        [Display(Name = "First Name")]
+        public string FirstName { get; set; }
+
+        [Required]
+        //[StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
+        [StringLength(100)]
+        [Display(Name = "Last Name")]
+        public string LastName { get; set; }
+
+        [Required]
+        [Display(Name = "Date of Birth")]
+        public DateTime BirthDate { get; set; }
+        [Required]
+        public string PhoneNumber { get; set; }
+
+        public string Address { get; set; }
+        public string City { get; set; }
+        [Required]
+        public string Country { get; set; }
+
+        [Required]
+        [Display(Name = "Compan Address")]
+        public string CompanyAddress { get; set; }
+
+        [Required]
+        [Display(Name = "Company Phone")]
+        public string CompanyPhoneNumber { get; set; }
     }
 
     public class ResetPasswordViewModel

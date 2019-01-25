@@ -9,6 +9,8 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using CUFE.Models;
+using DevExpress.Xpo;
+using DevExpress.Data.Filtering;
 
 namespace CUFE.Controllers
 {
@@ -71,6 +73,19 @@ namespace CUFE.Controllers
             if (!ModelState.IsValid)
             {
                 return View(model);
+            }
+
+            //check if user is active or not
+            var user = await UserManager.FindByEmailAsync(model.Email);
+            if (user != null)
+            {
+                if (!await UserManager.IsEmailConfirmedAsync(user.Id))
+                {
+                    //string callbackUrl = await SendEmailConfirmationTokenAsync(user.Id, "Confirm your account-Resend");
+                    ViewBag.Title = "Verfication is in Process!...";
+                    ViewBag.errorMessage = "We apologize for inconvinience but your Registration verification is in process and it usually take 24-48 hours to complete the verification process. Upon verification you will be able to use your Account. Thank you for your patience.";
+                    return View("Message");
+                }
             }
 
             // This doesn't count login failures towards account lockout
@@ -139,7 +154,11 @@ namespace CUFE.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
-            return View();
+            using (UnitOfWork uow = new UnitOfWork())
+            {
+                ViewBag.CountryList = uow.Query<Country>().ToList();
+                return View();
+            }
         }
 
         //
@@ -149,27 +168,37 @@ namespace CUFE.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
-            if (ModelState.IsValid)
+            using (UnitOfWork uow = new UnitOfWork())
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
-                var result = await UserManager.CreateAsync(user, model.Password);
-                if (result.Succeeded)
+                if (ModelState.IsValid)
                 {
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
-                    // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
-                    // Send an email with this link
-                    // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                    var company = new Company(uow) { Vat = model.Vat, CompanyName = model.CompanyName, Address = model.CompanyAddress, Email = model.Email, Phone = model.CompanyPhoneNumber };
+                    var userCompany = CreateCompany(company);
+                    var user = new ApplicationUser { UserName = model.Email, Email = model.Email, Company = userCompany };
+                    var result = await UserManager.CreateAsync(user, model.Password);
+                    if (result.Succeeded)
+                    {
+                        ViewBag.Title = "Registration Information Received!";
+                        string msg = string.Format("Dear {0}, Thank You for Registering with us. Your request has been received and You will receive a verification call between 2 business days. upon verfication you will be able to use your account.", model.FirstName);
+                        ViewBag.Message = msg;
+                        return View("Message");
 
-                    return RedirectToAction("Index", "Home");
+                        //await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+
+                        // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
+                        // Send an email with this link
+                        // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+                        // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                        // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+
+                        //return RedirectToAction("Index", "Home");
+                    }
+                    AddErrors(result);
                 }
-                AddErrors(result);
-            }
 
-            // If we got this far, something failed, redisplay form
-            return View(model);
+                // If we got this far, something failed, redisplay form
+                return View(model);
+            }
         }
 
         //
@@ -481,5 +510,20 @@ namespace CUFE.Controllers
             }
         }
         #endregion
+
+        public Company CreateCompany(Company model)
+        {
+            using (UnitOfWork uow = new UnitOfWork())
+            {
+                var company = uow.FindObject<Company>(CriteriaOperator.Parse("Vat==?", model.Vat));
+                if (company != null)
+                    return company as Company;
+                //If no company found then create new company and return 
+                model.Session.CommitTransaction();
+                return model;
+            }
+
+            //return null;
+        }
     }
 }

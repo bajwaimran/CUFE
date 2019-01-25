@@ -12,6 +12,7 @@ namespace CUFE.Models
     // You can add profile data for the user by adding more properties to your ApplicationUser class, please visit https://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
     public class ApplicationUser : XPIdentityUser<string, XpoApplicationUser>
     {
+       
         public ApplicationUser(XpoApplicationUser source) :
         base(source)
         {
@@ -26,6 +27,9 @@ namespace CUFE.Models
             base()
         {
         }
+
+        //custom properties for ApplicationUser
+        public Company Company { get; set; }
         public override void Assign(object source, int loadingFlags)
         {
             base.Assign(source, loadingFlags);
@@ -75,6 +79,9 @@ namespace CUFE.Models
         public XpoApplicationUser(Session session) : base(session)
         {
         }
+
+        //custom properties for ApplicationUser
+        public Company Company { get; set; }
         public override void Assign(object source, int loadingFlags)
         {
             base.Assign(source, loadingFlags);
