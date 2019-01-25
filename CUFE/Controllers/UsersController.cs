@@ -10,6 +10,7 @@ using CUFE.Extensions;
 using CUFE.Models;
 using DevExpress.Xpo;
 using DevExpress.Data.Filtering;
+using DevExpress.Web.Mvc;
 
 namespace CUFE.Controllers
 {
@@ -17,7 +18,9 @@ namespace CUFE.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
-        public UsersController() { }
+        public UsersController() {
+
+        }
         public UsersController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
         {
             UserManager = userManager;
@@ -46,6 +49,7 @@ namespace CUFE.Controllers
                 _userManager = value;
             }
         }
+        
         // GET: Users
         public ActionResult Index()
         {
@@ -57,8 +61,9 @@ namespace CUFE.Controllers
         [ValidateInput(false)]
         public ActionResult GridViewPartial()
         {
-            using(UnitOfWork uow = new UnitOfWork())
-            {                
+            //using(UnitOfWork uow = new UnitOfWork())
+            //{
+            UnitOfWork uow = new UnitOfWork();
                 ViewBag.CompanyList = uow.Query<Company>().ToList();
                 var model = uow.Query<XpoApplicationUser>();
                 return PartialView("~/Views/Admin/_GridViewPartial.cshtml", model.ToList());
@@ -80,23 +85,23 @@ namespace CUFE.Controllers
                 //    var model = db.Users.Find(userId);
                 //    return PartialView("~/Views/Admin/_GridViewPartial.cshtml", model);
                 //}
-            }
+           //}
             
             
             
         }
 
         [HttpPost, ValidateInput(false)]
-        public ActionResult GridViewPartialAddNew( CUFE.Models.ApplicationUser item)
+        public ActionResult GridViewPartialAddNew([ModelBinder(typeof(DevExpressEditorsBinder))] CUFE.Models.ApplicationUser item)
         {
             using(UnitOfWork uow = new UnitOfWork())
             {
                 ViewBag.CompanyList = uow.Query<Company>().ToList();
-                var model = uow.Query<ApplicationUser>();
+                var model = uow.Query<XpoApplicationUser>();
                 if (ModelState.IsValid)
                 {
-                    var company = uow.FindObject<Company>(CriteriaOperator.Parse("Oid==?", item.Company));
-                    var user = new ApplicationUser { UserName = item.UserName, Email = item.Email, Company = company };
+                    var company = uow.FindObject<Company>(CriteriaOperator.Parse("Oid==?", item.CompanyId));
+                    var user = new ApplicationUser { UserName = item.UserName, Email = item.Email, CompanyId = company.Oid };
                     var result = UserManager.Create(user, item.PasswordHash);
                     if (result.Succeeded)
                     {
@@ -114,19 +119,21 @@ namespace CUFE.Controllers
             
         }
         [HttpPost, ValidateInput(false)]
-        public ActionResult GridViewPartialUpdate( CUFE.Models.ApplicationUser item)
+        public ActionResult GridViewPartialUpdate([ModelBinder(typeof(DevExpressEditorsBinder))] CUFE.Models.ApplicationUser item)
         {
             using(UnitOfWork uow = new UnitOfWork())
             {
                 ViewBag.CompanyList = uow.Query<Company>().ToList();
-                var model = uow.Query<ApplicationUser>();
+                
+                var model = uow.Query<XpoApplicationUser>();
                 if (ModelState.IsValid)
-                {                    
-                    var currentItem = uow.FindObject<ApplicationUser>(CriteriaOperator.Parse("Id==?", item.Id));
+                {
+                    //var temp = UserManager.FindById(item.Id) as ApplicationUser;
+                    var currentItem = uow.FindObject<XpoApplicationUser>(CriteriaOperator.Parse("Id==?", item.Id));
                     if (currentItem != null)
                     {
                         currentItem.EmailConfirmed = item.EmailConfirmed;
-                        currentItem.Company = item.Company;
+                        currentItem.CompanyId = item.CompanyId;
                         currentItem.UserName = item.UserName;
                         uow.CommitChanges();
                         return PartialView("~/Views/Admin/_GridViewPartial.cshtml", model.ToList());
@@ -135,7 +142,7 @@ namespace CUFE.Controllers
                     return PartialView("~/Views/Admin/_GridViewPartial.cshtml", model.ToList());
 
                 }
-                ViewData["EditError"] = "Please, correct all errors.";
+                ViewData["EditError"] = "Invalid Model state.";
                 return PartialView("~/Views/Admin/_GridViewPartial.cshtml", model.ToList());
 
             }

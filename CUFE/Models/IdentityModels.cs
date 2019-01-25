@@ -29,7 +29,7 @@ namespace CUFE.Models
         }
 
         //custom properties for ApplicationUser
-        public Company Company { get; set; }
+        public int CompanyId { get; set; }
         public override void Assign(object source, int loadingFlags)
         {
             base.Assign(source, loadingFlags);
@@ -81,7 +81,7 @@ namespace CUFE.Models
         }
 
         //custom properties for ApplicationUser
-        public Company Company { get; set; }
+        public int CompanyId { get; set; }
         public override void Assign(object source, int loadingFlags)
         {
             base.Assign(source, loadingFlags);
@@ -136,5 +136,12 @@ namespace CUFE.Models
             //  // etc.             
             //}
         }
+
+        public static void AllRoles()
+        {
+
+        }
     }
+
+
 }

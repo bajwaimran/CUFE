@@ -2,18 +2,8 @@
 @using CUFE.Controllers
 
 @{
-    IEnumerable<CUFE.Models.Company> list = ViewBag.CompanyList;
-    //IEnumerable<Cargo_Europe_Freight_Exchange.Models.Company> list;
-    //int companyId =int.Parse( User.Identity.GetCompanyId());
-
-    //if (User.IsInRole("SuperAdmin"))
-    //{
-    //    list = companyList;
-    //}else if (User.IsInRole("Admin"))
-    //{
-
-    //    list = companyList.Where(c => c.CompanyId == companyId).ToList();
-    //}
+IEnumerable<CUFE.Models.Company> list = ViewBag.CompanyList;
+//List<CUFE.Models.Company> list = ViewBag.CompanyList;
 }
 @{
     var grid = Html.DevExpress().GridView(settings =>
@@ -56,7 +46,7 @@
         settings.KeyFieldName = "Id";
         settings.Columns.Add(c =>
         {
-            c.FieldName = "Company";
+            c.FieldName = "CompanyId";
 
 
             c.SetEditItemTemplateContent(i =>
@@ -65,65 +55,24 @@
                 {
                     var extension = Html.DevExpress().ComboBox(comboBoxSettings =>
                     {
-                        comboBoxSettings.Name = "Company";
+                        comboBoxSettings.Name = "CompanyId";
                         ComboBoxProperties comboBoxProperties = comboBoxSettings.Properties;
                         comboBoxProperties.TextField = "CompanyName";
                         comboBoxProperties.ValueField = "Oid";
                         comboBoxProperties.ValueType = typeof(int);
                         comboBoxProperties.DropDownStyle = DropDownStyle.DropDown;
 
-                    }).BindList(list).Bind(DataBinder.Eval(i.DataItem, "Oid"));
+                    }).BindList(list).Bind(DataBinder.Eval(i.DataItem, "CompanyId"));
                     extension.Render();
                 }
                 else
                 {
                     Html.DevExpress().TextBox(tbs =>
                     {
-                        tbs.Name = "Oid";
+                        tbs.Name = "CompanyId";
                         tbs.Text = i.Text;
                     }).Render();
                 }
-
-
-
-
-                //Html.DevExpress().ComboBox(s =>
-                //{
-                //    s.Name = "CompanyId";
-                //    s.Properties.TextField = "CompanyName";
-                //    s.Properties.ValueField = "CompanyId";
-                //    s.PreRender = (sender, e) =>
-                //    {
-                //        ASPxComboBox cmb = (ASPxComboBox)sender;
-                //        //if((sender as MVCxGridView).IsNewRowEditing)
-                //        //{
-
-                //        //}
-                //        //else
-                //        //{
-
-                //        //}
-                //        if (i.Text != null && i.Text != "")
-                //        {
-                //            int indexValue = Convert.ToInt32(i.Text);
-                //            List<Cargo_Europe_Freight_Exchange.Models.Company> newList = list.ToList();
-
-                //            int num = 0;
-
-                //            //foreach ( var item in list)
-                //            //{
-                //            //    if(item.CompanyId == indexValue)
-                //            //    {
-                //            //        break;
-                //            //    }
-                //            //    num++;
-                //            //}
-                //            num = newList.FindIndex(x => x.CompanyId == indexValue);
-                //            cmb.SelectedIndex = num;
-                //        }
-
-                //    };
-                //}).BindList(list).GetHtml();
             });
         });
         settings.Columns.Add(c =>
@@ -147,31 +96,6 @@
         {
             c.FieldName = "UserName";
         });
-        //settings.Columns.Add(c =>
-        //{
-        //    c.FieldName = "Address1";
-        //    c.Visible = false;
-        //    c.EditFormSettings.Visible = DefaultBoolean.True;
-        //});
-        //settings.Columns.Add(c =>
-        //{
-        //    c.FieldName = "Address2";
-        //    c.Visible = false;
-        //    c.EditFormSettings.Visible = DefaultBoolean.True;
-        //});
-        //settings.Columns.Add(c =>
-        //{
-        //    c.FieldName = "Birthdate";
-        //    c.ColumnType = MVCxGridViewColumnType.DateEdit;
-        //});
-        //settings.Columns.Add(c =>
-        //{
-        //    c.FieldName = "FirstName";
-        //});
-        //settings.Columns.Add(c =>
-        //{
-        //    c.FieldName = "LastName";
-        //});
 
         settings.Columns.Add(c =>
         {

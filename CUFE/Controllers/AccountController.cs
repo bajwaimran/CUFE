@@ -11,6 +11,7 @@ using Microsoft.Owin.Security;
 using CUFE.Models;
 using DevExpress.Xpo;
 using DevExpress.Data.Filtering;
+using DX.Data.Xpo.Identity;
 
 namespace CUFE.Controllers
 {
@@ -53,7 +54,7 @@ namespace CUFE.Controllers
                 _userManager = value;
             }
         }
-
+        
         //
         // GET: /Account/Login
         [AllowAnonymous]
@@ -174,7 +175,7 @@ namespace CUFE.Controllers
                 {
                     var company = new Company(uow) { Vat = model.Vat, CompanyName = model.CompanyName, Address = model.CompanyAddress, Email = model.Email, Phone = model.CompanyPhoneNumber };
                     var userCompany = CreateCompany(company);
-                    var user = new ApplicationUser { UserName = model.Email, Email = model.Email, Company = userCompany };
+                    var user = new ApplicationUser { UserName = model.Email, Email = model.Email, CompanyId = userCompany.Oid };
                     var result = await UserManager.CreateAsync(user, model.Password);
                     if (result.Succeeded)
                     {
