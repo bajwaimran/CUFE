@@ -149,12 +149,12 @@ namespace CUFE.Controllers
             
         }
         [HttpPost, ValidateInput(false)]
-        public ActionResult GridViewPartialDelete(System.String Id)
+        public ActionResult GridViewPartialDelete([ModelBinder(typeof(DevExpressEditorsBinder))]System.String Id)
         {
             using( UnitOfWork uow = new UnitOfWork())
             {
                 ViewBag.CompanyList = uow.Query<Company>().ToList();
-                var model = uow.Query<ApplicationUser>();
+                var model = uow.Query<XpoApplicationUser>();
                 //var user = uow.FindObject<ApplicationUser>(CriteriaOperator.Parse("Id==?", Id));
                 var user = model.First(m => m.Id == Id);
                 if(user != null)
