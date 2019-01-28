@@ -1,27 +1,63 @@
 ﻿using DevExpress.Xpo;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace CUFE.Models
 {
-    public class Company: XPObject
+    public class Company: BasePersistentObject
     {
-        public Company(): base() { }
+        
         public Company (Session session): base(session) { }
 
-        public string CompanyName { get; set; }
-        [DevExpress.Xpo.Indexed(Unique =true)]
-        public string Vat { get; set; }
-        public string Address { get; set; }
-        public string Email { get; set; }
-        [DevExpress.Xpo.Size(200)]
-        public string Phone { get; set; }
+
+        string phone;
+        string email;
+        string address;
+        string vat;
+        string companyName;
+
+        [Size(SizeAttribute.DefaultStringMappingFieldSize)]
+        public string CompanyName
+        {
+            get => companyName;
+            set => SetPropertyValue(nameof(CompanyName), ref companyName, value);
+        }
+
+
+        [Size(SizeAttribute.DefaultStringMappingFieldSize)]
+        [DevExpress.Xpo.Indexed(Unique = true)]
+        public string Vat
+        {
+            get => vat;
+            set => SetPropertyValue(nameof(Vat), ref vat, value);
+        }
+
+
+        [Size(SizeAttribute.DefaultStringMappingFieldSize)]
+        public string Address
+        {
+            get => address;
+            set => SetPropertyValue(nameof(Address), ref address, value);
+        }
+
+        [Size(SizeAttribute.DefaultStringMappingFieldSize)]
+        public string Email
+        {
+            get => email;
+            set => SetPropertyValue(nameof(Email), ref email, value);
+        }
+
+        
+        [Size(200)]
+        public string Phone
+        {
+            get => phone;
+            set => SetPropertyValue(nameof(Phone), ref phone, value);
+        }
+        
+        
         [DevExpress.Xpo.Size(100)]
         public string Fax { get; set; }
-        [DevExpress.Xpo.Size(200)]
-        public string UserId { get; set; }
-        public ApplicationUser User { get; set; }
+        //[DevExpress.Xpo.Size(200)]
+        //public string UserId { get; set; }
+        //public ApplicationUser User { get; set; }
     }
 }

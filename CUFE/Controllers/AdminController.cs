@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using DX.Data.Xpo.Identity;
+using Microsoft.AspNet.Identity;
 
 namespace CUFE.Controllers
 {
-    public class AdminController : Controller
+    public class AdminController : BaseXpoController
     {
         // GET: Admin
         //[Authorize(Roles = "SuperAdmin, Admin")]
@@ -14,6 +16,16 @@ namespace CUFE.Controllers
         {
             return View();
         }
-        
+        public ActionResult CompanyManagement()
+        {
+            return View();
+        }
+
+        public ActionResult CountryManagement()
+        {
+            return View();
+        }
+
+
     }
 }

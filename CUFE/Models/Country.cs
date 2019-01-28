@@ -1,17 +1,20 @@
 ﻿using DevExpress.Xpo;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+
 
 namespace CUFE.Models
 {
-    public class Country: XPObject
-    {
-        public Country(): base() { }
+    public class Country: BasePersistentObject
+    {       
         public Country(Session session): base(session) { }
 
+        public override void AfterConstruction()
+        {
+            base.AfterConstruction();
+        }
+        
+        [DevExpress.Xpo.Indexed(Unique = true)]
         public string CountryName { get; set; }
+        [DevExpress.Xpo.Indexed(Unique = true)]
         public string CountryCode { get; set; }
     }
 }

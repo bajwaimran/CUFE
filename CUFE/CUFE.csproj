@@ -218,6 +218,8 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\CommonController.cs" />
+    <Compile Include="Controllers\CompanyController.cs" />
+    <Compile Include="Controllers\CountriesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
@@ -226,6 +228,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\BasePersistentObject.cs" />
     <Compile Include="Models\Company.cs" />
     <Compile Include="Models\Country.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -233,6 +236,10 @@
     <Compile Include="Models\Truck.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="XPO\BaseXpoController.cs" />
+    <Compile Include="XPO\IXpoController.cs" />
+    <Compile Include="XPO\XpoHelper.cs" />
+    <Compile Include="XPO\XpoModelBinder.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\admintemplate\assets\bundles\chartist.bundle.js" />
@@ -3799,10 +3806,13 @@
     <Content Include="Views\Shared\Message.cshtml" />
     <Content Include="Views\Admin\UserManagement.cshtml" />
     <Content Include="Views\Admin\_GridViewPartial.cshtml" />
+    <Content Include="Views\Admin\CompanyManagement.cshtml" />
+    <Content Include="Views\Admin\_GridView1Partial.cshtml" />
+    <Content Include="Views\Admin\CountryManagement.cshtml" />
+    <Content Include="Views\Countries\GridViewPartialCountry.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Helpers\" />
     <Folder Include="Views\Users\" />
   </ItemGroup>
   <ItemGroup>

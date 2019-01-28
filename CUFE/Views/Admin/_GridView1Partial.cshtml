@@ -1,0 +1,65 @@
+@{
+    var grid = Html.DevExpress().GridView(settings => {
+        settings.Name = "GridView1";
+        settings.CallbackRouteValues = new { Controller = "Company", Action = "GridView1Partial" };
+
+        settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "Company", Action = "GridView1PartialAddNew" };
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "Company", Action = "GridView1PartialUpdate" };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "Company", Action = "GridView1PartialDelete" };
+        settings.SettingsEditing.Mode = GridViewEditingMode.EditFormAndDisplayRow;
+        
+        settings.SettingsBehavior.ConfirmDelete = true;
+        settings.SettingsText.ConfirmDelete = "Are you sure you want to delete this record?";
+
+        settings.CommandColumn.Visible = true;
+        settings.CommandColumn.ShowNewButton = true;
+        settings.CommandColumn.ShowDeleteButton = true;
+        settings.CommandColumn.ShowEditButton = true;
+
+        settings.SettingsPager.Visible = true;
+        settings.Settings.ShowGroupPanel = true;
+        settings.Settings.ShowFilterRow = true;
+
+        settings.Width = System.Web.UI.WebControls.Unit.Percentage(100);
+
+        settings.KeyFieldName = "Oid";
+
+        
+        
+
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "CompanyName";
+        });
+
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "Vat";
+        });
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "Address";
+        });
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "Email";
+        });
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "Phone";
+        });
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "Fax";
+        });
+
+    });
+    if (ViewData["EditError"] != null){
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+@grid.Bind(Model).GetHtml()
+
+<script>
+    
+</script>
