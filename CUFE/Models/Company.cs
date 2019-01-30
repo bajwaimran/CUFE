@@ -8,6 +8,7 @@ namespace CUFE.Models
         public Company (Session session): base(session) { }
 
 
+        
         string phone;
         string email;
         string address;
@@ -45,19 +46,29 @@ namespace CUFE.Models
             set => SetPropertyValue(nameof(Email), ref email, value);
         }
 
-        
+
         [Size(200)]
         public string Phone
         {
             get => phone;
             set => SetPropertyValue(nameof(Phone), ref phone, value);
         }
-        
-        
+
+
         [DevExpress.Xpo.Size(100)]
         public string Fax { get; set; }
         //[DevExpress.Xpo.Size(200)]
         //public string UserId { get; set; }
         //public ApplicationUser User { get; set; }
+
+
+        [Association("Company-Trucks")]
+        public XPCollection<Truck> Trucks
+        {
+            get
+            {
+                return GetCollection<Truck>("Trucks");
+            }
+        }
     }
 }

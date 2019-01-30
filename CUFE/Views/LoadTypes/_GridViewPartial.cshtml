@@ -1,0 +1,51 @@
+﻿@{
+    var grid = Html.DevExpress().GridView(settings =>
+    {
+        settings.Name = "GridView";
+        settings.CallbackRouteValues = new { Controller = "LoadTypes", Action = "GridviewPartial" };
+
+        settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "LoadTypes", Action = "GridViewAddNew" };
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "LoadTypes", Action = "GridViewUpdate" };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "LoadTypes", Action = "GridViewDelete" };
+        settings.SettingsEditing.Mode = GridViewEditingMode.EditFormAndDisplayRow;
+
+        settings.SettingsBehavior.ConfirmDelete = true;
+        settings.SettingsText.ConfirmDelete = "Are you sure you want to delete this record?";
+
+        settings.CommandColumn.Visible = true;
+        settings.CommandColumn.ShowNewButton = true;
+        settings.CommandColumn.ShowDeleteButton = true;
+        settings.CommandColumn.ShowEditButton = true;
+
+        settings.SettingsPager.Visible = true;
+        settings.Settings.ShowGroupPanel = true;
+        settings.Settings.ShowFilterRow = true;
+
+        settings.Width = System.Web.UI.WebControls.Unit.Percentage(100);
+
+        settings.KeyFieldName = "Oid";
+
+
+
+
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "Type";
+        });
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "IsActive";
+            c.ColumnType = MVCxGridViewColumnType.CheckBox;
+        });
+
+    });
+    if (ViewData["EditError"] != null)
+    {
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+@grid.Bind(Model).GetHtml()
+
+<script>
+
+</script>

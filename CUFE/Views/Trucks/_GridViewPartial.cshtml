@@ -1,0 +1,95 @@
+﻿@{ 
+    IEnumerable<CUFE.Models.TruckType> list = ViewBag.TruckTypesList;
+}
+@{
+    var grid = Html.DevExpress().GridView(settings =>
+    {
+        settings.Name = "GridView";
+        settings.CallbackRouteValues = new { Controller = "Trucks", Action = "GridviewPartial" };
+
+        settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "Trucks", Action = "GridViewAddNew" };
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "Trucks", Action = "GridViewUpdate" };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "Trucks", Action = "GridViewDelete" };
+        settings.SettingsEditing.Mode = GridViewEditingMode.EditFormAndDisplayRow;
+
+        settings.SettingsBehavior.ConfirmDelete = true;
+        settings.SettingsText.ConfirmDelete = "Are you sure you want to delete this record?";
+
+        settings.CommandColumn.Visible = true;
+        settings.CommandColumn.ShowNewButton = true;
+        settings.CommandColumn.ShowDeleteButton = true;
+        settings.CommandColumn.ShowEditButton = true;
+
+        settings.SettingsPager.Visible = true;
+        settings.Settings.ShowGroupPanel = true;
+        settings.Settings.ShowFilterRow = true;
+
+        settings.Width = System.Web.UI.WebControls.Unit.Percentage(100);
+
+        settings.KeyFieldName = "Oid";
+
+
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "RegNo";
+        });
+        
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "TruckType";
+            c.SetEditItemTemplateContent( i =>
+            {
+                var extension = Html.DevExpress().ComboBox(comboBoxSettings =>
+                {
+                    comboBoxSettings.Name = "TruckType";
+                    ComboBoxProperties comboBoxProperties = comboBoxSettings.Properties;
+                    comboBoxProperties.TextField = "Type";
+                    comboBoxProperties.ValueField = "Oid";
+                    comboBoxProperties.ValueType = typeof(int);
+                    comboBoxProperties.DropDownStyle = DropDownStyle.DropDown;
+
+                }).BindList(list).Bind(DataBinder.Eval(i.DataItem, "Oid"));
+                extension.Render();
+            });
+        });
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "Capacity";
+        });
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "IsFrigo";
+            c.ColumnType = MVCxGridViewColumnType.CheckBox;
+        });
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "IsisoThermal";
+            c.ColumnType = MVCxGridViewColumnType.CheckBox;
+        });
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "IsAdr";
+            c.ColumnType = MVCxGridViewColumnType.CheckBox;
+        });
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "IsLift";
+            c.ColumnType = MVCxGridViewColumnType.CheckBox;
+        });
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "IsGps";
+            c.ColumnType = MVCxGridViewColumnType.CheckBox;
+        });
+
+    });
+    if (ViewData["EditError"] != null)
+    {
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+@grid.Bind(Model).GetHtml()
+
+<script>
+
+</script>

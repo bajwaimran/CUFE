@@ -217,11 +217,15 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\ClientController.cs" />
     <Compile Include="Controllers\CommonController.cs" />
     <Compile Include="Controllers\CompanyController.cs" />
     <Compile Include="Controllers\CountriesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\LoadTypesController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\TrucksController.cs" />
+    <Compile Include="Controllers\TruckTypesController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Extensions\IdentityExtentions.cs" />
     <Compile Include="Global.asax.cs">
@@ -232,8 +236,10 @@
     <Compile Include="Models\Company.cs" />
     <Compile Include="Models\Country.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\LoadType.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Truck.cs" />
+    <Compile Include="Models\TruckType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="XPO\BaseXpoController.cs" />
@@ -3810,6 +3816,12 @@
     <Content Include="Views\Admin\_GridView1Partial.cshtml" />
     <Content Include="Views\Admin\CountryManagement.cshtml" />
     <Content Include="Views\Countries\GridViewPartialCountry.cshtml" />
+    <Content Include="Views\TruckTypes\_GridViewPartial.cshtml" />
+    <Content Include="Views\Admin\TruckTypeManagement.cshtml" />
+    <Content Include="Views\LoadTypes\_GridViewPartial.cshtml" />
+    <Content Include="Views\Admin\LoadTypeManagement.cshtml" />
+    <Content Include="Views\Trucks\_GridViewPartial.cshtml" />
+    <Content Include="Views\Client\TrucksManagement.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

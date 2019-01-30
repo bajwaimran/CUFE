@@ -26,6 +26,15 @@ namespace CUFE.Controllers
             return View();
         }
 
+        public ActionResult TruckTypeManagement()
+        {
+            return View();
+        }
+        public ActionResult LoadTypeManagement()
+        {
+            return View();
+        }
+
 
     }
 }

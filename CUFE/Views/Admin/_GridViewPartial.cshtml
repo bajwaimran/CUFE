@@ -44,7 +44,7 @@ IEnumerable<CUFE.Models.Company> list = ViewBag.CompanyList;
 
 
         settings.KeyFieldName = "Id";
-        
+
         settings.Columns.Add(c =>
         {
             c.FieldName = "CompanyId";
@@ -68,17 +68,61 @@ IEnumerable<CUFE.Models.Company> list = ViewBag.CompanyList;
                 }
                 else
                 {
-                    Html.DevExpress().TextBox(tbs =>
+                    //Html.DevExpress().TextBox(tbs =>
+                    //{
+                    //    tbs.Name = "CompanyId";
+                    //    tbs.Text = i.Text;
+                    //}).Render();
+                    var extension = Html.DevExpress().ComboBox(comboBoxSettings =>
                     {
-                        tbs.Name = "CompanyId";
-                        tbs.Text = i.Text;
-                    }).Render();
+                        comboBoxSettings.Name = "CompanyId";
+                        ComboBoxProperties comboBoxProperties = comboBoxSettings.Properties;
+                        comboBoxProperties.TextField = "CompanyName";
+                        comboBoxProperties.ValueField = "Oid";
+                        comboBoxProperties.ValueType = typeof(int);
+                        comboBoxProperties.DropDownStyle = DropDownStyle.DropDown;
+
+                    }).BindList(list).Bind(DataBinder.Eval(i.DataItem, "CompanyId"));
+                    extension.Render();
                 }
             });
         });
         settings.Columns.Add(c =>
         {
             c.FieldName = "Email";
+        });
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "FirstName";
+        });
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "LastName";
+        });
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "Address1";
+        });
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "Address2";
+        });
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "City";
+        });
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "Province";
+        });
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "Country";
+        });
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "Birthdate";
+            c.ColumnType = MVCxGridViewColumnType.DateEdit;
         });
 
         settings.Columns.Add(c =>

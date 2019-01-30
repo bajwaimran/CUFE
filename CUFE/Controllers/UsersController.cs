@@ -61,31 +61,12 @@ namespace CUFE.Controllers
         [ValidateInput(false)]
         public ActionResult GridViewPartial()
         {
-            //using(UnitOfWork uow = new UnitOfWork())
-            //{
+
+
             UnitOfWork uow = new UnitOfWork();
                 ViewBag.CompanyList = uow.Query<Company>().ToList();
                 var model = uow.Query<XpoApplicationUser>();
                 return PartialView("~/Views/Admin/_GridViewPartial.cshtml", model.ToList());
-
-                //if (User.IsInRole("SuperAdmin"))
-                //{
-                //    var model = uow.Query<ApplicationUser>();
-                //    return PartialView("~/Views/Admin/_GridViewPartial.cshtml", model.ToList());
-                //}
-                //else if (User.IsInRole("Admin"))
-                //{
-                //    int companyId = int.Parse(User.Identity.GetCompanyId());
-                //    var model = db.Users.Where(u => u.CompanyId == companyId);
-                //    return PartialView("~/Views/Admin/_GridViewPartial.cshtml", model.ToList());
-                //}
-                //else
-                //{
-                //    var userId = User.Identity.GetUserId();
-                //    var model = db.Users.Find(userId);
-                //    return PartialView("~/Views/Admin/_GridViewPartial.cshtml", model);
-                //}
-           //}
             
             
             
@@ -101,7 +82,19 @@ namespace CUFE.Controllers
                 if (ModelState.IsValid)
                 {
                     var company = uow.FindObject<Company>(CriteriaOperator.Parse("Oid==?", item.CompanyId));
-                    var user = new ApplicationUser { UserName = item.UserName, Email = item.Email, CompanyId = company.Oid };
+                    var user = new ApplicationUser {
+                        UserName = item.UserName,
+                        Email = item.Email,
+                        CompanyId = company.Oid,
+                        FirstName = item.FirstName,
+                        LastName = item.LastName,
+                        Address1 = item.Address1,
+                        Address2 = item.Address2,
+                        City = item.City,
+                        Province = item.Province,
+                        Country = item.Country,
+                        Birthdate = item.Birthdate
+                    };
                     var result = UserManager.Create(user, item.PasswordHash);
                     if (result.Succeeded)
                     {
@@ -119,34 +112,44 @@ namespace CUFE.Controllers
             
         }
         [HttpPost, ValidateInput(false)]
-        public ActionResult GridViewPartialUpdate([ModelBinder(typeof(DevExpressEditorsBinder))] CUFE.Models.ApplicationUser item)
+        public ActionResult GridViewPartialUpdate([ModelBinder(typeof(DevExpressEditorsBinder))]CUFE.Models.ApplicationUser item)
         {
-            using(UnitOfWork uow = new UnitOfWork())
+            using (UnitOfWork uow = new UnitOfWork())
             {
-                ViewBag.CompanyList = uow.Query<Company>().ToList();
-                
-                var model = uow.Query<XpoApplicationUser>();
                 if (ModelState.IsValid)
                 {
-                    //var temp = UserManager.FindById(item.Id) as ApplicationUser;
-                    var currentItem = uow.FindObject<XpoApplicationUser>(CriteriaOperator.Parse("Id==?", item.Id));
-                    if (currentItem != null)
-                    {
-                        currentItem.EmailConfirmed = item.EmailConfirmed;
-                        currentItem.CompanyId = item.CompanyId;
-                        currentItem.UserName = item.UserName;
-                        uow.CommitChanges();
-                        return PartialView("~/Views/Admin/_GridViewPartial.cshtml", model.ToList());
-                    }
-                    ViewData["EditError"] = "Please, correct all errors.";
-                    return PartialView("~/Views/Admin/_GridViewPartial.cshtml", model.ToList());
+                    //var user = uow.FindObject<XpoApplicationUser>(CriteriaOperator.Parse("Id==?", item.Id));
+                    var user = (ApplicationUser)UserManager.FindById(item.Id);
+                    //var u = UserManager.FindById(item.Id);
+                    user.EmailConfirmed = item.EmailConfirmed;
+                    user.CompanyId = item.CompanyId;
+                    user.UserName = item.UserName;
+                    user.Birthdate = item.Birthdate;
+                    user.FirstName = item.FirstName;
+                    user.LastName = item.LastName;
+                    user.Address1 = item.Address1;
+                    user.Address2 = item.Address2;
+                    user.City = item.City;
+                    user.Country = item.Country;
+                    user.PhoneNumber = item.PhoneNumber;
+
+                    var result = UserManager.Update(user);
+                    if(!result.Succeeded)
+                        ViewData["EditError"] = "Please, correct all errors." + result.Errors;
 
                 }
-                ViewData["EditError"] = "Invalid Model state.";
+                else
+                {
+                    ViewData["EditError"] = "Please, correct all errors.";
+                }
+            //using (UnitOfWork uow = new UnitOfWork())
+            //{
+                ViewBag.CompanyList = uow.Query<Company>().ToList();
+                var model = uow.Query<XpoApplicationUser>();
                 return PartialView("~/Views/Admin/_GridViewPartial.cshtml", model.ToList());
-
             }
-            
+
+
         }
         [HttpPost, ValidateInput(false)]
         public ActionResult GridViewPartialDelete([ModelBinder(typeof(DevExpressEditorsBinder))]System.String Id)

@@ -58,7 +58,7 @@ namespace CUFE.Controllers
                 var model = uow.Query<Country>();
                 return PartialView("~/Views/Countries/GridViewPartialCountry.cshtml", model.ToList());
             }
-            return null;
+            
         }
         public ActionResult GridViewPartialDelete(System.Int32 Oid)
         {
@@ -70,7 +70,7 @@ namespace CUFE.Controllers
                 uow.CommitChanges();
                 return PartialView("~/Views/Countries/GridViewPartialCountry.cshtml", model.ToList());
             }
-            return null;
+            
         }
 
     }
