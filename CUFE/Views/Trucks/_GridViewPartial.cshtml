@@ -36,7 +36,7 @@
         
         settings.Columns.Add(c =>
         {
-            c.FieldName = "TruckType";
+            c.FieldName = "TruckType";           
             c.SetEditItemTemplateContent( i =>
             {
                 var extension = Html.DevExpress().ComboBox(comboBoxSettings =>
@@ -48,7 +48,7 @@
                     comboBoxProperties.ValueType = typeof(int);
                     comboBoxProperties.DropDownStyle = DropDownStyle.DropDown;
 
-                }).BindList(list).Bind(DataBinder.Eval(i.DataItem, "Oid"));
+                }).BindList(list).Bind(DataBinder.Eval(i.DataItem, "TruckType"));
                 extension.Render();
             });
         });

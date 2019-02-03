@@ -7,6 +7,7 @@ using System.Web;
 using System.Web.Mvc;
 using CUFE.Extensions;
 using DevExpress.Data.Filtering;
+using Microsoft.AspNet.Identity;
 
 namespace CUFE.Controllers
 {
@@ -24,8 +25,10 @@ namespace CUFE.Controllers
         {
             using (UnitOfWork uow = new UnitOfWork())
             {
-
-                var model = uow.Query<Truck>();
+                int companyId = int.Parse(User.Identity.GetCompanyId());
+                var company = uow.FindObject<Company>(CriteriaOperator.Parse("Oid==?", companyId));
+                var model = company.Trucks;
+                //var model = uow.Query<Truck>();
                 ViewBag.TruckTypesList = truckTypeList;
                 return PartialView("_GridViewPartial", model.ToList());
             }

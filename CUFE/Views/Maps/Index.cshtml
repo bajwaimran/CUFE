@@ -1,0 +1,162 @@
+﻿
+<script type='text/javascript'>
+        var map;
+        function loadMapScenario() {
+            map = new Microsoft.Maps.Map(document.getElementById('myMap'), {
+                /* No need to set credentials if already passed in URL */
+                center: new Microsoft.Maps.Location(47.606209, -122.332071),
+                zoom: 12
+            });
+            Microsoft.Maps.loadModule('Microsoft.Maps.AutoSuggest', function () {
+                var options = {
+                    maxResults: 4,
+                    map: map
+                };
+                var manager = new Microsoft.Maps.AutosuggestManager(options);
+                manager.attachAutosuggest('#searchBox', '#searchBoxContainer', selectedSuggestion);
+            });
+            function selectedSuggestion(suggestionResult) {
+                map.entities.clear();
+                map.setView({ bounds: suggestionResult.bestView });
+                var pushpin = new Microsoft.Maps.Pushpin(suggestionResult.location);
+                map.entities.push(pushpin);
+                document.getElementById('printoutPanel').innerHTML =
+                    'Suggestion: ' + suggestionResult.formattedSuggestion +
+                    '<br> Lat: ' + suggestionResult.location.latitude +
+                    '<br> Lon: ' + suggestionResult.location.longitude;
+                document.getElementById('locname').value = suggestionResult.formattedSuggestion;
+                document.getElementById('latid').value = suggestionResult.location.latitude;
+                document.getElementById('lonid').value = suggestionResult.location.longitude;
+                document.getElementById('zipid').value = suggestionResult.address.postalCode;
+                document.getElementById('coid').value = suggestionResult.address.countryRegion;
+                document.getElementById('cooid').value = suggestionResult.location.latitude + ' , ' + suggestionResult.location.longitude;
+
+            }
+
+        }
+</script>
+<script type='text/javascript' src='https://www.bing.com/api/maps/mapcontrol?key=ApuZ25zP2JplCbiYUnTc6nQ-g4MJwgU7L9XaK0HzD0tsiFLpiZg4d_fH0JaqV_LR&callback=loadMapScenario' async defer></script>
+<script>
+        var origin, destination;
+        var searchManager, mapdirectionsManager;
+
+        function addToOrigin() {
+            try {
+                var startLocationName = document.getElementById("locname").value;
+                document.getElementById("startLocationName").value = startLocationName;
+
+                var startLocationZip = document.getElementById("zipid").value;
+                document.getElementById("startLocationZip").value = startLocationZip;
+
+                var startLocationCountry = document.getElementById("coid").value;
+                document.getElementById("startLocationCountry").value = startLocationCountry;
+
+                var startLocationCoordinates = document.getElementById("cooid").value;
+                document.getElementById("startLocationCoordinates").value = startLocationCoordinates;
+
+                var stlat = document.getElementById("latid").value;
+                var stlon = document.getElementById("lonid").value;
+
+                document.getElementById("idStartLat").value = stlat;
+                document.getElementById("idStartLon").value = stlon;
+
+
+            } catch (err) {
+                console.log("Element not found");
+
+            }
+            origin = startLocationName;
+
+            return false;
+        }
+
+        function addToDest() {
+            try {
+                var endLocationName = document.getElementById("locname").value;
+                document.getElementById("endLocationName").value = endLocationName;
+
+                var endLocationZip = document.getElementById("zipid").value;
+                document.getElementById("endLocationZip").value = endLocationZip;
+
+                var endLocationCountry = document.getElementById("coid").value;
+                document.getElementById("endLocationCountry").value = endLocationCountry;
+
+                var endLocationCoordinates = document.getElementById("cooid").value;
+                document.getElementById("endLocationCoordinates").value = endLocationCoordinates;
+                destination = endLocationName;
+
+                var stlat = document.getElementById("latid").value;
+                var stlon = document.getElementById("lonid").value;
+
+                document.getElementById("idEndLat").value = stlat;
+                document.getElementById("idEndLon").value = stlon;
+
+            } catch (err) {
+                console.log("Element not found");
+
+            }
+
+            destination = endLocationName;
+
+            showRouteOnMap();
+            return false;
+        }
+
+        function cleanTheInputs() {
+            document.getElementById('printoutPanel').innerHTML ="";
+            document.getElementById('locname').value = "";
+            document.getElementById('latid').value = "";
+            document.getElementById('lonid').value = "";
+            document.getElementById('zipid').value = "";
+            document.getElementById('coid').value = "";
+            document.getElementById('cooid').value = "";
+            document.getElementById('searchBox').value = "";
+            return false;
+        }
+
+
+        function showRouteOnMap() {
+            map = new Microsoft.Maps.Map(document.getElementById('myMap'), {
+                /* No need to set credentials if already passed in URL */
+                zoom: 4
+            });
+            Microsoft.Maps.loadModule('Microsoft.Maps.Directions', () => {
+                var directionsManager = new Microsoft.Maps.Directions.DirectionsManager(map);
+                // Set Route Mode to driving
+                directionsManager.setRequestOptions({ routeMode: Microsoft.Maps.Directions.RouteMode.driving });
+                var waypoint1 = new Microsoft.Maps.Directions.Waypoint({ address: origin });
+                var waypoint2 = new Microsoft.Maps.Directions.Waypoint({ address: destination });
+                directionsManager.addWaypoint(waypoint1);
+                directionsManager.addWaypoint(waypoint2);
+                // Set the element in which the itinerary will be rendered
+                //directionsManager.setRenderOptions({ itineraryContainer: document.getElementById('printoutPanel') });
+                directionsManager.calculateDirections();
+            });
+
+        }
+
+
+</script>
+
+
+
+
+
+<div id='printoutPanel'></div>
+<input id="locname" value="" type="hidden" />
+<input id="latid" name="lat" value="" type="hidden" />
+<input id="lonid" name="lon" value="" type="hidden" />
+<input id="zipid" name="zip" value="" type="hidden" />
+<input id="coid" name="co" value="" type="hidden" />
+<input id="cooid" value="" type="hidden" />
+<div id="res"></div>
+<div id='searchBoxContainer'><input type='text' id='searchBox' class="form-control" placeholder="Start Typing..." /></div>
+<div id='myMap' style='max-width: 100%; height: 300px;'></div>
+
+<button onclick="return addToOrigin()" style="margin-top:50px">Add to Origin</button>
+
+<button onclick="return addToDest()">Add to Destination</button>
+<button onclick="return cleanTheInputs()">Clear</button>
+
+
+

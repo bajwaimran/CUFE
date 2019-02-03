@@ -70,5 +70,23 @@ namespace CUFE.Models
                 return GetCollection<Truck>("Trucks");
             }
         }
+
+        [Association("Company-Loads")]
+        public XPCollection<Load> Loads
+        {
+            get
+            {
+                return GetCollection<Load>("Loads");
+            }
+        }
+
+        [Association("Company-Freights")]
+        public XPCollection<Freight> Freights
+        {
+            get
+            {
+                return GetCollection<Freight>("Freights");
+            }
+        }
     }
 }

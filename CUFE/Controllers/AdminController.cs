@@ -35,6 +35,10 @@ namespace CUFE.Controllers
             return View();
         }
 
+        public ActionResult ChatGroups()
+        {
+            return View();
+        }
 
     }
 }

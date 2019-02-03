@@ -1,0 +1,328 @@
+﻿@using Microsoft.AspNet.Identity
+@using CUFE.Extensions
+@using CUFE.Models
+@model CUFE.Models.ViewModels.FreightAddViewModel
+@{
+    ViewBag.Title = "Add";
+    Layout = "~/Views/Shared/_LayoutBackend.cshtml";
+    int companyId = int.Parse(User.Identity.GetCompanyId());
+    string userId = User.Identity.GetUserId();
+    string companyName = User.Identity.GetCompanyName();
+    string userName = User.Identity.GetName();
+    string userPhone = "";
+    string userEmail = User.Identity.GetUserName();
+    List<Truck> Trucks = CUFE.Helpers.FastController.GetTrucksByCompanyId(companyId);
+}
+
+
+
+@section head{
+
+
+
+    <link rel="stylesheet" href="~/Content/admintemplate/assets/vendor/animate-css/animate.min.css">
+
+    <link rel="stylesheet" href="~/Content/admintemplate/assets/vendor/bootstrap-multiselect/bootstrap-multiselect.css">
+    <link rel="stylesheet" href="~/Content/admintemplate/assets/vendor/bootstrap-datepicker/css/bootstrap-datepicker3.min.css">
+    <link rel="stylesheet" href="~/Content/admintemplate/assets/vendor/bootstrap-colorpicker/css/bootstrap-colorpicker.css" />
+    <link rel="stylesheet" href="~/Content/admintemplate/assets/vendor/multi-select/css/multi-select.css">
+    <link rel="stylesheet" href="~/Content/admintemplate/assets/vendor/bootstrap-tagsinput/bootstrap-tagsinput.css">
+    <link rel="stylesheet" href="~/Content/admintemplate/assets/vendor/nouislider/nouislider.min.css" />
+
+
+}
+@section scripts{
+
+
+    <script src="~/Content/admintemplate/assets/vendor/bootstrap-colorpicker/js/bootstrap-colorpicker.js"></script> <!-- Bootstrap Colorpicker Js -->
+    <script src="~/Content/admintemplate/assets/vendor/jquery-inputmask/jquery.inputmask.bundle.js"></script> <!-- Input Mask Plugin Js -->
+    <script src="~/Content/admintemplate/assets/vendor/jquery.maskedinput/jquery.maskedinput.min.js"></script>
+    <script src="~/Content/admintemplate/assets/vendor/multi-select/js/jquery.multi-select.js"></script> <!-- Multi Select Plugin Js -->
+    <script src="~/Content/admintemplate/assets/vendor/bootstrap-multiselect/bootstrap-multiselect.js"></script>
+    <script src="~/Content/admintemplate/assets/vendor/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+    <script src="~/Content/admintemplate/assets/vendor/bootstrap-tagsinput/bootstrap-tagsinput.js"></script> <!-- Bootstrap Tags Input Plugin Js -->
+    <script src="~/Content/admintemplate/assets/vendor/nouislider/nouislider.js"></script> <!-- noUISlider Plugin Js -->
+
+
+
+    <script>
+        $(document).ready(function () {
+            $("#submitbtn").hide();
+        });
+
+        $("#validateroute").click(function () {
+            var start = $('#startLocationName').val();
+            var dest = $('#endLocationName').val();
+            var formdata = "wp.1=" + start + "&wp.2=" + dest;
+            var result = false;
+            var newurl = "https://dev.virtualearth.net/REST/v1/Routes?" + formdata + "&key=ApuZ25zP2JplCbiYUnTc6nQ-g4MJwgU7L9XaK0HzD0tsiFLpiZg4d_fH0JaqV_LR";
+            $.when($.getJSON(newurl)
+                .done(function (json) {
+                    $("#validateroute").hide();
+                    $("#submitbtn").show();
+                }
+                )
+                .fail(function (jqXHR, textStatus, error) {
+                    alert("Please check as their is no route exist between enter locations");
+                }));
+        }
+        );
+
+
+
+    </script>
+
+
+}
+
+@section endscripts{
+    <script src="~/Content/admintemplate/assets/bundles/morrisscripts.bundle.js"></script>
+    <script src="~/Content/admintemplate/assets/js/pages/forms/advanced-form-elements.js"></script>
+}
+
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="card">
+            <div class="header">
+                <h2>Automatic Location Filler</h2>
+                <p>Search Origin &Aacute; Destination Location</p>
+            </div>
+            <div class="body">
+                @Html.Action("Index", "Maps")
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="row clearfix">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="header">
+                <h2></h2>
+            </div>
+            @using (Html.BeginForm("Add", "Freights", FormMethod.Post, new { @id = "loadsubmitform" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="body">
+                    <div class="demo-masked-input">
+                        <div class="row clearfix">
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                            <div class="col-lg-3 col-md-6">
+                                <b>Origin Date</b>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="icon-calendar"></i></span>
+                                    </div>
+                                    @(Html.TextBoxFor(m => m.StartDate, new { @class = "form-control date", placeholder = "Ex: 30/07/2016", @type = "date", @min = DateTime.Now.ToString("yyyy-MM-dd") }))
+                                    <p class="help-block">@Html.ValidationMessageFor(m => m.StartDate, "", new { @class = "text-danger" })</p>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <b>origin</b>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="icon-map"></i></span>
+                                    </div>
+                                    @(Html.TextBoxFor(m => m.StartLocationName, new { @class = "form-control", placeholder = "Ex: Paris, France", @type = "text", @id = "startLocationName" }))
+                                    <p class="help-block">@Html.ValidationMessageFor(m => m.StartLocationName, "", new { @class = "text-danger" })</p>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <b>Origin Country</b>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="icon-globe"></i></span>
+                                    </div>
+                                    @(Html.TextBoxFor(m => m.StartLocationCountry, new { @class = "form-control", placeholder = "Ex: France", @type = "text", @id = "startLocationCountry" }))
+                                    <p class="help-block">@Html.ValidationMessageFor(m => m.StartLocationCountry, "", new { @class = "text-danger" })</p>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <b>Origin Zip</b>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="icon-envelope-letter"></i></span>
+                                    </div>
+                                    @(Html.TextBoxFor(m => m.StartLocationZip, new { @class = "form-control", placeholder = "Ex: 143516", @type = "text", @id = "startLocationZip" }))
+                                    <p class="help-block">@Html.ValidationMessageFor(m => m.StartLocationZip, "", new { @class = "text-danger" })</p>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3 col-md-6">
+                                <b>Destination Date</b>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="icon-calendar"></i></span>
+                                    </div>
+                                    @(Html.TextBoxFor(m => m.EndDate, new { @class = "form-control", placeholder = "Ex: 30-07-2018", @type = "date", @min = DateTime.Now.ToString("yyyy-MM-dd") }))
+                                    <p class="help-block">@Html.ValidationMessageFor(m => m.EndDate, "", new { @class = "text-danger" })</p>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <b>Destination</b>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="icon-map"></i></span>
+                                    </div>
+                                    @(Html.TextBoxFor(m => m.EndLocationName, new { @class = "form-control", placeholder = "Ex: Frankfurt, Germany", @type = "text", @id = "endLocationName" }))
+                                    <p class="help-block">@Html.ValidationMessageFor(m => m.EndLocationName, "", new { @class = "text-danger" })</p>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <b>Destination Country</b>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="icon-globe"></i></span>
+                                    </div>
+                                    @(Html.TextBoxFor(m => m.EndLocationCountry, new { @class = "form-control", placeholder = "Ex: Germany", @type = "text", @id = "endLocationCountry" }))
+                                    <p class="help-block">@Html.ValidationMessageFor(m => m.EndLocationCountry, "", new { @class = "text-danger" })</p>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <b>Destination Zip</b>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="icon-envelope-letter"></i></span>
+                                    </div>
+                                    @(Html.TextBoxFor(m => m.EndLocationZip, new { @class = "form-control", placeholder = "Ex: 143516", @type = "text", @id = "endLocationZip" }))
+                                    <p class="help-block">@Html.ValidationMessageFor(m => m.EndLocationZip, "", new { @class = "text-danger" })</p>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <b>Truck Type Needed</b>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fa fa-truck"></i></span>
+                                    </div>
+                                    @Html.DropDownListFor(m => m.TruckId, new SelectList(Trucks, "Oid", "RegNo"), "--Select Truck--", new { @class = "form-control" })
+                                    <p class="help-block">@Html.ValidationMessageFor(m => m.TruckId, "", new { @class = "text-danger" })</p>
+                                </div>
+                            </div>
+
+                            @*<div class="col-lg-3 col-md-6">
+                                    <b>Load Type</b>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-th-large"></i></span>
+                                        </div>
+                                        @Html.DropDownListFor(m => m.Loadtype, new SelectList(ViewBag.LoadsType, "LoadTypeName", "LoadTypeName"), "--select Load type--", new { @class = "form-control" })
+                                        <p class="help-block">@Html.ValidationMessageFor(m => m.Loadtype, "", new { @class = "text-danger" })</p>
+                                    </div>
+                                </div>*@
+                            @*<div class="col-lg-3 col-md-6">
+                                    <b>Load Volume(Tons)</b>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="icon-user"></i></span>
+                                        </div>
+                                        @(Html.TextBoxFor(m => m.LoadVolume, new { @class = "form-control", placeholder = "Ex: 50.00", @type = "number" }))
+                                        <p class="help-block">@Html.ValidationMessageFor(m => m.LoadVolume, "", new { @class = "text-danger" })</p>
+                                    </div>
+                                </div>*@
+                            <div class="col-lg-3 col-md-6">
+                                <b>Expected Amount(EUR)</b>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fa fa-dollar"></i></span>
+                                    </div>
+                                    @(Html.TextBoxFor(m => m.OfferredPrice, new { @class = "form-control", placeholder = "Ex: 1520.00", @type = "number" }))
+                                    <p class="help-block">@Html.ValidationMessageFor(m => m.OfferredPrice, "", new { @class = "text-danger" })</p>
+                                </div>
+                            </div>
+                            @*<div class="col-lg-3 col-md-6">
+                                <b>Manager</b>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="icon-user"></i></span>
+                                    </div>
+                                    @Html.DropDownListFor(m => m.ContactPersonUserId, new SelectList(ViewBag.companyUsers, "UserId", "Name"), "-- Select User--", new { @class = "form-control", @id = "companyusers" })
+                                    <p class="help-block">@Html.ValidationMessageFor(m => m.ContactPersonUserId, "", new { @class = "text-danger" })</p>
+
+                                </div>
+                            </div>*@
+                            <div class="col-lg-3 col-md-6">
+                                <b>Contact Person Name</b>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="icon-user"></i></span>
+                                    </div>
+                                    @(Html.TextBoxFor(m => m.ContactPersonName, new { @class = "form-control", placeholder = "", @type = "text", @id = "", @Value = userName }))
+                                    <p class="help-block">@Html.ValidationMessageFor(m => m.ContactPersonName, "", new { @class = "text-danger" })</p>
+
+                                </div>
+                            </div>
+                            @*<div class="col-lg-3 col-md-6">
+                                    <b>Mobile Phone Number</b>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-mobile-phone"></i></span>
+                                        </div>
+                                        <input type="text" class="form-control mobile-phone-number" placeholder="Ex: +00 (000) 000-00-00">
+                                    </div>
+                                </div>*@
+                            <div class="col-lg-3 col-md-6">
+                                <b>Phone Number</b>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fa fa-phone"></i></span>
+                                    </div>
+                                    @(Html.TextBoxFor(m => m.ContactPersonPhone, new { @class = "form-control", placeholder = "", @type = "text", @id = "", @Value = userPhone }))
+                                    <p class="help-block">@Html.ValidationMessageFor(m => m.ContactPersonPhone, "", new { @class = "text-danger" })</p>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <b>Email</b>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fa fa-envelope"></i></span>
+                                    </div>
+                                    @(Html.TextBoxFor(m => m.ContactPersonEmail, new { @class = "form-control", placeholder = "", @type = "text", @id = "", @Value = userEmail }))
+                                    <p class="help-block">@Html.ValidationMessageFor(m => m.ContactPersonEmail, "", new { @class = "text-danger" })</p>
+                                </div>
+                            </div>
+
+
+
+
+                            <div class="col-lg-12 col-md-12">
+                                <b>Comments / Notes</b>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="icon-note"></i></span>
+                                    </div>
+                                    @(Html.EditorFor(m => m.Notes, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter your comment or notes here" } }))
+
+                                </div>
+                            </div>
+                            <div class="col-lg-12 col-md-12">
+                                <input id="tcheckbox" type="checkbox" name="checkbox" required="" data-parsley-errors-container="#error-checkbox" data-parsley-multiple="checkbox">
+                                <span for="tcheckbox">I accept terms &amp; consitions of cargo-europe.de</span>
+                            </div>
+                            @(Html.EditorFor(m => m.StartLat, new { htmlAttributes = new { @type = "hidden", @id = "idStartLat" } }))
+                            @(Html.EditorFor(m => m.StartLon, new { htmlAttributes = new { @type = "hidden", @id = "idStartLon" } }))
+                            @(Html.EditorFor(m => m.EndLat, new { htmlAttributes = new { @type = "hidden", @id = "idEndLat" } }))
+                            @(Html.EditorFor(m => m.EndLon, new { htmlAttributes = new { @type = "hidden", @id = "idEndLon" } }))
+                            @(Html.TextBoxFor(m => m.StartLocationCoordinates, new { @type = "hidden", @id = "startLocationCoordinates" }))
+                            @(Html.TextBoxFor(m => m.EndLocationCoordinates, new { @type = "hidden", @id = "endLocationCoordinates" }))
+                            @Html.EditorFor(m => m.CompanyId, new { htmlAttributes = new { @Value = companyId, @type = "hidden" } })
+                            @Html.EditorFor(m => m.CreatedbyUserId, new { htmlAttributes = new { @Value = User.Identity.GetUserId(), @type = "hidden" } })
+                            <div class="col-lg-12 col-md-12">
+                                <div id="success"></div>
+                                <!-- For success/fail messages -->
+                                <input id="submitbtn" type="submit" value="Add Freight" class="btn btn-primary" />
+                                <button id="validateroute" class="btn" onclick="return false">Validate</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+
+
+

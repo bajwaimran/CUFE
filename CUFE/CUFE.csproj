@@ -66,6 +66,12 @@
     <Reference Include="DX.Utils, Version=1.0.0.7, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\DX.Utils.1.0.0.7\lib\net461\DX.Utils.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Core, Version=2.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.2.2\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.SystemWeb, Version=2.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.SystemWeb.2.2.2\lib\net45\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -217,10 +223,15 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\ChatController.cs" />
     <Compile Include="Controllers\ClientController.cs" />
     <Compile Include="Controllers\CommonController.cs" />
     <Compile Include="Controllers\CompanyController.cs" />
     <Compile Include="Controllers\CountriesController.cs" />
+    <Compile Include="Controllers\FreightsController.cs" />
+    <Compile Include="Controllers\LoadsController.cs" />
+    <Compile Include="Controllers\MapsController.cs" />
+    <Compile Include="Helpers\FastController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoadTypesController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -231,15 +242,29 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\CustomUserIdProvider.cs" />
+    <Compile Include="Hubs\GroupChatHub.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\BasePersistentObject.cs" />
+    <Compile Include="Models\Blog.cs" />
+    <Compile Include="Models\ChatModels\ChatUser.cs" />
+    <Compile Include="Models\ChatModels\Connection.cs" />
+    <Compile Include="Models\ChatModels\ConnectionModel.cs" />
+    <Compile Include="Models\ChatModels\GroupChat.cs" />
+    <Compile Include="Models\ChatModels\OnlineUser.cs" />
+    <Compile Include="Models\ChatModels\SentMessage.cs" />
     <Compile Include="Models\Company.cs" />
     <Compile Include="Models\Country.cs" />
+    <Compile Include="Models\Freight.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\Load.cs" />
     <Compile Include="Models\LoadType.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\Notification.cs" />
     <Compile Include="Models\Truck.cs" />
     <Compile Include="Models\TruckType.cs" />
+    <Compile Include="Models\ViewModels\FreightAddViewModel.cs" />
+    <Compile Include="Models\ViewModels\LoadAddViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="XPO\BaseXpoController.cs" />
@@ -3768,6 +3793,9 @@
     <Content Include="Scripts\jquery-3.3.1.slim.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.signalR-2.2.2.js" />
+    <Content Include="Scripts\jquery.signalR-2.2.2.min.js" />
+    <Content Include="Scripts\jquery.signalR-2.4.0.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
@@ -3822,6 +3850,20 @@
     <Content Include="Views\Admin\LoadTypeManagement.cshtml" />
     <Content Include="Views\Trucks\_GridViewPartial.cshtml" />
     <Content Include="Views\Client\TrucksManagement.cshtml" />
+    <Content Include="Views\Chat\Index.cshtml" />
+    <Content Include="Views\Admin\ChatGroups.cshtml" />
+    <Content Include="Views\Chat\GridViewPartial.cshtml" />
+    <Content Include="Views\Chat\GroupChat.cshtml" />
+    <Content Include="Views\Shared\_LayoutChatPage.cshtml" />
+    <Content Include="Views\Client\Loads.cshtml" />
+    <Content Include="Views\Loads\_GridViewPartial.cshtml" />
+    <Content Include="Views\Loads\Add.cshtml" />
+    <Content Include="Views\Maps\Index.cshtml" />
+    <Content Include="Views\Freights\_GridViewPartial.cshtml" />
+    <Content Include="Views\Freights\Add.cshtml" />
+    <Content Include="Views\Freights\GridViewPartial.cshtml" />
+    <Content Include="Views\Client\Freights.cshtml" />
+    <Content Include="Views\Client\Dashboard.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
