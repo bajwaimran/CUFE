@@ -223,6 +223,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\BlogsController.cs" />
     <Compile Include="Controllers\ChatController.cs" />
     <Compile Include="Controllers\ChatsController.cs" />
     <Compile Include="Controllers\ClientController.cs" />
@@ -245,6 +246,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\CustomUserIdProvider.cs" />
+    <Compile Include="Hubs\ChatHub.cs" />
     <Compile Include="Hubs\GroupChatHub.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\BasePersistentObject.cs" />
@@ -253,6 +255,7 @@
     <Compile Include="Models\ChatModels\Connection.cs" />
     <Compile Include="Models\ChatModels\ConnectionModel.cs" />
     <Compile Include="Models\ChatModels\GroupChat.cs" />
+    <Compile Include="Models\ChatModels\GroupChatMessage.cs" />
     <Compile Include="Models\ChatModels\OnlineUser.cs" />
     <Compile Include="Models\ChatModels\Room.cs" />
     <Compile Include="Models\ChatModels\RoomMember.cs" />
@@ -3876,10 +3879,18 @@
     <Content Include="Views\Chats\_RoomMemberPartial.cshtml" />
     <Content Include="Views\Admin\Roles.cshtml" />
     <Content Include="Views\Roles\_GridViewPartial.cshtml" />
+    <Content Include="Views\Client\Chat.cshtml" />
+    <Content Include="Views\Admin\Blogs.cshtml" />
+    <Content Include="Views\Blogs\_GridViewPartial.cshtml" />
+    <Content Include="Views\Client\Users.cshtml" />
+    <Content Include="Views\Users\_MyUsersGridViewPartial.cshtml" />
+    <Content Include="Views\Client\Search.cshtml" />
+    <Content Include="Views\Client\AdvancedSearch.cshtml" />
+    <Content Include="Views\Admin\GroupMembers.cshtml" />
+    <Content Include="Views\Chats\_GroupMembersPartialView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Users\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

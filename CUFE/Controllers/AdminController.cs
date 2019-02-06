@@ -42,36 +42,15 @@ namespace CUFE.Controllers
             return View();
         }
 
-        //public void CreateRoles()
-        //{
-        //    using (UnitOfWork uow = new UnitOfWork())
-        //    {
-        //        new XpoApplicationRole(uow)
-        //        {
-        //            Name = "Super Admin"
-        //        };
-        //        new XpoApplicationRole(uow)
-        //        {
-        //            Name = "Admin"
-        //        };
-        //        new XpoApplicationRole(uow)
-        //        {
-        //            Name = "User"
-        //        };
-        //        new XpoApplicationRole(uow)
-        //        {
-        //            Name = "Driver"
-        //        };
-        //        uow.CommitChanges();
-
-        //    }
-
-        //}
-
-        public ActionResult Roles()
+        public ActionResult GroupMembers()
         {
             return View();
         }
+        public ActionResult Blogs()
+        {
+            return View();
+        }
+        
 
     }
 }

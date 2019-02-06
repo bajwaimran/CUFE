@@ -34,15 +34,15 @@ namespace CUFE.Models.ChatModels
         public DateTime Timestamp
         {
             get => timestamp;
-            set => SetPropertyValue(nameof(Timestamp), ref timestamp, value);
+            set => SetPropertyValue<DateTime>(nameof(Timestamp), ref timestamp, value);
         }
 
-
+        string user;
         [Size(SizeAttribute.DefaultStringMappingFieldSize)]
         public string User
         {
-            get => text;
-            set => SetPropertyValue(nameof(User), ref text, value);
+            get => user;
+            set => SetPropertyValue(nameof(User), ref user, value);
         }
 
 

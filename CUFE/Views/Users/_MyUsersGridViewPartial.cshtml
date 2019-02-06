@@ -1,0 +1,161 @@
+﻿@using CUFE.Extensions
+@using CUFE.Controllers
+@using CUFE.Helpers
+
+@{  
+    IEnumerable<CUFE.Models.XpoApplicationRole> roles = FastController.AllRoles();
+}
+
+
+
+@{
+    var grid = Html.DevExpress().GridView(settings =>
+    {
+        settings.Name = "GridView1";
+
+
+        settings.CallbackRouteValues = new { Controller = "Users", Action = "MyUsersGridViewPartial" };
+
+        settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "Users", Action = "Add" };
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "Users", Action = "Update" };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "Users", Action = "Delete" };
+
+        settings.SettingsSearchPanel.CustomEditorName = "tbSearch";
+        settings.Settings.ShowTitlePanel = true;
+        settings.SetTitlePanelTemplateContent(content =>
+        {
+            Html.DevExpress().Label(label =>
+            {
+
+                label.Text = "User Management";
+                label.Style["font-weight"] = "bold";
+
+            }).Render();
+
+        });
+
+
+        settings.SettingsEditing.Mode = GridViewEditingMode.EditFormAndDisplayRow;
+        settings.SettingsBehavior.ConfirmDelete = true;
+
+        settings.CommandColumn.Visible = true;
+        settings.CommandColumn.ShowNewButton = true;
+        settings.CommandColumn.ShowDeleteButton = true;
+        settings.CommandColumn.ShowEditButton = true;
+
+        settings.Width = System.Web.UI.WebControls.Unit.Percentage(100);
+
+
+
+
+        settings.KeyFieldName = "Id";
+        
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "Email";
+        });
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "FirstName";
+        });
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "LastName";
+        });
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "Address1";
+        });
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "Address2";
+        });
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "City";
+        });
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "Province";
+        });
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "Country";
+        });
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "Birthdate";
+            c.ColumnType = MVCxGridViewColumnType.DateEdit;
+        });
+
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "PasswordHash";
+            c.Caption = "Password";
+            c.Visible = false;
+            c.EditFormSettings.Visible = DefaultBoolean.True;
+
+        });
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "PhoneNumber";
+        });
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "UserName";
+        });
+
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "EmailConfirmed";
+            c.Caption = "Active";
+            c.Visible = true;
+            c.EditFormSettings.Visible = DefaultBoolean.True;
+            c.ColumnType = MVCxGridViewColumnType.CheckBox;
+        });
+
+        settings.Columns.Add(c =>
+{
+    c.FieldName = "Role";
+    c.Caption = "Role";
+    c.UnboundType = DevExpress.Data.UnboundColumnType.String;
+    c.EditFormSettings.Visible = DefaultBoolean.True;
+    c.SetEditItemTemplateContent(i =>
+{
+                var extension = Html.DevExpress().ComboBox(comboBoxSettings =>
+                {
+                    comboBoxSettings.Name = "Role";
+                    ComboBoxProperties comboBoxProperties = comboBoxSettings.Properties;
+                    comboBoxProperties.TextField = "Name";
+                    comboBoxProperties.ValueField = "Name";
+                    comboBoxProperties.ValueType = typeof(string);
+                    comboBoxProperties.DropDownStyle = DropDownStyle.DropDown;
+                }).BindList(roles).Bind(DataBinder.Eval(i.DataItem, "Role"));
+                extension.Render();
+            });
+});
+
+        settings.SettingsPager.Visible = true;
+        settings.Settings.ShowGroupPanel = true;
+        settings.Settings.ShowFilterRow = true;
+        settings.SettingsBehavior.AllowSelectByRowClick = true;
+
+        settings.SettingsAdaptivity.AdaptivityMode = GridViewAdaptivityMode.Off;
+        settings.SettingsAdaptivity.AdaptiveColumnPosition = GridViewAdaptiveColumnPosition.Right;
+        settings.SettingsAdaptivity.AdaptiveDetailColumnCount = 1;
+        settings.SettingsAdaptivity.AllowOnlyOneAdaptiveDetailExpanded = false;
+        settings.SettingsAdaptivity.HideDataCellsAtWindowInnerWidth = 0;
+
+    });
+    if (ViewData["EditError"] != null)
+    {
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+@grid.Bind(Model).GetHtml()
+
+
+<script>
+    function onComboBoxSelectedIndexChanged(s, e) {       
+    }
+</script>

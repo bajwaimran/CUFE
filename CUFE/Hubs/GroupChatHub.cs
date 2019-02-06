@@ -17,85 +17,44 @@ namespace CUFE.Hubs
         public static Dictionary<string, string> lstAllConnections = new Dictionary<string, string>();
         public static Dictionary<string, string> groupNames = new Dictionary<string, string>();
 
+        public static List<UserConnections> ConnectionList = new List<UserConnections>();
+        public static List<ConnectionList> listAllConnections = new List<ConnectionList>();
+
+        
         public override Task OnConnected()
         {
             using (UnitOfWork uow = new UnitOfWork())
             {
-                string username = Context.User.Identity.Name;
-                
-                lstAllConnections.Add(Context.ConnectionId, username);
-                Clients.All.BroadcastConnections(lstAllConnections);
-                var user = uow.FindObject<ChatUser>(CriteriaOperator.Parse("UserName==?", username));
-                if( user == null)
+                var user = uow.FindObject<XpoApplicationUser>(CriteriaOperator.Parse("UserName==?", Context.User.Identity.Name));
+                if (user != null)
                 {
-                    user = new ChatUser(uow)
+                    var con = new UserConnections
                     {
-                        UserName = username
+                        ConnectionId = Context.ConnectionId,
+                        UserAgent = Context.Request.Headers["User-Agent"],
+                        Connected = true,
+                        UserId = user.Id
                     };
-                    uow.CommitChanges();
+                    ConnectionList.Add(con);                    
                 }
-                else
-                {
-                    foreach(var item in user.Rooms)
-                    {
-                        Groups.Add(Context.ConnectionId, item.RoomName);
-                    }
-                }
-                
+                return base.OnConnected();
             }
-            return base.OnConnected();
         }
         public override Task OnDisconnected(bool stopCalled)
         {
             using (UnitOfWork uow = new UnitOfWork())
             {
-                string usernameToRemove = Context.User.Identity.GetUserId();
-                lstAllConnections.Remove(Context.ConnectionId);
-                Clients.All.BroadcastConnections(lstAllConnections);
+                var con = ConnectionList.Find(u => u.ConnectionId == Context.ConnectionId);
+                if(con != null)
+                {
+                    ConnectionList.Remove(con);
+                }
             }
             return base.OnDisconnected(stopCalled);
         }
-        public void AddToRoom(string roomName)
-        {
-            using (UnitOfWork uow = new UnitOfWork())
-            {
-                var room = uow.FindObject<GroupChat>(CriteriaOperator.Parse("RoomName==?", roomName));
-                if(room == null)
-                {
-                    var newRoom = new GroupChat(uow)
-                    {
-                        RoomName = roomName
-                    };
-                    var user = new ChatUser(uow)
-                    {
-                        UserName = Context.User.Identity.Name
-                    };
-                    newRoom.Users.Add(user);
-                    uow.CommitChanges();
-                    Groups.Add(Context.ConnectionId, roomName);
-                }
-            }
-        }
 
+       
 
-        public void RemoveFromRoom(string roomName)
-        {
-            using (UnitOfWork uow = new UnitOfWork())
-            {
-                var room = uow.FindObject<GroupChat>(CriteriaOperator.Parse("RoomName==?", roomName));
-                if(room != null)
-                {
-                    var userlist = room.Users.Where(u => u.UserName == Context.User.Identity.Name);
-                    foreach(var item in userlist)
-                    {
-                        room.Users.Remove(item);
-                    }
-
-                    uow.CommitChanges();
-                    Groups.Remove(Context.ConnectionId, roomName);
-                }
-            }
-        }
 
         public Task SendPrivateMessage(string user, string message)
         {
@@ -110,30 +69,7 @@ namespace CUFE.Hubs
             Clients.All.BroadcastConnections(lstAllConnections);
         }
         
-        public void AddUserToRoom(string roomName, string userId)
-        {
-            using (UnitOfWork uow = new UnitOfWork())
-            {
-                var room = uow.FindObject<GroupChat>(CriteriaOperator.Parse("RoomName==?", roomName));
-                if(room != null){
-                    var user = room.Users.FirstOrDefault(u => u.UserName == userId);
-                    if(user == null)
-                    {
-                        var newuser = new ChatUser(uow)
-                        {
-                            UserName = userId
-                        };
-                        room.Users.Add(newuser);
-
-                        uow.CommitChanges();
-                        Clients.Caller.notifications("Added");
-                    }
-                    Clients.Caller.notifications("user is already a member of current group!");
-                }
-                //Clients.Caller.notifications("No Room found with given name!");
-
-            }
-        }
+       
 
         public void SendMessge(string message)
         {
@@ -143,14 +79,98 @@ namespace CUFE.Hubs
 
         public void JoinRoom(string roomName)
         {
-            Groups.Add(Context.ConnectionId, roomName);
-            Clients.Group(roomName).showBroadcastMessage(Context.User.Identity.Name + "Joined");
+            
+
+            using (UnitOfWork uow = new UnitOfWork())
+            {
+                Groups.Add(Context.ConnectionId, roomName);
+                Clients.Group(roomName).showBroadcastMessage(Context.User.Identity.Name + "Joined");
+
+                var room = uow.FindObject<GroupChat>(CriteriaOperator.Parse("RoomName==?", roomName));
+                if (room == null)
+                {
+                    var newRoom = new GroupChat(uow)
+                    {
+                        RoomName = roomName
+                    };
+                    var user = new ChatUser(uow)
+                    {
+                        UserName = Context.User.Identity.Name
+                    };
+                    newRoom.ChatUsers.Add(user);
+                    Groups.Add(Context.ConnectionId, roomName);
+                }
+                else
+                {
+                    try
+                    {
+                        var user = room.ChatUsers.First(u => u.UserName == Context.User.Identity.Name);
+
+                        if (user == null)
+                        {
+                            room.ChatUsers.Add(new ChatUser(uow)
+                            {
+                                UserName = Context.User.Identity.Name
+                            });
+                            Groups.Add(Context.ConnectionId, roomName);
+                        }
+                    }catch(Exception e)
+                    {
+                        room.ChatUsers.Add(new ChatUser(uow)
+                        {
+                            UserName = Context.User.Identity.Name
+                        });
+                        Groups.Add(Context.ConnectionId, roomName);
+                    }
+                    
+                }
+                uow.CommitChanges();
+            }
         }
 
+        public void LeaveRoom(string roomName)
+        {
+            using (UnitOfWork uow = new UnitOfWork())
+            {
+                Groups.Remove(Context.ConnectionId, roomName);
+                var room = uow.FindObject<GroupChat>(CriteriaOperator.Parse("RoomName==?", roomName));
+                if(room != null)
+                {
+                    var user = room.ChatUsers.FirstOrDefault(u => u.UserName == Context.User.Identity.Name);
+                    if(user != null)
+                    {
+                        room.ChatUsers.Remove(user);
+                        uow.CommitChanges();
+                    }
+                }
+            }
+            
+        }
 
         public void GroupMessage(string groupName, string message)
         {
-            Clients.Group(groupName).showBroadcastMessage(message);
+            using (UnitOfWork uow = new UnitOfWork())
+            {
+                Clients.Group(groupName).showBroadcastMessage(message);
+                var room = uow.FindObject<GroupChat>(CriteriaOperator.Parse("RoomName==?", groupName));
+                if(room != null)
+                {
+                    var msg = new GroupChatMessage(uow)
+                    {
+                        Message = message,
+                        SenderUserName = Context.User.Identity.Name,
+                        Timestamp = DateTime.Now
+                    };
+
+                    room.GroupChatMessages.Add(msg);
+                    uow.CommitChanges();
+                }
+            }
         }
     }
+
+
+    
+    
+
 }

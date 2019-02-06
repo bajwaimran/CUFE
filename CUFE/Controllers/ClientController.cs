@@ -13,9 +13,14 @@ using CUFE.Models.ChatModels;
 
 namespace CUFE.Controllers
 {
+    [Authorize(Roles = "SuperAdmin, Admin")]
     public class ClientController : Controller
     {
         private UnitOfWork uow = new UnitOfWork();
+        public ActionResult Index()
+        {
+            return RedirectToAction("Dashboard") ;
+        }
         public ActionResult TrucksManagement()
         {
             return View();
@@ -24,12 +29,18 @@ namespace CUFE.Controllers
         {
             return View();
         }
-
+        public ActionResult AddLoad()
+        {
+            return View("~/Views/Loads/Add");
+        }
         public ActionResult Freights()
         {
             return View();
         }
-
+        public ActionResult AddFreight()
+        {
+            return View("~/Views/Freights/Add");
+        }
         public ActionResult Users()
         {
             return View();
@@ -47,29 +58,34 @@ namespace CUFE.Controllers
             return View();
         }
         [Authorize]
-        public ActionResult Groups()
+        public ActionResult Chat()
         {
+            ViewBag.UserId = User.Identity.GetUserId();
             return View();
         }
         [Authorize]
-        public ActionResult ManageGroup(int id)
+        public ActionResult Groups()
         {
-            UnitOfWork uow = new UnitOfWork();
-
-            ViewBag.RoomId = id;
-            int companyId = int.Parse(User.Identity.GetCompanyId());
-            ViewBag.Users = uow.Query<XpoApplicationUser>().Where(u => u.CompanyId == companyId).ToList();
-            //var newModel = (from r in uow.Query<Room>()
-            //               join m in uow.Query<RoomMember>()
-            //               on r.Oid equals m.Room
-            //                select r);
-
-            var rooms = uow.Query<Room>();
-            
+            ViewBag.userinfo = uow.FindObject<XpoApplicationUser>(CriteriaOperator.Parse("UserName==?", User.Identity.Name));
+            var groups = uow.Query<GroupChat>();
+            if(groups != null)
+            {
+                return View(groups.ToList());
+            }
             return View();
-
         }
 
+        public ActionResult Search()
+        {
+            return View();
+        }
+
+        public ActionResult AdvancedSearch()
+        {
+            return View();
+        }
+
+        
 
     }
 }

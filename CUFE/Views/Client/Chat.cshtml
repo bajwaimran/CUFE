@@ -1,0 +1,240 @@
+﻿
+@{
+    ViewBag.Title = "Chat";
+    Layout = "~/Views/Shared/_LayoutChatPage.cshtml";
+    var usr = ViewBag.UserId;
+    List<CUFE.Models.ChatModels.SentMessage> sentMessageList = CUFE.Helpers.FastController.GetAllSentMessagesByUserId(usr);
+    List<CUFE.Models.ChatModels.SentMessage> receivedMessageList = CUFE.Helpers.FastController.GetAllReceivedMessagesByUserId(usr);
+    IEnumerable<CUFE.Models.XpoApplicationUser> AllUsers = CUFE.Helpers.FastController.AllUsers();
+
+}
+@section head{
+    <link rel="stylesheet" href="~/Content/admintemplate/assets/css/chatapp.css">
+}
+
+
+<div id="idNotifications"></div>
+<div class="row clearfix">
+    <div class="col-lg-12">
+        <div class="chat-app" id="tabs">
+            <div class="row">
+                <div class="col-lg-3 col-md-4">
+                    <div class="hidden-xs">
+                        <div id="plist" class="people-list">
+                            <div class="input-group p-3 bg-white border-bottom">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="icon-magnifier"></i></span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="Search...">
+                            </div>
+                            <ul class="list-unstyled chat-list mt-2 mb-0" id="connections">                               
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-9 col-md-8" id="relatedDivs">
+                    @foreach (var item in AllUsers)
+                    {
+                        <div id="T_@item.Id" class="chat bg-white alert alert-dismissible chatmessagebox" style="display:none">
+                            <div class="chat-header clearfix">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <a href="javascript:void(0);" data-toggle="modal" data-target="#view_info">
+                                            <img src="~/Content/images/user-male-icon.png" alt="avatar" />
+                                        </a>
+                                        <div class="chat-about">
+                                            <h6 class="m-b-0">@item.FirstName</h6>
+                                            <small>Online</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 hidden-sm text-right">
+                                        @*<a href="javascript:void(0);" onclick="return false;" class="btn btnclose"><i class="icon-close"></i></a>*@
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="chat-history">
+                                <ul class="m-b-0" id="discussion_@item.Id" style="overflow:auto; height:70vh;">
+                                    @{
+                                        var msgs = new List<CUFE.Models.ChatModels.SentMessage>();
+                                        if (sentMessageList != null)
+                                        {
+                                            var sentmessages = sentMessageList.Where(u => u.ReceiverId == item.Id);
+                                            foreach (var msg in sentmessages)
+                                            {
+                                                msgs.Add(msg);
+                                            }
+                                        }
+                                        if (receivedMessageList != null)
+                                        {
+                                            var receivedmessages = receivedMessageList.Where(u => u.User == item.Id);
+                                            foreach (var msg in receivedmessages)
+                                            {
+                                                msgs.Add(msg);
+                                            }
+                                        }
+                                        var messages = new List<CUFE.Models.ChatModels.SentMessage>();
+                                        if (msgs != null)
+                                        {
+                                            var temp = msgs.OrderBy(m => m.Timestamp);
+                                            foreach (var msg in temp)
+                                            {
+                                                messages.Add(msg);
+                                            }
+                                        }
+
+                                        if (messages != null)
+                                        {
+                                            foreach (var sentMessage in messages)
+                                            {
+
+                                                if (sentMessage.User == usr)
+                                                {
+                                                    <li class="clearfix">
+                                                        <div class="detail-right">
+                                                            <div class="message my-message">
+                                                                <span class="message-data-time d-block mt-1">  @sentMessage.Timestamp  </span><p>  @sentMessage.Text  </p>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                }
+                                                else
+                                                {
+                                                    <li class="clearfix">
+                                                        <div class="detail-right">
+                                                            <div class="message other-message float-right">
+                                                                <span class="message-data-time d-block mt-1"> @sentMessage.Timestamp </span><p> @sentMessage.Text </p>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                    }
+                                                }
+                                            }
+                                        }                                  
+                                        <li><sub>Current Messages below</sub></li>
+                                    </ul>
+                            </div>
+                            <div class="chat-message clearfix">
+                                <form id="form_@item.Id">
+                                    <div class="input-group mb-0">
+                                        <input type="hidden" name="user" value="@item.Id" />
+                                        @*@Html.DropDownList("user", new SelectList(ViewBag.Allusers, "Id", "FirstName"), new { @id = "idUsername" })*@
+                                        <input type="text" class="form-control" name="chat_msg" placeholder="Enter text here..." id="idMessage_@item.Id">
+                                        <div class="input-group-append">
+                                            @*<button id="idMessageSendButton">Send</button>*@
+                                            <button class="btnSend" id="@item.Id" onclick="return false;">Send</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    }
+                    <!-- end of relted div -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<input type="hidden" id="hiddenUserId" value="@usr" />
+@section scripts{
+    <script src="~/Scripts/jquery.signalR-2.4.0.min.js"></script>
+    <script src="~/signalr/hubs"></script>
+    <script>
+
+        $(function () {
+            var chat = $.connection.chatHub;
+            //show error messages
+            chat.client.showErrorMessage = function (message) {
+                $("#idErrorMessage").text(message);
+            }
+            //private chat message receiver
+            chat.client.addChatMessage = function (senderId, message) {
+                $('#T_' + senderId).show();
+                var discussionTabId = "#discussion_" + senderId;
+                var d = new Date();
+                $(discussionTabId).append('<li class="clearfix"><div class="detail-right"><div class="message other-message float-right"><span class="message-data-time d-block mt-1">' + d.toUTCString() + '</span><p>' + message + '</p></div></div></li>');
+                var div = $(discussionTabId);
+                div.scrollTop(div.prop('scrollHeight')); //this function will scroll down all div to show the last message
+
+            }
+
+
+
+            chat.client.broadcastConnections = function (allConnections) {
+                $("#connections").html('');
+                var myuserid = $("#hiddenUserId").val();
+                console.log(myuserid);
+                var arr = $.makeArray(allConnections);
+                for (var x = 0; x < arr.length; x++) {
+                    if (arr[x].UserId != myuserid) {
+                        var append = "<li class='clearfix clickable' id='#T_" + arr[x].UserId + "'><div class='float-left list-left'>";
+                        append += "<div class='img-preview'><img src='/Content/images/user-male-icon.png' alt='avatar' /><div class='status'><i class='fa fa-circle online'></i></div></div>";
+                        append += "<div class='about'><div class='name'>" + arr[x].Username + "</div></div>";
+                        append += "<div class='float-right'><div class='time'></div><div class='badge badge-danger text-white'></div></div>";
+                        append += "</div></li> ";
+                        $("#connections").append(append);
+                    }
+
+                }
+
+            }
+
+
+
+            $.connection.hub.start().done(function () {
+                $(".btnSend").click(function () {
+                    var currentId = this.id;
+                    var user = $(this).closest('form').find('input[name="user"]').val();
+                    console.log('sending user is :' + user);
+                    var msg = $(this).closest('form').find('input[name="chat_msg"]').val();
+                    chat.server.sendChatMessage(user, msg);
+                    $(this).closest('form').find('input[name="chat_msg"]').val('');
+                    var d = new Date();
+                    var discussionTabId = "#discussion_" + currentId;
+                    var msgId = '#idMessage' + currentId;
+                    $(discussionTabId).append('<li class="clearfix"><div class="detail-right"><div class="message my-message"><span class="message-data-time d-block mt-1">' + d.toUTCString() + '</span><p>' + msg + '</p></div></div></li>');
+                    var div = $(discussionTabId);
+                    div.scrollTop(div.prop('scrollHeight'));
+                    $(msgId).focus();
+
+                })
+            });
+        });
+
+        function htmlEncode(value) {
+            var encodedValue = $('<div />').text(value).html();
+            return encodedValue;
+        }
+
+        //activate the user on click
+        $(function () {                       //run when the DOM is ready
+
+            $("#connections").on("click",".clickable", function () {  //use a class, since your ID gets mangled
+                console.log("clicked me");
+                var target = this.id;
+                var targetId = target.substring(1, target.length);
+                $(".clickable").not(this).removeClass('active');
+                $(this).toggleClass('active');
+                $(target).show();
+                $(".chatmessagebox").each(function () {
+                    var currentDiv = this.id;
+                    if (currentDiv != targetId) {
+                        console.log("target: " + targetId + " - current: " + currentDiv);
+                        $("#" + currentDiv).hide();
+                    }
+                }
+
+                );
+
+                var substr = targetId.substring(2, targetId.length);
+                var div = $("#discussion_" + substr);
+                div.scrollTop(div.prop('scrollHeight'));
+            });
+        });
+
+        //show last element
+
+
+
+    </script>
+}

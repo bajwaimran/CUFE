@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using CUFE.Models.ChatModels;
-
+using DX.Data.Xpo.Identity;
 namespace CUFE.Helpers
 {
     public static class FastController
@@ -66,8 +66,24 @@ namespace CUFE.Helpers
         public static List<XpoApplicationRole> AllRoles()
         {
             UnitOfWork uow = new UnitOfWork();
-            return uow.Query<XpoApplicationRole>().ToList();
+            var model = from u in uow.Query<XpoApplicationRole>()
+                        where u.Name != "SuperAdmin"
+                        select u;
+                       
+            return model.ToList();
         }
 
+        public static List<Country> AllCountries()
+        {
+            UnitOfWork uow = new UnitOfWork();
+            return uow.Query<Country>().ToList();
+        }
+
+        public static List<GroupChat> MyGroups(string username)
+        {
+            UnitOfWork uow = new UnitOfWork();
+            var user = uow.FindObject<ChatUser>(CriteriaOperator.Parse("UserName==?",username));
+            return user.Rooms.ToList();
+        }
     }
 }

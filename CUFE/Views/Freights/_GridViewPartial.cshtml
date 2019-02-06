@@ -11,10 +11,26 @@
         settings.SettingsEditing.Mode = GridViewEditingMode.EditFormAndDisplayRow;
         settings.SettingsBehavior.ConfirmDelete = true;
 
-        //settings.CommandColumn.Visible = true;
-        //settings.CommandColumn.ShowNewButton = true;
-        //settings.CommandColumn.ShowDeleteButton = true;
-        //settings.CommandColumn.ShowEditButton = true;
+        settings.SettingsSearchPanel.CustomEditorName = "tbSearch";
+        settings.Settings.ShowTitlePanel = true;
+        settings.SetTitlePanelTemplateContent(content =>
+        {
+            Html.DevExpress().Label(label =>
+            {
+
+                label.Text = "Freights Management";
+                label.Style["font-weight"] = "bold";
+
+            }).Render();
+
+        });
+
+        if (User.IsInRole("Admin"))
+        {
+            settings.CommandColumn.Visible = true;
+            settings.CommandColumn.ShowDeleteButton = true;
+            settings.CommandColumn.ShowEditButton = true;
+        }
 
         settings.KeyFieldName = "Oid";
 
@@ -30,19 +46,19 @@
         settings.SettingsAdaptivity.HideDataCellsAtWindowInnerWidth = 0;
 
         settings.Columns.Add(c =>
-       {
-           c.FieldName = "StartDate";
-           c.ColumnType = MVCxGridViewColumnType.DateEdit;
-           c.Settings.AutoFilterCondition = AutoFilterCondition.Equals;
-           c.Width = System.Web.UI.WebControls.Unit.Pixel(150);
-       });
+        {
+            c.FieldName = "StartDate";
+            c.ColumnType = MVCxGridViewColumnType.DateEdit;
+            c.Settings.AutoFilterCondition = AutoFilterCondition.Equals;
+            c.Width = System.Web.UI.WebControls.Unit.Pixel(150);
+        });
         settings.Columns.Add(C =>
-       {
-           C.FieldName = "EndDate";
-           C.ColumnType = MVCxGridViewColumnType.DateEdit;
-           C.Settings.AutoFilterCondition = AutoFilterCondition.Equals;
-           C.Width = System.Web.UI.WebControls.Unit.Pixel(150);
-       });
+        {
+            C.FieldName = "EndDate";
+            C.ColumnType = MVCxGridViewColumnType.DateEdit;
+            C.Settings.AutoFilterCondition = AutoFilterCondition.Equals;
+            C.Width = System.Web.UI.WebControls.Unit.Pixel(150);
+        });
         settings.Columns.Add("StartLocationName");
         settings.Columns.Add("StartLocationZip");
         settings.Columns.Add("StartLocationCountry");

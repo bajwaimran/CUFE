@@ -1,8 +1,217 @@
-﻿
+﻿@model IEnumerable<CUFE.Models.ChatModels.GroupChat>
+
+
 @{
     ViewBag.Title = " Chat Groups";
-    Layout = "~/Views/Shared/_LayoutBackend.cshtml";
+    Layout = "~/Views/Shared/_LayoutChatPage.cshtml";
+    List<CUFE.Models.ChatModels.GroupChat> rooms = CUFE.Helpers.FastController.MyGroups(User.Identity.Name);
+    var user = ViewBag.userinfo;
 }
 
+@section head{
+    <link rel="stylesheet" href="~/Content/admintemplate/assets/css/chatapp.css">
 
-@Html.Action("GridViewPartial", "Chats")
+}
+<div id="idNotifications"></div>
+<div class="row clearfix">
+    <div class="col-lg-12">
+        <div class="chat-app" id="tabs">
+            <div class="row">
+                <div class="col-lg-3 col-md-4">
+                    <div class="hidden-xs">
+                        <div id="plist" class="people-list">
+                            <div class="input-group p-3 bg-white border-bottom">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="icon-magnifier"></i></span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="Search...">
+                            </div>
+                            <ul class="list-unstyled chat-list mt-2 mb-0" id="connections">
+                                @foreach (var item in Model)
+                                {
+                                    <li class="clearfix clickable" id="#T_@item.Oid">
+                                        <div class="float-left list-left">
+                                            <div class="img-preview">
+                                                <img src="~/Content/images/user-male-icon.png" alt="avatar" />
+                                                <div class="status"><i class="fa fa-circle online"></i></div>
+                                            </div>
+                                            <div class="about">
+                                                <div class="name">@item.RoomName</div>
+                                                <div class="msg"> @*Ok Good*@ </div>
+                                            </div>
+                                        </div>
+                                        <div class="float-right">
+                                            <div class="time">@*23 July*@</div>
+                                            <div class="badge badge-danger bg-danger text-white">@*2*@</div>
+                                        </div>
+                                    </li>
+                                }
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-9 col-md-8" id="relatedDivs">
+                    @foreach (var item in Model)
+                    {
+                        <div id="T_@item.Oid" class="chat bg-white alert alert-dismissible chatmessagebox" style="display:none">
+                            <div class="chat-header clearfix">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <a href="javascript:void(0);" data-toggle="modal" data-target="#view_info">
+                                            <img src="~/Content/images/user-male-icon.png" alt="avatar" />
+                                        </a>
+                                        <div class="chat-about">
+                                            <h6 class="m-b-0">@item.RoomName</h6>
+                                            <small>Online</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 hidden-sm text-right">
+                                        @*<a href="javascript:void(0);" onclick="return false;" class="btn btnclose"><i class="icon-close"></i></a>*@
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="chat-history">
+                                <ul class="m-b-0" id="discussion_@item.Oid" style="overflow:auto; height:70vh;">
+                                    @{
+                                        @*var msgs = sentMessageList.Where(u => u.ReceiverId == item.Id).ToList();
+            var receivedMessages = receivedMessageList.Where(u => u.User == item.Id).ToList();
+            msgs.AddRange(receivedMessageList);
+            var messages = msgs.OrderBy(m => m.Timestamp);
+
+            foreach (var sentMessage in messages)
+            {
+
+                if (sentMessage.User == usr)
+                {
+                    <li class="clearfix">
+                        <div class="detail-right">
+                            <div class="message my-message">
+                                <span class="message-data-time d-block mt-1">  @sentMessage.Timestamp  </span><p>  @sentMessage.text  </p>
+                            </div>
+                        </div>
+                    </li>
+                }
+                else
+                {
+                    <li class="clearfix">
+                        <div class="detail-right">
+                            <div class="message other-message float-right">
+                                <span class="message-data-time d-block mt-1"> @sentMessage.Timestamp </span><p> @sentMessage.text </p>
+                            </div>
+                        </div>
+                    </li>
+                }
+
+
+
+            }*@
+
+
+                                    }
+                                    <li><sub>Current Messages below</sub></li>
+                                </ul>
+                            </div>
+                            <div class="chat-message clearfix">
+                                <form id="form_@item.Oid">
+                                    <div class="input-group mb-0">
+                                        <input type="hidden" name="user" value="@item.Oid" />
+                                        @*@Html.DropDownList("user", new SelectList(ViewBag.Allusers, "Id", "FirstName"), new { @id = "idUsername" })*@
+                                        <input type="text" class="form-control" name="chat_msg" placeholder="Enter text here..." id="idMessage_@item.Oid">
+                                        <div class="input-group-append">
+                                            @*<button id="idMessageSendButton">Send</button>*@
+                                            <button class="btnSend" id="@item.Oid" onclick="return false;">Send</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    }
+                    <!-- end of relted div -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<input type="hidden" id="hiddenUserId" value="@user.Id" />
+@section scripts{
+
+
+    <script src="~/Scripts/jquery.signalR-2.4.0.min.js"></script>
+    <script src="~/signalr/hubs"></script>
+    <script>
+
+
+        $(function () {
+            var chat = $.connection.groupChatHub;
+
+
+
+            //broadcast messages
+            chat.client.showBroadcastMessage = function (message) {
+                console.log(message);
+                $("#idNotifications").append('<li><div class="alert alert-info alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="close"><span aria-hidden="true">x</span></button>' + htmlEncode(message) + '</div></li>');
+            };
+
+
+            $.connection.hub.start().done(function () {
+                $(".btnSend").click(function () {
+                    var msg = $("#messageBox").val();
+                    chat.server.sendMessge(msg);
+                });
+
+                $("#btnCreateGroup").click(function () {
+                    var msg = $("#groupNameBox").val();
+                    console.log("New group creating or adding user to group " + msg);
+                    chat.server.joinRoom(msg);
+                });
+
+                $("#idMessageSendButton").click(function () {
+                    var msg = $("#idMessage").val();
+                    var name = $("#groupNameId").val();
+                    chat.server.groupMessage(name, msg);
+                });
+
+
+                $("#btnLeaveGroup").click(function () {
+                    var msg = $("#groupNameBox").val();
+                    console.log("user leaving the group " + msg);
+                    chat.server.leaveRoom(msg);
+                });
+
+            });
+        });
+
+        function htmlEncode(value) {
+            var encodedValue = $('<div />').text(value).html();
+            return encodedValue;
+        }
+
+    </script>
+    <script>
+        $(function () {                       //run when the DOM is ready
+
+            $("#connections").on("click", ".clickable", function () {  //use a class, since your ID gets mangled
+                console.log("clicked me");
+                var target = this.id;
+                var targetId = target.substring(1, target.length);
+                $(".clickable").not(this).removeClass('active');
+                $(this).toggleClass('active');
+                $(target).show();
+                $(".chatmessagebox").each(function () {
+                    var currentDiv = this.id;
+                    if (currentDiv != targetId) {
+                        console.log("target: " + targetId + " - current: " + currentDiv);
+                        $("#" + currentDiv).hide();
+                    }
+                }
+
+                );
+
+                var substr = targetId.substring(2, targetId.length);
+                var div = $("#discussion_" + substr);
+                div.scrollTop(div.prop('scrollHeight'));
+            });
+        });
+    </script>
+}

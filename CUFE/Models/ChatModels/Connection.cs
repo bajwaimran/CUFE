@@ -9,8 +9,7 @@ namespace CUFE.Models.ChatModels
     public class Connection: BasePersistentObject
     {
         public Connection(Session session): base(session) { }
-        bool connected;
-        string userAgent;
+        
         string connectionId;
 
         [Size(SizeAttribute.DefaultStringMappingFieldSize)]
@@ -20,34 +19,42 @@ namespace CUFE.Models.ChatModels
             set => SetPropertyValue(nameof(ConnectionId), ref connectionId, value);
         }
 
-
-        [Size(SizeAttribute.DefaultStringMappingFieldSize)]
+        string userAgent;
+        [Size(2000)]
         public string UserAgent
         {
             get => userAgent;
             set => SetPropertyValue(nameof(UserAgent), ref userAgent, value);
         }
 
+
+        bool connected;
         public bool Connected
         {
             get => connected;
-            set => SetPropertyValue(nameof(Connected), ref connected, value);
+            set => SetPropertyValue<bool>(nameof(Connected), ref connected, value);
         }
 
-        ChatUser chatUser;
-        [Association("ChatUser-Connections")]       
-        public ChatUser ChatUser
+        string userId;
+        public string UserId
         {
-            get => chatUser;
-            set => SetPropertyValue(nameof(ChatUser), ref chatUser, value);
+            get => userId;
+            set => SetPropertyValue(nameof(UserId), ref userId, value);
         }
+        //ChatUser chatUser;
+        //[Association("ChatUser-Connections")]       
+        //public ChatUser ChatUser
+        //{
+        //    get => chatUser;
+        //    set => SetPropertyValue(nameof(ChatUser), ref chatUser, value);
+        //}
 
-        XpoApplicationUser user;
-        [Association("XpoApplicationUser-Connections")]
-        public XpoApplicationUser User
-        {
-            get => user;
-            set => SetPropertyValue(nameof(User), ref user, value);
-        }
+        //XpoApplicationUser user;
+        //[Association("XpoApplicationUser-Connections")]
+        //public XpoApplicationUser User
+        //{
+        //    get => user;
+        //    set => SetPropertyValue<XpoApplicationUser>(nameof(User), ref user, value);
+        //}
     }
 }

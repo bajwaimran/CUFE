@@ -21,17 +21,6 @@ namespace CUFE.Models.ChatModels
         }
 
 
-
-
-        [Association("ChatUser-Connections")]
-        public XPCollection<Connection> Connections
-        {
-            get
-            {
-                return GetCollection<Connection>("Connections");
-            }
-        }
-
         [Association("ChatUser-GroupChats")]
         public XPCollection<GroupChat> Rooms
         {

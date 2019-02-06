@@ -49,7 +49,7 @@ namespace CUFE.Models
 
 
         //public XPCollection<Connection> Connections { get; set; }
-        //public XPCollection<SentMessage> SentMessages { get; set; }
+        public XPCollection<SentMessage> SentMessages { get; set; }
         public override void Assign(object source, int loadingFlags)
         {
             
@@ -228,8 +228,10 @@ namespace CUFE.Models
             get => role;
             set => SetPropertyValue(nameof(Role), ref role, value);
         }
+
+
         //XPCollection<Connection> connections;
-        
+
         //[Association("XpoApplicationUser-Connections")]
         //public XPCollection<Connection> Connections
         //{
@@ -237,21 +239,23 @@ namespace CUFE.Models
         //    {
         //        return GetCollection<Connection>("Connections");
         //    }
-        //    set => SetPropertyValue(nameof(Connections), ref connections, value);
+        //   set => SetPropertyValue(nameof(Connections), ref connections, value);
         //}
 
-        //XPCollection<SentMessage> sentMessages;
-        //[Association("XpoApplicationUser-SentMessages")]
-        //public XPCollection<SentMessage> SentMessages
-        //{
-        //    get
-        //    {
-        //        return GetCollection<SentMessage>("SentMessages");
-        //    }
-        //    set => SetPropertyValue(nameof(SentMessage), ref sentMessages, value);
-            
-            
-        //}
+
+
+        XPCollection<SentMessage> sentMessages;
+        [Association("XpoApplicationUser-SentMessages")]
+        public XPCollection<SentMessage> SentMessages
+        {
+            get
+            {
+                return GetCollection<SentMessage>("SentMessages");
+            }
+            set => SetPropertyValue(nameof(SentMessage), ref sentMessages, value);
+
+
+        }
         public override void Assign(object source, int loadingFlags)
         {
             base.Assign(source, loadingFlags);
@@ -275,7 +279,7 @@ namespace CUFE.Models
                 this.Notes = src.Notes;
                 this.Role = src.Role;
                 //this.Connections = src.Connections;
-                //this.SentMessages = src.SentMessages;
+                this.SentMessages = src.SentMessages;
                 this.Notes = src.Notes;
             }
         }

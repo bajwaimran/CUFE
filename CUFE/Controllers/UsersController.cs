@@ -187,5 +187,132 @@ namespace CUFE.Controllers
             }
 
         }
+
+
+        public ActionResult MyUsersGridViewPartial()
+        {
+            using (UnitOfWork uow = new UnitOfWork())
+            {
+                int companyId = int.Parse(User.Identity.GetCompanyId());
+                var model = uow.Query<XpoApplicationUser>().Where(u => u.CompanyId == companyId);               
+                return PartialView("_MyUsersGridViewPartial", model.ToList());
+            }
+            
+        }
+
+        [HttpPost, ValidateInput(false)]
+        public ActionResult Add([ModelBinder(typeof(DevExpressEditorsBinder))] CUFE.Models.ApplicationUser item)
+        {
+            using (UnitOfWork uow = new UnitOfWork())
+            {
+                //ViewBag.CompanyList = uow.Query<Company>().ToList();
+                int companyId = int.Parse(User.Identity.GetCompanyId());
+                var model = uow.Query<XpoApplicationUser>().Where(u => u.CompanyId == companyId);
+                if (ModelState.IsValid)
+                {
+                    var company = uow.FindObject<Company>(CriteriaOperator.Parse("Oid==?", companyId));
+                    var user = new ApplicationUser
+                    {
+                        UserName = item.UserName,
+                        Email = item.Email,
+                        CompanyId = companyId,
+                        FirstName = item.FirstName,
+                        LastName = item.LastName,
+                        Address1 = item.Address1,
+                        Address2 = item.Address2,
+                        City = item.City,
+                        Province = item.Province,
+                        Country = item.Country,
+                        Birthdate = item.Birthdate
+                    };
+                    var result = UserManager.Create(user, item.PasswordHash);
+                    if (result.Succeeded)
+                    {
+                        AddRole(user.Id, item.Role);
+                        return PartialView("_MyUsersGridViewPartial", model.ToList());
+                    }
+                    ViewData["EditError"] = "Unable to add";
+                }
+                else
+                    ViewData["EditError"] = "Please, correct all errors.";
+
+                return PartialView("_MyUsersGridViewPartial", model.ToList());
+
+            }
+
+        }
+
+
+        [HttpPost, ValidateInput(false)]
+        public ActionResult Update([ModelBinder(typeof(DevExpressEditorsBinder))]CUFE.Models.ApplicationUser item)
+        {
+            using (UnitOfWork uow = new UnitOfWork())
+            {
+                int companyId = int.Parse(User.Identity.GetCompanyId());
+                var model = uow.Query<XpoApplicationUser>().Where(u => u.CompanyId == companyId);
+
+                if (ModelState.IsValid)
+                {
+                    //var user = uow.FindObject<XpoApplicationUser>(CriteriaOperator.Parse("Id==?", item.Id));
+                    var user = (ApplicationUser)UserManager.FindById(item.Id);
+                    //var u = UserManager.FindById(item.Id);
+                    user.EmailConfirmed = item.EmailConfirmed;
+                    user.UserName = item.UserName;
+                    user.Birthdate = item.Birthdate;
+                    user.FirstName = item.FirstName;
+                    user.LastName = item.LastName;
+                    user.Address1 = item.Address1;
+                    user.Address2 = item.Address2;
+                    user.City = item.City;
+                    user.Country = item.Country;
+                    user.PhoneNumber = item.PhoneNumber;
+                    user.Role = item.Role;
+
+                    var result = UserManager.Update(user);
+                    if (result.Succeeded)
+                    {
+                        UserManager.AddToRole(user.Id, item.Role);
+                        return PartialView("_MyUsersGridViewPartial", model.ToList());
+                    }
+                    else
+                    {
+                        ViewData["EditError"] = "Please, correct all errors." + result.Errors;
+                    }
+                        
+                    
+                }
+                else
+                {
+                    ViewData["EditError"] = "Please, correct all errors.";
+                }
+                //using (UnitOfWork uow = new UnitOfWork())
+                //{
+                //ViewBag.CompanyList = uow.Query<Company>().ToList();
+                //var model = uow.Query<XpoApplicationUser>();
+                return PartialView("_MyUsersGridViewPartial", model.ToList());
+            }
+        }
+
+        [HttpPost, ValidateInput(false)]
+        public ActionResult Delete([ModelBinder(typeof(DevExpressEditorsBinder))]System.String Id)
+        {
+            using (UnitOfWork uow = new UnitOfWork())
+            {
+                int companyId = int.Parse(User.Identity.GetCompanyId());
+                var model = uow.Query<XpoApplicationUser>().Where(u => u.CompanyId == companyId);
+                var user = model.First(m => m.Id == Id);
+                if (user != null)
+                {
+                    uow.Delete(user);
+                    uow.CommitChanges();
+                    return PartialView("_MyUsersGridViewPartial", model.ToList());
+                }
+
+                ViewData["EditError"] = "Correct All errors";
+                return PartialView("_MyUsersGridViewPartial", model.ToList());
+            }
+
+        }
+
     }
 }

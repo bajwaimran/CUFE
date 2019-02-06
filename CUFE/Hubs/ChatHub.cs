@@ -1,248 +1,129 @@
-﻿using CUFE.Models;
-using CUFE.Models.ChatModels;
-using DevExpress.Data.Filtering;
-using DevExpress.Xpo;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.SignalR;
-using Microsoft.AspNet.SignalR.Hubs;
-using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Security.Claims;
+﻿using DevExpress.Xpo;
 using System.Threading.Tasks;
+using Microsoft.AspNet.SignalR;
+using DevExpress.Data.Filtering;
+using CUFE.Models;
+using CUFE.Models.ChatModels;
+using System.Collections.Generic;
+using System;
+using CUFE.Controllers;
 
 namespace CUFE.Hubs
 {
     public class ChatHub : Hub
     {
-        public static Dictionary<string, string> lstAllConnections = new Dictionary<string, string>();
-        public static List<ConnectionModel> listAllConnections = new List<ConnectionModel>();
-        public void SendChatMessage(string who, string message)
-        {
-            var name = Context.User.Identity.Name;
-            var id = Context.User.Identity.GetUserId();
-            using (UnitOfWork uow = new UnitOfWork())
-            {
-                //var user = db.Users.Find(who);
-                var user = uow.FindObject<XpoApplicationUser>(CriteriaOperator.Parse("Id==?", id));
-                if (user == null)
-                {
-                    Clients.Caller.showErrorMessage("Could not find that user.");
-                }
-                else
-                {
-                    //db.Entry(user)
-                    //    .Collection(u => u.Connections)
-                    //    .Query()
-                    //    .Where(c => c.Connected == true)
-                    //    .Load();
-
-
-
-
-                    if (user.Connections == null)
-                    {
-                        Clients.Caller.showErrorMessage("The user is no longer connected.");
-                    }
-                    else
-                    {
-                        SendMessage(who, message);
-                        foreach (var connection in user.Connections)
-                        {
-                            // sending chat messsage with email id
-                            //Clients.Client(connection.ConnectionID)
-                            //    .addChatMessage(id, name + ": " + message);
-
-                            //sending chat message without email id
-                            Clients.Client(connection.ConnectionId)
-                                .addChatMessage(id,  message);
-
-                        }
-                    }
-                }
-            }
-        }
-
-        public void SendGroupChatMessage(string who, string message)
-        {
-
-        }
+        public static List<ConnectionList> listAllConnections = new List<ConnectionList>();
+        public static List<UserConnections> ConnectionList = new List<UserConnections>();
         public override Task OnConnected()
         {
             using (UnitOfWork uow = new UnitOfWork())
             {
-                //var x = db.Users.Find(Context.User.Identity.GetUserId());
-                var x = uow.FindObject<XpoApplicationUser>(CriteriaOperator.Parse("Id==?", Context.User.Identity.GetUserId()));
-                if (x != null)
+                var user = uow.FindObject<XpoApplicationUser>(CriteriaOperator.Parse("UserName==?", Context.User.Identity.Name));
+                if(user != null)
                 {
-                    var newOnlineUser = new ConnectionModel
-                    {
-                        ConnectionId = Context.ConnectionId,
-                        UserId = x.Id,
-                        Username = x.FirstName
-                    };
-                    var usr = listAllConnections.Find(u => u.UserId == x.Id);
-                    if (usr != null)
-                    {
-                        listAllConnections.Remove(usr);
-                        listAllConnections.Add(newOnlineUser);
-                    }
-                    else
-                    {
-                        listAllConnections.Add(newOnlineUser);
-                    }
-                }
-
-            }
-
-            //string username = Context.User.Identity.GetUserName();
-            string username = Context.User.Identity.GetUserName();
-            lstAllConnections.Add(Context.ConnectionId, username);
-            //Clients.All.BroadcastConnections(lstAllConnections);
-            Clients.All.BroadcastConnections(listAllConnections);
-            //return base.OnConnected();
-
-            var name = Context.User.Identity.Name;
-            using (UnitOfWork uow = new UnitOfWork())
-            {
-                //var user = db.Users
-                //    .Include(u => u.Connections)
-                //    .SingleOrDefault(u => u.UserName == name);
-
-                var user = uow.FindObject<XpoApplicationUser>(CriteriaOperator.Parse("UserName==?", name));
-
-                if (user == null)
-                {
-                    //all users must be registered users
-                    //user = new ApplicationUser
-                    //{
-                    //    UserName = name,
-                    //    Connections = new List<Connection>()
-                    //};
-                    //db.Users.Add(user);
-                }
-                else
-                {
-                    var newConnection = new Connection(uow)
+                    var con = new UserConnections
                     {
                         ConnectionId = Context.ConnectionId,
                         UserAgent = Context.Request.Headers["User-Agent"],
-                        Connected = true
+                        Connected = true,
+                        UserId = user.Id
                     };
-                    user.Connections.Add(newConnection);
-
-                    uow.CommitChanges();
-                }
-
-
+                    ConnectionList.Add(con);
+                    var userInList = listAllConnections.Find(u => u.UserId == user.Id);
+                    if(userInList == null)
+                    {
+                        listAllConnections.Add(new ConnectionList
+                        {
+                            UserId = user.Id,
+                            Username = user.UserName
+                        });
+                    }
+                    Clients.All.BroadcastConnections(listAllConnections);
+                }                
+                return base.OnConnected();
             }
-            return base.OnConnected();
         }
-
 
         public override Task OnDisconnected(bool stopCalled)
         {
-            var x = listAllConnections.Where(u => u.ConnectionId == Context.ConnectionId).FirstOrDefault();
-            if (x != null)
-            {
-                listAllConnections.Remove(x);
-            }
-            //listAllConnections.Remove()
-            lstAllConnections.Remove(Context.ConnectionId);
-            //Clients.All.BroadcastConnections(lstAllConnections);
-            Clients.All.BroadcastConnections(listAllConnections);
             using (UnitOfWork uow = new UnitOfWork())
             {
+                var user = uow.FindObject<XpoApplicationUser>(CriteriaOperator.Parse("UserName==?", Context.User.Identity.Name));
                 var connection = uow.FindObject<Connection>(CriteriaOperator.Parse("ConnectionId==?", Context.ConnectionId));
-                connection.Connected = false;
-                connection.Save();
-            }
-            return base.OnDisconnected(stopCalled);
-        }
-
-        public void SetConnectionName(string connectionname)
-        {
-            lstAllConnections[Context.ConnectionId] = connectionname;
-            Clients.All.BroadcastConnections(lstAllConnections);
-        }
-        //Broadcast Message from Admin
-        public void BroadcastMessage(string message)
-        {
-
-            Clients.All.showBroadcastMessage(message);
-            using (UnitOfWork uow = new UnitOfWork())
-            {
-                var notification = new Notification(uow)
+                if(connection != null)
                 {
-                    NotificationText = message,
-                    Timestamp = DateTime.Now
-                };
-                uow.CommitChanges();
-
-            }
-        }
-
-
-        // custome function 
-        public void SendMessage(string receiverId, string message)
-        {
-            string senderId = Context.User.Identity.Name;
-            DateTime currentTime = DateTime.Now;
-            using (UnitOfWork uow = new UnitOfWork())
-            {
-                //var sender = db.Users
-                //    .Include(u => u.SentMessages)
-                //    .Include(u => u.ReceivedMessages)
-                //    .SingleOrDefault(u => u.UserName == senderId);
-
-                var sender = uow.FindObject<XpoApplicationUser>(CriteriaOperator.Parse("UserName==?", senderId));
-
-                //var receiver = db.Users
-                //    .Include(u => u.SentMessages)
-                //    .Include(u => u.ReceivedMessages)
-                //    .SingleOrDefault(u => u.Id == receiverId);
-
-                var receiver = uow.FindObject<XpoApplicationUser>(CriteriaOperator.Parse("UserName==?", receiverId));
-
-                if (sender != null && receiver != null)
-                {
-                    try
+                    uow.Delete(connection);
+                    uow.CommitChanges();
+                    var userInList = listAllConnections.Find(u => u.UserId == user.Id);
+                    if (userInList != null)
                     {
-                        var nmsg = new SentMessage(uow)
-                        {
-
-                            ReceiverId = receiver.Id,
-                            Text = message,
-                            Timestamp = currentTime,
-                            User = sender.Id
-                        };
-                        sender.SentMessages.Add(nmsg);
-                        uow.CommitChanges();
+                        listAllConnections.Remove(userInList);
                     }
-                    catch (Exception e)
+                    var con = ConnectionList.Find(u => u.ConnectionId == Context.ConnectionId);
+                    if(con != null)
                     {
-                        System.Console.WriteLine(e.Message);
+                        ConnectionList.Remove(con);
                     }
-                    
+                    Clients.All.BroadcastConnections(listAllConnections);
                 }
+                return base.OnDisconnected(stopCalled);
             }
-
             
         }
 
-        //create new group
-        public async Task CreateGroup(string groupName)
+        public void SendChatMessage(string who, string message)
         {
-            await Groups.Add(Context.ConnectionId, groupName);
-            Clients.All.showBroadcastMessage("{groupName} is added!");
-            //await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
-            await Clients.Group(groupName).SendAsync("Send", $"{Context.ConnectionId} has joined the group {groupName}.");
-        }    
-
-        
+            
+            using (UnitOfWork uow = new UnitOfWork())
+            {
+                var user = uow.FindObject<XpoApplicationUser>(CriteriaOperator.Parse("UserName==?", Context.User.Identity.Name));
+                var receiver = uow.FindObject<XpoApplicationUser>(CriteriaOperator.Parse("Id==?", who));
+                if(receiver != null)
+                {
+                    var msg = new SentMessage(uow)
+                    {
+                        Text = message,
+                        ReceiverId = receiver.Id,
+                        User = user.Id,                        
+                        Timestamp = DateTime.Now
+                    };
+                    user.SentMessages.Add(msg);
+                    try
+                    {
+                        uow.CommitChanges();
+                    }
+                    catch(Exception e)
+                    {
+                        var msfg  = e.Message;
+                    }
+                    var connections = ConnectionList.FindAll(u => u.UserId == receiver.Id);
+                    if(connections != null)
+                    {
+                        foreach (var con in connections)
+                        {
+                            Clients.Client(con.ConnectionId).addChatMessage(user.Id, message);
+                        }
+                    }
+                }
+                
+                
+            }
+        }
     }
-   
-   
 
+
+    public class ConnectionList
+    {        
+        public string UserId { get; set; }
+        public string Username { get; set; }
+    }
+
+
+    public class UserConnections
+    {
+        public string ConnectionId { get; set; }
+        public string UserId { get; set; }
+        public string UserAgent { get; set; }
+        public bool Connected { get; set; }
+    }
 }

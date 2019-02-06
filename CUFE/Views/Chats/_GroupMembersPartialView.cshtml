@@ -1,0 +1,129 @@
+﻿
+@{
+    List<CUFE.Models.XpoApplicationUser> userlist = ViewBag.Users;
+    var grid = Html.DevExpress().GridView(settings =>
+    {
+        settings.Name = "GridView";
+        settings.CallbackRouteValues = new { Controller = "Chats", Action = "GroupMembers" };
+
+        settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "Chats", Action = "Add" };
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "Chats", Action = "Update" };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "Chats", Action = "Delete" };
+
+        settings.SettingsSearchPanel.CustomEditorName = "tbSearch";
+        settings.Settings.ShowTitlePanel = true;
+        settings.SetTitlePanelTemplateContent(content =>
+        {
+            Html.DevExpress().Label(label =>
+            {
+
+                label.Text = "Chat Groups Management";
+                label.Style["font-weight"] = "bold";
+
+            }).Render();
+
+        });
+
+
+        settings.SettingsEditing.Mode = GridViewEditingMode.EditFormAndDisplayRow;
+        settings.SettingsBehavior.ConfirmDelete = true;
+
+        settings.CommandColumn.Visible = true;
+        settings.CommandColumn.ShowNewButton = true;
+        settings.CommandColumn.ShowDeleteButton = true;
+        settings.CommandColumn.ShowEditButton = true;
+
+        settings.Width = System.Web.UI.WebControls.Unit.Percentage(100);
+
+        settings.KeyFieldName = "Oid";
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "UserName";
+
+        });
+        
+
+        //settings.CustomUnboundColumnData = (s, e) =>
+        //{
+        //    if (e.Column.FieldName == "Rooms")
+        //    {
+        //        var tasks = e.GetListSourceFieldValue("Rooms") as List<string>;
+        //        var res = "";
+        //        foreach (string task in tasks)
+        //        {
+        //            res += task + ", ";
+        //        }
+        //        e.Value = res.Substring(0, res.Length - 2);
+        //    }
+        //};
+        //settings.Columns.Add(c =>
+        //{
+        //    c.FieldName = "Members";
+
+
+        //    c.SetEditItemTemplateContent(i =>
+        //    {
+
+        //        var extension = Html.DevExpress().ListBox(
+        //            lbsettings =>
+        //            {
+        //                lbsettings.Name = "Members";
+        //                //lbsettings.Width = System.Web.UI.WebControls.Unit.Percentage(100);
+        //                //lbsettings.Height = 150;
+        //                lbsettings.Properties.SelectionMode = ListEditSelectionMode.CheckColumn;
+        //                lbsettings.Properties.ValueType = typeof(string);
+        //                foreach (var item in userlist)
+        //                {
+        //                    lbsettings.Properties.Items.Add(item.UserName, item.Id);
+        //                }
+
+        //            });
+
+        //        //var extension = Html.DevExpress().ComboBox(comboBoxSettings =>
+        //        //{
+        //        //    comboBoxSettings.Name = "Members";
+        //        //    ComboBoxProperties comboBoxProperties = comboBoxSettings.Properties;
+        //        //    comboBoxProperties.TextField = "UserName";
+        //        //    comboBoxProperties.ValueField = "Id";
+        //        //    comboBoxProperties.ValueType = typeof(string);
+        //        //    comboBoxProperties.DropDownStyle = DropDownStyle.DropDown;
+
+        //        //}).BindList(userlist).Bind(DataBinder.Eval(i.DataItem, "Oid"));
+        //        extension.Render();
+
+
+        //    });
+        //});
+
+
+        settings.Columns.Add(c =>
+        {
+            c.UnboundType = DevExpress.Data.UnboundColumnType.String;
+            c.Visible = true;
+            c.SetDataItemTemplateContent(x =>
+            {
+                ViewContext.Writer.Write(string.Format("<a href=\"/Client/ManageGroup/{0}\" class=\"button\" data-id='{0}' onclick=\"\">Manage Group</a>", x.KeyValue));
+            });
+        });
+
+
+        settings.SettingsPager.Visible = true;
+        settings.Settings.ShowGroupPanel = true;
+        settings.Settings.ShowFilterRow = true;
+        settings.SettingsBehavior.AllowSelectByRowClick = true;
+
+        settings.SettingsAdaptivity.AdaptivityMode = GridViewAdaptivityMode.Off;
+        settings.SettingsAdaptivity.AdaptiveColumnPosition = GridViewAdaptiveColumnPosition.Right;
+        settings.SettingsAdaptivity.AdaptiveDetailColumnCount = 1;
+        settings.SettingsAdaptivity.AllowOnlyOneAdaptiveDetailExpanded = false;
+        settings.SettingsAdaptivity.HideDataCellsAtWindowInnerWidth = 0;
+
+    });
+    if (ViewData["EditError"] != null)
+    {
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+@grid.Bind(Model).GetHtml()
+
+

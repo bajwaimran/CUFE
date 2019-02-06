@@ -101,17 +101,49 @@ namespace CUFE.Controllers
             }
         }
 
-        //public ActionResult AddMember([ModelBinder(typeof(XpoModelBinder))]Room item)
-        //{
 
-        //}
-        //public ActionResult UpdateMember([ModelBinder(typeof(XpoModelBinder))]Room item)
-        //{
+        public void SaveMessage(string senderId, string receiverId, string message)
+        {
+            using (UnitOfWork uow = new UnitOfWork())
+            {
+                try
+                {
+                    var user = uow.FindObject<XpoApplicationUser>(CriteriaOperator.Parse("Id==?", senderId));
+                    var receiver = uow.FindObject<XpoApplicationUser>(CriteriaOperator.Parse("Id==?", receiverId));
+                    if (receiver != null)
+                    {
+                        new SentMessage(uow)
+                        {
+                            Text = message,
+                            ReceiverId = receiver.Id,
+                            User = user.Id,
+                            ApplicationUser = user,
+                            Timestamp = DateTime.Now
+                        };
+                        uow.CommitChanges();
+                    }
+                }catch(Exception e)
+                {
 
-        //}
-        //public ActionResult DeleteMember(int Oid)
-        //{
+                }
+                
 
-        //}
+
+            }
+        }
+
+        public ActionResult GroupMembers()
+        {
+            using (UnitOfWork uow = new UnitOfWork())
+            {
+                var model = uow.Query<ChatUser>();
+                return PartialView("_GroupMembersPartialView", model.ToList());
+            }
+        }
+
+
+
+
+
     }
 }

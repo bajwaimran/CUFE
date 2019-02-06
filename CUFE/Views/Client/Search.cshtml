@@ -1,0 +1,293 @@
+﻿
+@{
+    ViewBag.Title = "Search";
+    Layout = "~/Views/Shared/_LayoutBackend.cshtml";
+}
+
+
+
+
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="card">
+            <div class="header">
+                <h2>Automatic Location Filler</h2>
+                <p>Search Origin &Aacute; Destination Location</p>
+            </div>
+            <div class="body">
+                @Html.Action("Index", "Maps")
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="card">
+            <div class="header">
+                <h2>Loading &amp; Unloading Places</h2>
+                <p><span class="wi wi-lightning"></span> Search Loads &amp; Freights (SuperFast Way )</p>
+            </div>
+            <div class="body">
+                @using (Html.BeginForm())
+                {
+                    <input type="hidden" name="startco" id="startLocationCoordinates" />
+                    <input type="hidden" name="endco" id="endLocationCoordinates" />
+                    <div class="demo-masked-input">
+                        <div class="row clearfix">
+                            <!-- Loading inputs -->
+                            <div class="col-lg-2 col-md-4">
+                                <b>Loading Country</b>
+                                <div class="input-group mb-2">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="icon-globe"></i></span>
+                                    </div>
+                                    <input type="text" name="startcountry" class="form-control" id="startLocationCountry" />
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-4">
+                                <b>Post Code</b>
+                                <div class="input-group mb-2">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="icon-envelope-letter"></i></span>
+                                    </div>
+                                    <input type="text" name="statzip" placeholder="Eg: 76446" class="form-control" id="startLocationZip" />
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <b>Loading Town</b>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fa fa-map-marker"></i></span>
+                                    </div>
+                                    <input type="text" name="startlocation" placeholder="Eg: Paris" class="form-control" id="startLocationName" />
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-4">
+                                <b>Loading Date</b>
+                                <div class="input-group mb-2">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="icon-calendar"></i></span>
+                                    </div>
+                                    <input type="date" name="startdate" placeholder="Eg: 30-07-2018" class="form-control date" />
+                                </div>
+                            </div>
+                            @*<div class="col-lg-2 col-md-4">
+                                    <b>Loading Time</b>
+                                    <div class="input-group mb-2">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="icon-calendar"></i></span>
+                                        </div>
+                                        <input type="time" placeholder="" class="form-control" />
+                                    </div>
+                                </div>*@
+                            <div class="col-lg-2 col-md-4">
+                                <b>Radius(Km)</b>
+                                <div class="input-group mb-2">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fa fa-circle-o-notch"></i></span>
+                                    </div>
+                                    <input type="number" name="startradius" placeholder="Eg: 25" class="form-control" min="0" max="99" value="10" />
+                                </div>
+                            </div>
+
+                            <!-- unloading inputs -->
+                            <div class="col-lg-2 col-md-4">
+                                <b>Unloading Country</b>
+                                <div class="input-group mb-2">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="icon-globe"></i></span>
+                                    </div>
+                                    <input type="text" name="endcountry" class="form-control" id="endLocationCountry" />
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-4">
+                                <b>Post Code</b>
+                                <div class="input-group mb-2">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="icon-envelope-letter"></i></span>
+                                    </div>
+                                    <input type="text" name="endzip" placeholder="Eg: 76446" class="form-control" id="endLocationZip" />
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <b>Unloading Town</b>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fa fa-map-marker"></i></span>
+                                    </div>
+                                    <input type="text" name="endlocation" placeholder="Eg: Paris" class="form-control" id="endLocationName" />
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-4">
+                                <b>Unloading Date</b>
+                                <div class="input-group mb-2">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="icon-calendar"></i></span>
+                                    </div>
+                                    <input type="date" name="enddate" placeholder="Eg: 30-07-2018" class="form-control date" />
+                                </div>
+                            </div>
+                            @*<div class="col-lg-2 col-md-4">
+                                    <b>Unloading Time</b>
+                                    <div class="input-group mb-2">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="icon-calendar"></i></span>
+                                        </div>
+                                        <input type="time" placeholder="" class="form-control" />
+                                    </div>
+                                </div>*@
+
+                            <div class="col-lg-2 col-md-4">
+                                <b>Radius(Km)</b>
+                                <div class="input-group mb-2">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fa fa-circle-o-notch"></i></span>
+                                    </div>
+                                    <input type="number" name="endradius" placeholder="Eg: 25" class="form-control" min="0" max="99" value="10" />
+                                </div>
+                            </div>
+                            <input type="hidden" name="startLat" id="idStartLat" />
+                            <input type="hidden" name="startLon" id="idStartLon" />
+                            <input type="hidden" name="endLat" id="idEndLat" />
+                            <input type="hidden" name="endLon" id="idEndLon" />
+                            <div class="col-lg-12 col-md-12">
+                                <div id="success"></div>
+                                <!-- For success/fail messages -->
+                                <input id="btnsubmit" type="submit" value="Search" class="btn btn-primary" style="display: none;">
+                                <button id="btnfreights" class="btn" style="display: none;">Search Freights</button>
+                                <button id="btnloads" class="btn" style="display: none;">Search Loads</button>
+                                <button id="btnsavesearch" class="btn" style="display: none;">Save Search</button>
+                                <button id="validateroute" class="btn" onclick="return false">Validate</button>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="row clearfix">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="header">
+                <h2></h2>
+            </div>
+
+        </div>
+    </div>
+</div>
+@section scripts{
+
+
+    <script src="~/Content/admintemplate/assets/vendor/bootstrap-colorpicker/js/bootstrap-colorpicker.js"></script> <!-- Bootstrap Colorpicker Js -->
+    <script src="~/Content/admintemplate/assets/vendor/jquery-inputmask/jquery.inputmask.bundle.js"></script> <!-- Input Mask Plugin Js -->
+    <script src="~/Content/admintemplate/assets/vendor/jquery.maskedinput/jquery.maskedinput.min.js"></script>
+    <script src="~/Content/admintemplate/assets/vendor/multi-select/js/jquery.multi-select.js"></script> <!-- Multi Select Plugin Js -->
+    <script src="~/Content/admintemplate/assets/vendor/bootstrap-multiselect/bootstrap-multiselect.js"></script>
+    <script src="~/Content/admintemplate/assets/vendor/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+    <script src="~/Content/admintemplate/assets/vendor/bootstrap-tagsinput/bootstrap-tagsinput.js"></script> <!-- Bootstrap Tags Input Plugin Js -->
+    <script src="~/Content/admintemplate/assets/vendor/nouislider/nouislider.js"></script> <!-- noUISlider Plugin Js -->
+
+
+    <script>
+        $(document).ready(function () {
+            $("#submitbtn").hide();
+        });
+
+        $("#validateroute").click(function () {
+            var start = $('#startLocationName').val();
+            var dest = $('#endLocationName').val();
+            var formdata = "wp.1=" + start + "&wp.2=" + dest;
+            var result = false;
+            var newurl = "https://dev.virtualearth.net/REST/v1/Routes?" + formdata + "&key=ApuZ25zP2JplCbiYUnTc6nQ-g4MJwgU7L9XaK0HzD0tsiFLpiZg4d_fH0JaqV_LR";
+            $.when($.getJSON(newurl)
+                .done(function (json) {
+                    $("#validateroute").hide();
+                    $("#btnsubmit").show();
+                    $("#btnfreights").show();
+                    $("#btnloads").show();
+                    $("#btnsavesearch").show();
+                }
+                )
+                .fail(function (jqXHR, textStatus, error) {
+                    alert("Please check as their is no route exist between enter locations");
+                }));
+        }
+        );
+
+
+
+    </script>
+    <script>
+        $("#btnfreights").click(function () {
+            alert("Freights.");
+            var str = $("form").serialize();
+            console.log(str);
+            window.open("@Url.Action("Search", "Freights")" + "?" + str);
+
+            @*$.ajax({
+                type: "GET",
+                url: "@Url.Action("Search","Freights")",
+                data: str,
+                success: function () {
+
+                    console.log("Successfzully submitted");
+                    window.open("@Url.Action("Search","Freights")");
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            });*@
+            return false;
+        });
+        $("#btnloads").click(function () {
+            alert("Loads.");
+            var str = $("form").serialize();
+            console.log(str);
+            window.open("@Url.Action("Search","Loads")" + "?" + str);
+            @*$.ajax({
+                type: "GET",
+                url: "@Url.Action("Search","Loads")",
+                data: str,
+                success: function () {
+                    console.log("Successfzully submitted");
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            });*@
+            return false;
+        });
+        $("#btnsavesearch").click(function () {
+            //alert("Save.");
+            //var str = $("form").serialize();
+            //console.log(str);
+            //alert("Your Search saved in you preferences");
+            @*$.ajax({
+                type: "POST",
+                url: "@Url.Action("SaveSearch","Dashboard")",
+                data: str,
+                success: function () {
+                    console.log("Successfzully submitted");
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            });*@
+            return false;
+        });
+    </script>
+
+
+    <script src="~/Content/admintemplate/assets/bundles/morrisscripts.bundle.js"></script>
+    <script src="~/Content/admintemplate/assets/js/pages/forms/advanced-form-elements.js"></script>
+
+}
