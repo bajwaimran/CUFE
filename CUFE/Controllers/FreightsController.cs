@@ -45,7 +45,7 @@ namespace CUFE.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Add(FreightAddViewModel model)
+        public ActionResult Add(FreightAddViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -102,5 +102,7 @@ namespace CUFE.Controllers
                 }
             }
         }
+
+        
     }
 }

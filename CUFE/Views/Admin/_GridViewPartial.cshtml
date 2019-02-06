@@ -1,14 +1,21 @@
 @using CUFE.Extensions
 @using CUFE.Controllers
+@using CUFE.Helpers
 
 @{
-IEnumerable<CUFE.Models.Company> list = ViewBag.CompanyList;
-//List<CUFE.Models.Company> list = ViewBag.CompanyList;
+    IEnumerable<CUFE.Models.Company> list = ViewBag.CompanyList;
+    //List<CUFE.Models.Company> list = ViewBag.CompanyList;
+    IEnumerable<CUFE.Models.XpoApplicationRole> roles = FastController.AllRoles();
 }
+
+
+
 @{
     var grid = Html.DevExpress().GridView(settings =>
     {
-        settings.Name = "GridView";
+        settings.Name = "GridView1";
+
+
         settings.CallbackRouteValues = new { Controller = "Users", Action = "GridViewPartial" };
 
         settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "Users", Action = "GridViewPartialAddNew" };
@@ -68,12 +75,12 @@ IEnumerable<CUFE.Models.Company> list = ViewBag.CompanyList;
                 }
                 else
                 {
-                    //Html.DevExpress().TextBox(tbs =>
-                    //{
-                    //    tbs.Name = "CompanyId";
-                    //    tbs.Text = i.Text;
-                    //}).Render();
-                    var extension = Html.DevExpress().ComboBox(comboBoxSettings =>
+            //Html.DevExpress().TextBox(tbs =>
+            //{
+            //    tbs.Name = "CompanyId";
+            //    tbs.Text = i.Text;
+            //}).Render();
+            var extension = Html.DevExpress().ComboBox(comboBoxSettings =>
                     {
                         comboBoxSettings.Name = "CompanyId";
                         ComboBoxProperties comboBoxProperties = comboBoxSettings.Properties;
@@ -151,6 +158,28 @@ IEnumerable<CUFE.Models.Company> list = ViewBag.CompanyList;
             c.ColumnType = MVCxGridViewColumnType.CheckBox;
         });
 
+        settings.Columns.Add(c =>
+{
+            c.FieldName = "Role";
+            c.Caption = "Role";
+            c.UnboundType = DevExpress.Data.UnboundColumnType.String;
+            c.EditFormSettings.Visible = DefaultBoolean.True;
+            c.SetEditItemTemplateContent(i =>
+            {
+                var extension = Html.DevExpress().ComboBox(comboBoxSettings =>
+                {
+                    comboBoxSettings.Name = "Role";
+                    ComboBoxProperties comboBoxProperties = comboBoxSettings.Properties;
+                    comboBoxProperties.TextField = "Name";
+                    comboBoxProperties.ValueField = "Name";
+                    comboBoxProperties.ValueType = typeof(string);
+                    comboBoxProperties.DropDownStyle = DropDownStyle.DropDown;
+                    comboBoxProperties.ClientSideEvents.SelectedIndexChanged = "onComboBoxSelectedIndexChanged";
+                }).BindList(roles).Bind(DataBinder.Eval(i.DataItem, "Role"));
+                extension.Render();
+            });
+        });
+
         settings.SettingsPager.Visible = true;
         settings.Settings.ShowGroupPanel = true;
         settings.Settings.ShowFilterRow = true;
@@ -169,3 +198,26 @@ IEnumerable<CUFE.Models.Company> list = ViewBag.CompanyList;
     }
 }
 @grid.Bind(Model).GetHtml()
+
+
+<script>
+    function onComboBoxSelectedIndexChanged(s, e) {
+        //alert(s.GetText());
+        //console.log(s.GetRowKey(e.visibleIndex));
+        //var role = s.GetText();
+        //var controls = ASPxClientControl.GetControlCollection();
+        //var usr = controls.GetByName('GridView.Id');
+        ////alert(GridView2.GetEditor("RoleName").GetValue());
+        ////GridView2.GetEditor("RoleName").SetValue(str);
+        //console.log(usr);
+        @*var usr = "523daa1a-e76c-4810-a6bd-9e9f382b41d2";
+        var role = "Admin";
+        $.ajax({
+            url: '@Url.Action("RoleMapping","Account")',
+            type: "post",
+            data: { user: usr, role: role }
+        }).done(function () {
+            console.log("Roles Added");
+        });*@
+    }
+</script>

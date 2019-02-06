@@ -132,11 +132,12 @@ namespace CUFE.Controllers
                     user.City = item.City;
                     user.Country = item.Country;
                     user.PhoneNumber = item.PhoneNumber;
+                    user.Role = item.Role;
 
                     var result = UserManager.Update(user);
                     if(!result.Succeeded)
                         ViewData["EditError"] = "Please, correct all errors." + result.Errors;
-
+                    UserManager.AddToRole(user.Id, item.Role);
                 }
                 else
                 {

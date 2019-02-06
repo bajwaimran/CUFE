@@ -526,5 +526,11 @@ namespace CUFE.Controllers
 
             //return null;
         }
+
+        public void RoleMapping(string user, string role)
+        {
+            
+            UserManager.AddToRole(user, role);
+        }
     }
 }

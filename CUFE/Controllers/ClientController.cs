@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using CUFE.Models.ViewModels;
 using System.Linq;
 using System;
+using CUFE.Models.ChatModels;
+
 namespace CUFE.Controllers
 {
     public class ClientController : Controller
@@ -44,5 +46,30 @@ namespace CUFE.Controllers
             ViewBag.MyOrdersCount = "0";
             return View();
         }
+        [Authorize]
+        public ActionResult Groups()
+        {
+            return View();
+        }
+        [Authorize]
+        public ActionResult ManageGroup(int id)
+        {
+            UnitOfWork uow = new UnitOfWork();
+
+            ViewBag.RoomId = id;
+            int companyId = int.Parse(User.Identity.GetCompanyId());
+            ViewBag.Users = uow.Query<XpoApplicationUser>().Where(u => u.CompanyId == companyId).ToList();
+            //var newModel = (from r in uow.Query<Room>()
+            //               join m in uow.Query<RoomMember>()
+            //               on r.Oid equals m.Room
+            //                select r);
+
+            var rooms = uow.Query<Room>();
+            
+            return View();
+
+        }
+
+
     }
 }

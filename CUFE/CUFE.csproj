@@ -224,6 +224,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\ChatController.cs" />
+    <Compile Include="Controllers\ChatsController.cs" />
     <Compile Include="Controllers\ClientController.cs" />
     <Compile Include="Controllers\CommonController.cs" />
     <Compile Include="Controllers\CompanyController.cs" />
@@ -231,6 +232,7 @@
     <Compile Include="Controllers\FreightsController.cs" />
     <Compile Include="Controllers\LoadsController.cs" />
     <Compile Include="Controllers\MapsController.cs" />
+    <Compile Include="Controllers\RolesController.cs" />
     <Compile Include="Helpers\FastController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoadTypesController.cs" />
@@ -252,6 +254,8 @@
     <Compile Include="Models\ChatModels\ConnectionModel.cs" />
     <Compile Include="Models\ChatModels\GroupChat.cs" />
     <Compile Include="Models\ChatModels\OnlineUser.cs" />
+    <Compile Include="Models\ChatModels\Room.cs" />
+    <Compile Include="Models\ChatModels\RoomMember.cs" />
     <Compile Include="Models\ChatModels\SentMessage.cs" />
     <Compile Include="Models\Company.cs" />
     <Compile Include="Models\Country.cs" />
@@ -3864,6 +3868,14 @@
     <Content Include="Views\Freights\GridViewPartial.cshtml" />
     <Content Include="Views\Client\Freights.cshtml" />
     <Content Include="Views\Client\Dashboard.cshtml" />
+    <Content Include="Views\Chats\Index.cshtml" />
+    <Content Include="Views\Client\Groups.cshtml" />
+    <Content Include="Views\Chats\_GridViewPartial.cshtml" />
+    <Content Include="Views\Chats\ManageGroup.cshtml" />
+    <Content Include="Views\Client\ManageGroup.cshtml" />
+    <Content Include="Views\Chats\_RoomMemberPartial.cshtml" />
+    <Content Include="Views\Admin\Roles.cshtml" />
+    <Content Include="Views\Roles\_GridViewPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,10 +1,12 @@
-﻿using System;
+﻿using DevExpress.Xpo;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using DX.Data.Xpo.Identity;
 using Microsoft.AspNet.Identity;
+using CUFE.Models;
 
 namespace CUFE.Controllers
 {
@@ -36,6 +38,37 @@ namespace CUFE.Controllers
         }
 
         public ActionResult ChatGroups()
+        {
+            return View();
+        }
+
+        //public void CreateRoles()
+        //{
+        //    using (UnitOfWork uow = new UnitOfWork())
+        //    {
+        //        new XpoApplicationRole(uow)
+        //        {
+        //            Name = "Super Admin"
+        //        };
+        //        new XpoApplicationRole(uow)
+        //        {
+        //            Name = "Admin"
+        //        };
+        //        new XpoApplicationRole(uow)
+        //        {
+        //            Name = "User"
+        //        };
+        //        new XpoApplicationRole(uow)
+        //        {
+        //            Name = "Driver"
+        //        };
+        //        uow.CommitChanges();
+
+        //    }
+
+        //}
+
+        public ActionResult Roles()
         {
             return View();
         }

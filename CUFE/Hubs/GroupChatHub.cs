@@ -134,6 +134,23 @@ namespace CUFE.Hubs
 
             }
         }
+
+        public void SendMessge(string message)
+        {
+            Clients.All.showBroadcastMessage(message);
+        }
         
+
+        public void JoinRoom(string roomName)
+        {
+            Groups.Add(Context.ConnectionId, roomName);
+            Clients.Group(roomName).showBroadcastMessage(Context.User.Identity.Name + "Joined");
+        }
+
+
+        public void GroupMessage(string groupName, string message)
+        {
+            Clients.Group(groupName).showBroadcastMessage(message);
+        }
     }
 }

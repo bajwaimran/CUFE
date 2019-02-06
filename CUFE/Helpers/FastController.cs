@@ -56,7 +56,18 @@ namespace CUFE.Helpers
             return company.Trucks.ToList();
 
         }
+        public static List<XpoApplicationUser> AllUsers()
+        {
+            UnitOfWork uow = new UnitOfWork();
+            return uow.Query<XpoApplicationUser>().ToList();
+        }
 
+
+        public static List<XpoApplicationRole> AllRoles()
+        {
+            UnitOfWork uow = new UnitOfWork();
+            return uow.Query<XpoApplicationRole>().ToList();
+        }
 
     }
 }

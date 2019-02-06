@@ -1,4 +1,5 @@
-﻿using DevExpress.Xpo;
+﻿using CUFE.Models.ChatModels;
+using DevExpress.Xpo;
 
 namespace CUFE.Models
 {
@@ -86,6 +87,15 @@ namespace CUFE.Models
             get
             {
                 return GetCollection<Freight>("Freights");
+            }
+        }
+
+        [Association("Company-Rooms")]
+        public XPCollection<Room> Rooms
+        {
+            get
+            {
+                return GetCollection<Room>("Rooms");
             }
         }
     }

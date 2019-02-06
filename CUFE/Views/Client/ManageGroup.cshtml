@@ -1,0 +1,32 @@
+﻿@model CUFE.Models.ChatModels.Room
+@{
+    ViewBag.Title = "Manage Chat Group & Associated Members";
+    Layout = "~/Views/Shared/_LayoutBackend.cshtml";
+    int roomId = ViewBag.RoomId;
+    List<CUFE.Models.XpoApplicationUser> Users = ViewBag.Users;
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    if (Users != null)
+    {
+        @Html.DevExpress().ListBoxFor(model => model.Members,
+        settings => {
+            settings.Width = System.Web.UI.WebControls.Unit.Percentage(100);
+            settings.Height = 150;
+            settings.Properties.SelectionMode = ListEditSelectionMode.CheckColumn;
+            settings.Properties.ValueType = typeof(string);
+            foreach(var item in Users)
+            {
+                settings.Properties.Items.Add(item.UserName, item.Id);
+            }
+
+        }).GetHtml()
+    }
+
+    <input type="submit" value="Add Members" />
+}
+
+

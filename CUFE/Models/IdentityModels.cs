@@ -45,6 +45,8 @@ namespace CUFE.Models
         public string Photo { get; set; }
         public string Profile { get; set; }
         public string Notes { get; set; }
+        public string Role { get; set; }
+
 
         //public XPCollection<Connection> Connections { get; set; }
         //public XPCollection<SentMessage> SentMessages { get; set; }
@@ -69,6 +71,7 @@ namespace CUFE.Models
                 this.Photo = src.Photo;
                 this.Profile = src.Profile;
                 this.Notes = src.Notes;
+                this.Role = src.Role;
                 //this.Connections = src.Connections;
                 //this.SentMessages = src.SentMessages;
                 // etc.				
@@ -218,6 +221,13 @@ namespace CUFE.Models
             set => SetPropertyValue(nameof(Notes), ref notes, value);
         }
 
+
+        string role;
+        public string Role
+        {
+            get => role;
+            set => SetPropertyValue(nameof(Role), ref role, value);
+        }
         //XPCollection<Connection> connections;
         
         //[Association("XpoApplicationUser-Connections")]
@@ -263,6 +273,7 @@ namespace CUFE.Models
                 this.Photo = src.Photo;
                 this.Profile = src.Profile;
                 this.Notes = src.Notes;
+                this.Role = src.Role;
                 //this.Connections = src.Connections;
                 //this.SentMessages = src.SentMessages;
                 this.Notes = src.Notes;
