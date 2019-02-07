@@ -6,6 +6,7 @@
     Layout = "~/Views/Shared/_LayoutChatPage.cshtml";
     List<CUFE.Models.ChatModels.GroupChat> rooms = CUFE.Helpers.FastController.MyGroups(User.Identity.Name);
     var user = ViewBag.userinfo;
+    List<CUFE.Models.ChatModels.GroupChatMessage> messagesList = ViewBag.Messages;
 }
 
 @section head{
@@ -13,6 +14,8 @@
 
 }
 <div id="idNotifications"></div>
+@*<input type="text" id="groupNameBox" placeholder="Enter New Group Name" />
+<button id="btnCreateGroup">Join Group</button>*@
 <div class="row clearfix">
     <div class="col-lg-12">
         <div class="chat-app" id="tabs">
@@ -36,6 +39,7 @@
                                                 <div class="status"><i class="fa fa-circle online"></i></div>
                                             </div>
                                             <div class="about">
+                                                <input type="hidden" id="input_@item.Oid" value="@item.RoomName" />
                                                 <div class="name">@item.RoomName</div>
                                                 <div class="msg"> @*Ok Good*@ </div>
                                             </div>
@@ -72,40 +76,46 @@
                                 </div>
                             </div>
                             <div class="chat-history">
-                                <ul class="m-b-0" id="discussion_@item.Oid" style="overflow:auto; height:70vh;">
+                                <ul class="m-b-0" id="discussion_@item.RoomName" style="overflow:auto; height:70vh;">
+
                                     @{
-                                        @*var msgs = sentMessageList.Where(u => u.ReceiverId == item.Id).ToList();
-            var receivedMessages = receivedMessageList.Where(u => u.User == item.Id).ToList();
-            msgs.AddRange(receivedMessageList);
-            var messages = msgs.OrderBy(m => m.Timestamp);
+                                        if (messagesList != null)
+                                        {
+                                            var msgs = messagesList.Where(u => u.GroupChat.Oid == item.Oid).ToList();
+                                            if (msgs != null)
+                                            {
+                                                var messages = msgs.OrderBy(m => m.Timestamp);
 
-            foreach (var sentMessage in messages)
-            {
+                                                foreach (var sentMessage in messages)
+                                                {
 
-                if (sentMessage.User == usr)
-                {
-                    <li class="clearfix">
-                        <div class="detail-right">
-                            <div class="message my-message">
-                                <span class="message-data-time d-block mt-1">  @sentMessage.Timestamp  </span><p>  @sentMessage.text  </p>
-                            </div>
-                        </div>
-                    </li>
-                }
-                else
-                {
-                    <li class="clearfix">
-                        <div class="detail-right">
-                            <div class="message other-message float-right">
-                                <span class="message-data-time d-block mt-1"> @sentMessage.Timestamp </span><p> @sentMessage.text </p>
-                            </div>
-                        </div>
-                    </li>
-                }
+                                                    if (sentMessage.SenderUserName == User.Identity.Name)
+                                                    {
+                                                        <li class="clearfix">
+                                                            <div class="detail-right">
+                                                                <div class="message my-message">
+                                                                    <span class="message-data-time d-block mt-1">  @sentMessage.Timestamp  </span><p>  @sentMessage.Message  </p>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                    }
+                                                    else
+                                                    {
+                                                        <li class="clearfix">
+                                                            <div class="detail-right">
+                                                                <div class="message other-message float-right">
+                                                                    <span class="message-data-time d-block mt-1"> @sentMessage.Timestamp </span><p> @sentMessage.Message </p>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                    }
 
 
 
-            }*@
+                                                }
+                                            }
+                                        }
+
 
 
                                     }
@@ -115,12 +125,12 @@
                             <div class="chat-message clearfix">
                                 <form id="form_@item.Oid">
                                     <div class="input-group mb-0">
-                                        <input type="hidden" name="user" value="@item.Oid" />
+                                        <input type="hidden" name="user" value="@User.Identity.Name" />
                                         @*@Html.DropDownList("user", new SelectList(ViewBag.Allusers, "Id", "FirstName"), new { @id = "idUsername" })*@
-                                        <input type="text" class="form-control" name="chat_msg" placeholder="Enter text here..." id="idMessage_@item.Oid">
+                                        <input type="text" class="form-control" name="chat_msg" placeholder="Enter text here..." id="idMessage_@item.RoomName">
                                         <div class="input-group-append">
                                             @*<button id="idMessageSendButton">Send</button>*@
-                                            <button class="btnSend" id="@item.Oid" onclick="return false;">Send</button>
+                                            <button class="btnSend" id="@item.RoomName" onclick="return false;">Send</button>
                                         </div>
                                     </div>
                                 </form>
@@ -145,12 +155,20 @@
         $(function () {
             var chat = $.connection.groupChatHub;
 
+            //show group messages
 
+            chat.client.showGroupMessage = function (groupName, message) {
+                //var room = groupName.toLowerCase();
+                var discussionTabId = "#discussion_" + groupName;
+                var d = new Date();
+                $(discussionTabId).append('<li class="clearfix"><div class="detail-right"><div class="message other-message float-right"><span class="message-data-time d-block mt-1">' + d.toUTCString() + '</span><p>' + message + '</p></div></div></li>');
+                var div = $(discussionTabId);
+                div.scrollTop(div.prop('scrollHeight'));
+            }
 
             //broadcast messages
             chat.client.showBroadcastMessage = function (message) {
-                console.log(message);
-                $("#idNotifications").append('<li><div class="alert alert-info alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="close"><span aria-hidden="true">x</span></button>' + htmlEncode(message) + '</div></li>');
+                //$("#idNotifications").append('<li><div class="alert alert-info alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="close"><span aria-hidden="true">x</span></button>' + htmlEncode(message) + '</div></li>');
             };
 
 
@@ -170,6 +188,7 @@
                     var msg = $("#idMessage").val();
                     var name = $("#groupNameId").val();
                     chat.server.groupMessage(name, msg);
+                    
                 });
 
 
@@ -178,6 +197,18 @@
                     console.log("user leaving the group " + msg);
                     chat.server.leaveRoom(msg);
                 });
+                
+                $.connection.hub.start().done(function () {
+                    $(".btnSend").click(function () {
+                        var roomname = this.id;
+                        var chatMessageInput = $(this).closest('form').find('input[name="chat_msg"]');
+                        var msg = chatMessageInput.val();
+                        chat.server.groupMessage(roomname, msg);
+                        chatMessageInput.val('');
+                        chatMessageInput.focus();
+                    });
+                    }
+                );
 
             });
         });
@@ -187,30 +218,38 @@
             return encodedValue;
         }
 
+        function joinGroupOnClick(roomName) {
+            var chat2 = $.connection.groupChatHub;
+            chat2.server.joinRoom(roomName);
+        }
+
     </script>
     <script>
         $(function () {                       //run when the DOM is ready
 
             $("#connections").on("click", ".clickable", function () {  //use a class, since your ID gets mangled
-                console.log("clicked me");
+                //console.log("clicked me");
                 var target = this.id;
                 var targetId = target.substring(1, target.length);
+                
                 $(".clickable").not(this).removeClass('active');
                 $(this).toggleClass('active');
                 $(target).show();
                 $(".chatmessagebox").each(function () {
                     var currentDiv = this.id;
                     if (currentDiv != targetId) {
-                        console.log("target: " + targetId + " - current: " + currentDiv);
+                        //console.log("target: " + targetId + " - current: " + currentDiv);
                         $("#" + currentDiv).hide();
                     }
                 }
 
                 );
-
                 var substr = targetId.substring(2, targetId.length);
-                var div = $("#discussion_" + substr);
+                var inputElemenet = "#input_" + substr;
+                var roomname = $(inputElemenet).val();                
+                var div = $("#discussion_" + roomname);
                 div.scrollTop(div.prop('scrollHeight'));
+                joinGroupOnClick(roomname);
             });
         });
     </script>

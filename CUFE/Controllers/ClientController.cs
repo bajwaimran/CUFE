@@ -67,11 +67,13 @@ namespace CUFE.Controllers
         public ActionResult Groups()
         {
             ViewBag.userinfo = uow.FindObject<XpoApplicationUser>(CriteriaOperator.Parse("UserName==?", User.Identity.Name));
+            ViewBag.Messages = uow.Query<GroupChatMessage>().ToList();
             var groups = uow.Query<GroupChat>();
             if(groups != null)
             {
                 return View(groups.ToList());
             }
+            
             return View();
         }
 

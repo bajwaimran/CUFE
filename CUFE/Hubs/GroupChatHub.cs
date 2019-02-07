@@ -84,8 +84,8 @@ namespace CUFE.Hubs
             using (UnitOfWork uow = new UnitOfWork())
             {
                 Groups.Add(Context.ConnectionId, roomName);
-                Clients.Group(roomName).showBroadcastMessage(Context.User.Identity.Name + "Joined");
-
+                //Clients.Group(roomName).showBroadcastMessage(Context.User.Identity.Name + "Joined");
+                Clients.Group(roomName).showGroupMessage(roomName, Context.User.Identity.Name + "Joined");
                 var room = uow.FindObject<GroupChat>(CriteriaOperator.Parse("RoomName==?", roomName));
                 if (room == null)
                 {
@@ -151,7 +151,8 @@ namespace CUFE.Hubs
         {
             using (UnitOfWork uow = new UnitOfWork())
             {
-                Clients.Group(groupName).showBroadcastMessage(message);
+                //Clients.Group(groupName).showBroadcastMessage(message);
+                Clients.Group(groupName).showGroupMessage(groupName, message);
                 var room = uow.FindObject<GroupChat>(CriteriaOperator.Parse("RoomName==?", groupName));
                 if(room != null)
                 {
