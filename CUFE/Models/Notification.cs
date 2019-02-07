@@ -12,7 +12,7 @@ namespace CUFE.Models
 
         string notificationText;
 
-        [Size(SizeAttribute.DefaultStringMappingFieldSize)]
+        [Size(2000)]
         public string NotificationText
         {
             get => notificationText;

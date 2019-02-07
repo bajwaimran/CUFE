@@ -1,0 +1,108 @@
+﻿@{
+    var grid = Html.DevExpress().GridView(settings =>
+    {
+        settings.Name = "GridView1";
+
+
+        settings.CallbackRouteValues = new
+        {
+            Controller = "Notifications",
+            Action = "GridViewPartial" };
+
+        settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "Notifications", Action = "Add" };
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "Notifications", Action = "Update" };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "Notifications", Action = "Delete" };
+
+        settings.SettingsSearchPanel.CustomEditorName = "tbSearch";
+        settings.Settings.ShowTitlePanel = true;
+        settings.SetTitlePanelTemplateContent(content =>
+        {
+            Html.DevExpress().Label(label =>
+            {
+
+                label.Text = "Notifications";
+                label.Style["font-weight"] = "bold";
+
+            }).Render();
+
+        });
+
+
+        settings.SettingsEditing.Mode = GridViewEditingMode.EditFormAndDisplayRow;
+        settings.SettingsBehavior.ConfirmDelete = true;
+
+        settings.CommandColumn.Visible = true;
+        settings.CommandColumn.ShowNewButton = true;
+        settings.CommandColumn.ShowDeleteButton = true;
+        settings.CommandColumn.ShowEditButton = true;
+
+        settings.Width = System.Web.UI.WebControls.Unit.Percentage(100);
+
+        GridViewCommandColumnCustomButton approveBtn = new GridViewCommandColumnCustomButton();
+        approveBtn.ID = "approveBtn";
+        approveBtn.Text = "Send Notification";
+        //approveBtn.Image.IconID = "actions_apply_32x32gray";
+        settings.CommandColumn.CustomButtons.Add(approveBtn);
+
+
+        settings.KeyFieldName = "Oid";
+
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "NotificationText";
+            c.Name = "idnotification";
+
+        });
+
+
+        settings.Columns.Add(c =>
+        {
+            c.UnboundType = DevExpress.Data.UnboundColumnType.String;
+            c.Visible = true;
+
+            c.SetDataItemTemplateContent(x =>
+            {
+                Html.DevExpress().Button(s =>
+                {
+                    s.Name = "btnSendMessage";
+                    s.Width = System.Web.UI.WebControls.Unit.Pixel(100);
+                    s.ControlStyle.CssClass = "submitButton";
+                    s.Text = "Send Notification";
+                    s.UseSubmitBehavior = false;
+                    s.ClientSideEvents.Click = "";
+                }).Render();
+            });
+        });
+
+        settings.SettingsPager.Visible = true;
+        settings.Settings.ShowGroupPanel = true;
+        settings.Settings.ShowFilterRow = true;
+        settings.SettingsBehavior.AllowSelectByRowClick = true;
+
+        settings.SettingsAdaptivity.AdaptivityMode = GridViewAdaptivityMode.Off;
+        settings.SettingsAdaptivity.AdaptiveColumnPosition = GridViewAdaptiveColumnPosition.Right;
+        settings.SettingsAdaptivity.AdaptiveDetailColumnCount = 1;
+        settings.SettingsAdaptivity.AllowOnlyOneAdaptiveDetailExpanded = false;
+        settings.SettingsAdaptivity.HideDataCellsAtWindowInnerWidth = 0;
+
+    });
+    if (ViewData["EditError"] != null)
+    {
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+@grid.Bind(Model).GetHtml()
+<script>
+    function alertMe(message) {
+        alert(123);
+        var em = message; 
+        //alert("alert me!" + message);
+        debugger;
+        var test = $(message).closest("tr");
+       
+        var gridView1 = ASPxClientControl.GetControlCollection().GetByName("GridView1");
+        //var id = gridView1.GetFocusedRowCellValue("Oid");
+        //var x = ASPxClientControl.GetFocusedRowCellValue("GridView1");
+        console.log(gridView1);
+    }
+</script>

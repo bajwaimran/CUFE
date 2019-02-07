@@ -12,7 +12,7 @@
     <!-- VENDOR CSS -->
     <link rel="stylesheet" href="~/Content/admintemplate/assets/vendor/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="~/Content/admintemplate/assets/vendor/font-awesome/css/font-awesome.min.css">
-
+    <link rel="stylesheet" href="~/Content/admintemplate/assets/vendor/toastr/toastr.min.css">
 
     <!-- MAIN CSS -->
     <link rel="stylesheet" href="~/Content/admintemplate/assets/css/main.css">
@@ -21,17 +21,17 @@
     @*Additional stylesheets and scripts*@
     @RenderSection("head", required: false)
 
-    
 
-        @Html.DevExpress().GetStyleSheets(
-            new StyleSheet { ExtensionSuite = ExtensionSuite.NavigationAndLayout },
-            new StyleSheet { ExtensionSuite = ExtensionSuite.GridView }
-        )
-        @Html.DevExpress().GetScripts(
-            new Script { ExtensionSuite = ExtensionSuite.NavigationAndLayout },
-            new Script { ExtensionSuite = ExtensionSuite.GridView }
-        )
-    
+
+    @Html.DevExpress().GetStyleSheets(
+        new StyleSheet { ExtensionSuite = ExtensionSuite.NavigationAndLayout },
+        new StyleSheet { ExtensionSuite = ExtensionSuite.GridView }
+    )
+    @Html.DevExpress().GetScripts(
+        new Script { ExtensionSuite = ExtensionSuite.NavigationAndLayout },
+        new Script { ExtensionSuite = ExtensionSuite.GridView }
+    )
+
 
 
 
@@ -132,9 +132,29 @@
     <!-- Javascript -->
     <script src="~/Content/admintemplate/assets/bundles/libscripts.bundle.js"></script>
     <script src="~/Content/admintemplate/assets/bundles/vendorscripts.bundle.js"></script>
+
+    <script src="~/Content/admintemplate/assets/vendor/toastr/toastr.js"></script>
     @RenderSection("scripts", required: false)
+    <script src="~/Scripts/jquery.signalR-2.4.0.min.js"></script>
+    <script src="~/signalr/hubs"></script>
+    <script>
+        $(function () {
+            toastr.options.closeButton = true;
+            toastr.options.positionClass = 'toast-bottom-right';
 
+            var notificationServer = $.connection.notificationHub;
+            notificationServer.client.notify = function (message) {
+                toastr['info'](message);
+            }
 
+            $.connection.hub.start().done(function () {
+                
+            }
+            );
+
+        });
+        
+    </script>
 
     <script src="~/Content/admintemplate/assets/bundles/mainscripts.bundle.js"></script>
 

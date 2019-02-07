@@ -116,6 +116,7 @@ namespace CUFE.Hubs
                         }
                     }catch(Exception e)
                     {
+                        System.Console.WriteLine(e.Message);
                         room.ChatUsers.Add(new ChatUser(uow)
                         {
                             UserName = Context.User.Identity.Name

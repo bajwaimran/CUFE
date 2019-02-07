@@ -76,7 +76,7 @@
             c.Visible = true;
             c.SetDataItemTemplateContent(x =>
             {
-                ViewContext.Writer.Write(string.Format("<a href=\"/Loads/View/{0}\" class=\"button\" data-id='{0}' onclick=\"\">View</a>", x.KeyValue));
+                ViewContext.Writer.Write(string.Format("<a href=\"/Client/Load/{0}\" class=\"button\" data-id='{0}' onclick=\"\">View</a>", x.KeyValue));
             });
         });
         settings.Settings.ShowHeaderFilterButton = true;

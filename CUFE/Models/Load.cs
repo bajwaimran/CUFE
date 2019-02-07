@@ -10,29 +10,24 @@ namespace CUFE.Models
     {
         public Load(Session session): base(session) { }
 
-        string startLocationName;
-        DateTime startDate;
-        DateTime endDate;
+        
+        
+        
 
+        string startLocationName;
         [Size(SizeAttribute.DefaultStringMappingFieldSize)]
         public string StartLocationName
         {
             get => startLocationName;
             set => SetPropertyValue(nameof(StartLocationName), ref startLocationName, value);
         }
-
-       
-
+        DateTime startDate;
         public DateTime StartDate
         {
             get => startDate;
             set => SetPropertyValue(nameof(StartDate), ref startDate, value);
         }
-
-
-
-        
-
+        DateTime endDate;
         public DateTime EndDate
         {
             get => endDate;
@@ -57,7 +52,6 @@ namespace CUFE.Models
 
         //public string StartLocationZip { get; set; }
         string startLocationZip;
-
         [Size(SizeAttribute.DefaultStringMappingFieldSize)]
         public string StartLocationZip
         {
@@ -66,7 +60,6 @@ namespace CUFE.Models
         }
         //public string StartLocationCountry { get; set; }
         string startLocationCountry;
-
         [Size(SizeAttribute.DefaultStringMappingFieldSize)]
         public string StartLocationCountry
         {
@@ -74,18 +67,14 @@ namespace CUFE.Models
             set => SetPropertyValue(nameof(StartLocationCountry), ref startLocationCountry, value);
         }
         //public double StartLat { get; set; }
-        double startLat;
-
-        
+        double startLat;        
         public double StartLat
         {
             get => startLat;
             set => SetPropertyValue(nameof(StartLat), ref startLat, value);
         }
         //public double StartLon { get; set; }
-        double startLon;
-
-        
+        double startLon;        
         public double StartLon
         {
             get => startLon;
@@ -93,7 +82,6 @@ namespace CUFE.Models
         }
         //public string StartLocationCoordinates { get; set; }
         string startLocationCoordinates;
-
         [Size(SizeAttribute.DefaultStringMappingFieldSize)]
         public string StartLocationCoordinates
         {
@@ -103,15 +91,13 @@ namespace CUFE.Models
 
         //public string EndLocationName { get; set; }
         string endLocationName;
-
         [Size(SizeAttribute.DefaultStringMappingFieldSize)]
         public string EndLocationName
         {
-            get => startLocationCoordinates;
+            get => endLocationName;
             set => SetPropertyValue(nameof(EndLocationName), ref endLocationName, value);
         }
         string endCity;
-
         public string EndCity {
             get => endCity;
             set => SetPropertyValue(nameof(EndCity), ref endCity, value);

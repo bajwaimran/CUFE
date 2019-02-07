@@ -13,39 +13,17 @@ using CUFE.Models.ChatModels;
 
 namespace CUFE.Controllers
 {
-    [Authorize(Roles = "SuperAdmin, Admin")]
+    
     public class ClientController : Controller
     {
         private UnitOfWork uow = new UnitOfWork();
+        /*DASHBOARD RELATED METHODS*/
+        [Authorize(Roles = "Admin, User")]
         public ActionResult Index()
         {
             return RedirectToAction("Dashboard") ;
         }
-        public ActionResult TrucksManagement()
-        {
-            return View();
-        }
-        public ActionResult Loads()
-        {
-            return View();
-        }
-        public ActionResult AddLoad()
-        {
-            return View("~/Views/Loads/Add");
-        }
-        public ActionResult Freights()
-        {
-            return View();
-        }
-        public ActionResult AddFreight()
-        {
-            return View("~/Views/Freights/Add");
-        }
-        public ActionResult Users()
-        {
-            return View();
-        }
-
+        [Authorize(Roles = "Admin, User")]
         public ActionResult Dashboard()
         {
             ViewBag.Blogs = uow.Query<Blog>().Take(4).ToList();
@@ -57,36 +35,96 @@ namespace CUFE.Controllers
             ViewBag.MyOrdersCount = "0";
             return View();
         }
-        [Authorize]
-        public ActionResult Chat()
+
+        /*VEHICLE RELATED METHODS*/
+        [Authorize(Roles = "Admin")]
+        public ActionResult TrucksManagement()
         {
-            ViewBag.UserId = User.Identity.GetUserId();
-            return View();
-        }
-        [Authorize]
-        public ActionResult Groups()
-        {
-            ViewBag.userinfo = uow.FindObject<XpoApplicationUser>(CriteriaOperator.Parse("UserName==?", User.Identity.Name));
-            ViewBag.Messages = uow.Query<GroupChatMessage>().ToList();
-            var groups = uow.Query<GroupChat>();
-            if(groups != null)
-            {
-                return View(groups.ToList());
-            }
-            
             return View();
         }
 
+        /*LOADS RELATED METHODS*/
+        [Authorize(Roles = "Admin, User")]
+        public ActionResult Loads()
+        {
+            return View();
+        }
+        [Authorize(Roles = "Admin, User")]
+        public ActionResult AddLoad()
+        {
+            return View("~/Views/Loads/Add.cshtml");
+        }
+        [Authorize]
+        public ActionResult Load(int id)
+        {
+            var model = uow.FindObject<Load>(CriteriaOperator.Parse("Oid==?", id));
+            return View(model);
+        }
+        /*FREIGHTS RELATED METHODS*/
+        [Authorize(Roles = "Admin, User")]
+        public ActionResult Freights()
+        {
+            return View();
+        }
+        [Authorize(Roles = "Admin, User")]
+        public ActionResult AddFreight()
+        {
+            return View("~/Views/Freights/Add.cshtml");
+        }
+        [Authorize]
+        public ActionResult Freight(int id)
+        {
+            var model = uow.FindObject<Freight>(CriteriaOperator.Parse("Oid==?", id));
+            return View(model);
+        }
+        /*USER MANAGEMENT RELATED METHODS*/
+        [Authorize(Roles = "Admin")]
+        public ActionResult Users()
+        {
+            return View();
+        }
+
+
+
+
+        /*SEARCH RELATED METHODS*/
+        [Authorize]
+        [Authorize(Roles = "SuperAdmin, Admin, User, Driver")]
         public ActionResult Search()
         {
             return View();
         }
-
+        [Authorize(Roles = "SuperAdmin, Admin, User, Driver")]
         public ActionResult AdvancedSearch()
         {
             return View();
         }
 
+        /*CHAT RELATED METHODS*/
+        [Authorize(Roles = "SuperAdmin, Admin, User, Driver")]
+        public ActionResult Chat()
+        {
+            ViewBag.UserId = User.Identity.GetUserId();
+            return View();
+        }
+        [Authorize(Roles = "SuperAdmin, Admin, User, Driver")]
+        public ActionResult Groups()
+        {
+            ViewBag.userinfo = uow.FindObject<XpoApplicationUser>(CriteriaOperator.Parse("UserName==?", User.Identity.Name));
+            ViewBag.Messages = uow.Query<GroupChatMessage>().ToList();
+            var groups = uow.Query<GroupChat>();
+            if (groups != null)
+            {
+                return View(groups.ToList());
+            }
+
+            return View();
+        }
+        [Authorize(Roles = "SuperAdmin, Admin")]
+        public ActionResult ChatGroups()
+        {
+            return View();
+        }
         
 
     }

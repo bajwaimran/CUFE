@@ -81,6 +81,7 @@ namespace CUFE.Controllers
                         ContactPersonPhone = model.ContactPersonPhone,
                         ContactPersonEmail = model.ContactPersonEmail,
                         UserId = userId,
+                        TruckId = model.TruckId,
                         CreatedOn = DateTime.Now
                     };
                     company.Freights.Add(freight);

@@ -1,0 +1,93 @@
+﻿@model CUFE.Models.Load
+
+@using CUFE.Extensions
+@{
+    ViewBag.Title = "Load";
+    Layout = "~/Views/Shared/_LayoutBackend.cshtml";
+    int companyId = int.Parse(User.Identity.GetCompanyId());
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card bg-secondary">
+            <div class="card-header"><h2 class="text-white">Load Details</h2> </div>
+            <div class="card-body">
+                <h4 class="text-white">@Model.StartLocationCountry &rarr; @Model.EndLocationCountry</h4>
+
+                <p class="card-text text-white">Load Type : <strong>@Model.LoadType</strong></p>
+                <p class="card-text text-white">Volume : <strong>@Model.LoadVolume Tons</strong></p>
+                <p class="card-text text-white">Truck Type Required : <strong>@Model.TruckTypeNeeded Tons</strong></p>
+                <hr />
+                @*<h5 class="card-text text-white">Contact Person : <strong>@Model.CotactPerson</strong> </h5>
+                    <h5 class="card-text text-white">Phone Number : <strong>@Model.Phone</strong> </h5>
+                    <h5 class="card-text text-white">Email : <strong>@Model.Email</strong> </h5>*@
+                @*<button style="width:150px">Contact</button>*@
+                @Html.DevExpress().Button(
+               settings =>
+               {
+                   settings.Name = "btnShowContactForm";
+                   settings.Text = "Contact Details";
+                   settings.ClientSideEvents.Click = "function(s, e) { PopupControl.Show(); }";
+                   settings.Theme = "";
+               }
+               ).GetHtml()
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">From</h4>
+                <h6>@Model.StartLocationName</h6>
+
+                <h6>Zip: @Model.StartLocationZip</h6>
+                <h6>@Model.StartLocationCountry</h6>
+
+                <h6>@Model.StartDate</h6>
+                <p class="card-text"></p>
+                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+            </div>
+
+        </div>
+    </div>
+    <div class="col-md-6 col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">To</h4>
+                <h6>@Model.EndLocationName</h6>
+
+                <h6>Zip: @Model.EndLocationZip</h6>
+                <h6>@Model.EndLocationCountry</h6>
+
+                <h6>@Model.EndDate</h6>
+                <p class="card-text"></p>
+                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+            </div>
+        </div>
+    </div>
+    <div class="mx-auto" id="res">
+        <form id="form" action="" method="post">
+            <input type="hidden" name="wp.1" value="@Model.StartLocationName"><br>
+            <input type="hidden" name="wp.2" value="@Model.EndLocationName"><br>
+
+            <input id="submit" type="button" name="submit" value="Calculate Distance" style="width:150px">
+        </form>
+
+        @{
+            if ((companyId == Model.CompanyId) && (User.Identity.GetUserRole() == "Admin"))
+            {
+                <form action="@Url.Action("Edit",new { id= Model.Oid})">
+                    <input type="submit" name="submit" value="Edit" style="width:150px">
+                </form>
+            }
+        }
+
+
+    </div>
+    @*<div class="col-md-12">
+            <div id="myMap" style="position:relative;width:100%;height:300px;"></div>
+
+        </div>*@
+
+
+</div>
+

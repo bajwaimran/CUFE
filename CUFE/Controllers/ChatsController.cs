@@ -124,7 +124,7 @@ namespace CUFE.Controllers
                     }
                 }catch(Exception e)
                 {
-
+                    System.Console.WriteLine(e.Message);
                 }
                 
 
@@ -140,10 +140,6 @@ namespace CUFE.Controllers
                 return PartialView("_GroupMembersPartialView", model.ToList());
             }
         }
-
-
-
-
 
     }
 }

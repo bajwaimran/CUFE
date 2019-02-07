@@ -1,0 +1,120 @@
+﻿@model CUFE.Models.Freight
+
+@using CUFE.Extensions
+@{
+    ViewBag.Title = "Freight";
+    Layout = "~/Views/Shared/_LayoutBackend.cshtml";
+    CUFE.Models.Truck TruckInfo = CUFE.Helpers.FastController.TruckInfo(Model.TruckId);
+    int companyId = int.Parse(User.Identity.GetCompanyId());
+}
+
+<div class="container">
+    <div class="row">
+
+        <div class="col-md-9">
+
+            <div class="row col-md-12 bg-light table-bordered">
+                <div class="col-md-12">
+                    <p> <h2>Freight Information</h2></p>
+                    <hr />
+                </div>
+                <div class="col-md-6 col-sm-12">
+                    <h3>Loading Location</h3>
+                    <h6>@Model.StartLocationName</h6>
+
+                    <h6>Zip: @Model.StartLocationZip</h6>
+                    <h6>@Model.StartLocationCountry</h6>
+
+                    <h6>@Model.StartDate</h6>
+                    <p class="card-text"></p>
+                    <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                </div>
+                <div class="col-md-6 col-sm-12 bg-light">
+                    <h3>Unloading Location</h3>
+                    <h6>@Model.EndLocationName</h6>
+
+                    <h6>Zip: @Model.EndLocationZip</h6>
+                    <h6>@Model.EndLocationCountry</h6>
+
+                    <h6>@Model.EndDate</h6>
+                    <p class="card-text"></p>
+                    <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                </div>
+                <div class="col-md-12">
+                    <hr />
+                </div>
+                <div class="col-md-12">
+                    <h3>Vehicle Information &amp; Properties</h3>
+                    <table class="table table-striped">
+                        <tr>
+                            <th>Vehicle Type</th>
+                            <td>@TruckInfo.TruckType</td>
+                        </tr>
+                        <tr>
+                            <th>Loading Capacity</th>
+                            <td>@TruckInfo.Capacity Tons</td>
+                        </tr>
+                        <tr>
+                            <th>Frigo</th>
+                            <td>@Html.CheckBox("isfrgi", TruckInfo.IsFrigo, new { disabled = "" })</td>
+                        </tr>
+                        <tr>
+                            <th>ADR</th>
+                            <td>@Html.CheckBox("isfrgi", TruckInfo.IsAdr, new { disabled = "" })</td>
+                        </tr>
+                        <tr>
+                            <th>GPS</th>
+                            <td>@Html.CheckBox("isfrgi", TruckInfo.IsGps, new { disabled = "" })</td>
+                        </tr>
+                        <tr>
+                            <th>Iso Thermal</th>
+                            <td>@Html.CheckBox("isfrgi", TruckInfo.IsisoThermal, new { disabled = "" })</td>
+                        </tr>
+                        <tr>
+                            <th>Lift</th>
+                            <td>@Html.CheckBox("isfrgi", TruckInfo.IsLift, new { disabled = "" })</td>
+                        </tr>
+                    </table>
+
+                </div>
+
+
+
+                <div class="mx-auto" id="res">
+                    <form id="form" action="" method="post">
+                        <input type="hidden" name="wp.1" value="@Model.StartLocationName"><br>
+                        <input type="hidden" name="wp.2" value="@Model.EndLocationName"><br>
+
+                        <input id="submit" type="button" name="submit" value="Calculate Distance" style="width:150px">
+                    </form>
+
+                    @{
+                        if ((companyId == Model.CompanyId) && (User.IsInRole("Admin")))
+                        {
+                            <form action="@Url.Action("Edit",new { id= Model.Oid})">
+                                <input type="submit" value="Edit" style="width:150px">
+                            </form>
+                        }
+                    }
+
+                    @Html.DevExpress().Button(
+               settings =>
+               {
+                   settings.Name = "btnShowContactForm";
+                   settings.Text = "Contact Details";
+                   settings.ClientSideEvents.Click = "function(s, e) { PopupControl.Show(); }";
+                   settings.Theme = "";
+                   settings.Styles.Style.Width = System.Web.UI.WebControls.Unit.Pixel(150);
+               }
+               ).GetHtml()
+                </div>
+
+            </div>
+            <div class="col-md-12">
+                <p class="mt-3 text-center mb-0">if you need any help email us at  <a class="text-primary" href="#">query@abona-erp.com</a> </p>
+            </div>
+
+        </div>
+    </div>
+</div>
+

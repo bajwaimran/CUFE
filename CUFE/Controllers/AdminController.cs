@@ -50,7 +50,10 @@ namespace CUFE.Controllers
         {
             return View();
         }
-        
+        public ActionResult Notifications()
+        {
+            return View();
+        }
 
     }
 }
