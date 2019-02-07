@@ -14,6 +14,10 @@ namespace CUFE.Controllers
 {
     public class FreightsController : Controller
     {
+        public ActionResult Index()
+        {
+            return View();
+        }
         public ActionResult GridViewPartial()
         {
             using (UnitOfWork uow = new UnitOfWork())

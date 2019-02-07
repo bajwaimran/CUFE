@@ -40,5 +40,10 @@ namespace CUFE.Controllers
 
             return View();
         }
+
+        public ActionResult Blogs()
+        {
+            return View();
+        }
     }
 }

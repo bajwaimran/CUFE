@@ -2,118 +2,110 @@
 @model CUFE.Models.RegisterViewModel
 @{
     ViewBag.Title = "Register";
+    Layout = "~/Views/Shared/_LayoutBusiness.cshtml";
     List<Country> list = ViewBag.CountryList;
 }
+@section devexpress{
 
-<h2>@ViewBag.Title.</h2>
-
-@using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-{
-    @Html.AntiForgeryToken()
-    @Html.ValidationSummary("", new { @class = "text-danger" })
-    @*<h4>Create a new account.</h4>
-        <hr />
-        @Html.ValidationSummary("", new { @class = "text-danger" })
-        <div class="form-group">
-            @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" })
-            <div class="col-md-10">
-                @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
-            </div>
-        </div>
-        <div class="form-group">
-            @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
-            <div class="col-md-10">
-                @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
-            </div>
-        </div>
-        <div class="form-group">
-            @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-2 control-label" })
-            <div class="col-md-10">
-                @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" class="btn btn-default" value="Register" />
-            </div>
-        </div>*@
-
-
-    @Html.DevExpress().FormLayout(settings =>
-{
-    settings.Name = "RegistrationForm";
-    //settings.Width = System.Web.UI.WebControls.Unit.Percentage(100);
-    var regForm = settings.Items.AddGroupItem(giSettings =>
-    {
-        giSettings.Caption = "";
-        giSettings.HorizontalAlign = FormLayoutHorizontalAlign.Center;
-    }
-    );
-
-
-
-    var userInfo = regForm.Items.AddGroupItem(giSettings =>
-    {
-        giSettings.Caption = "User Information";
-        giSettings.ColumnCount = 4;
-    }
-);
-    userInfo.Items.Add(m => m.FirstName);
-    userInfo.Items.Add(m => m.LastName);
-    userInfo.Items.Add(m => m.Email);
-    userInfo.Items.Add(m => m.PhoneNumber);
-    userInfo.Items.Add(itemSettings =>
-    {
-        itemSettings.NestedExtensionType = FormLayoutNestedExtensionItemType.DateEdit;
-        itemSettings.FieldName = "BirthDate";
-    });
-    userInfo.Items.Add(m => m.Address);
-    userInfo.Items.Add(m => m.City);
-    userInfo.Items.Add(m => m.Country, i =>
-    {
-        i.NestedExtension().ComboBox(s =>
-        {
-            s.ControlStyle.CssClass = "maxWidth";
-            s.Properties.DropDownStyle = DropDownStyle.DropDownList;
-            s.Properties.DataSource = list.Select( y => y.CountryName);
-        });
-    });
-
-
-    var companyInfo = regForm.Items.AddGroupItem(giSettings =>
-    {
-        giSettings.Caption = "Company Information";
-        giSettings.ColumnCount = 4;
-    }
-);
-    companyInfo.Items.Add(m => m.CompanyName);
-    companyInfo.Items.Add(m => m.Vat);
-    companyInfo.Items.Add(m => m.CompanyPhoneNumber);
-    companyInfo.Items.Add(m => m.CompanyAddress);
-
-    settings.Items.Add(i =>
-    {
-        i.Caption = "";
-        i.NestedExtension().Button(b =>
-        {
-
-            b.Name = "btn";
-            b.Text = "Register";
-            b.UseSubmitBehavior = true;
-        });
-    });
-
-    var credentialInfo = regForm.Items.AddGroupItem(gi =>
-    {
-        gi.Caption = "Account Information";
-        gi.ColumnCount = 3;
-    });
-    credentialInfo.Items.Add(m => m.UserName);
-    credentialInfo.Items.Add(m => m.Password);
-    credentialInfo.Items.Add(m => m.ConfirmPassword);
-
-}).GetHtml()
+    @Html.DevExpress().GetStyleSheets(
+        new StyleSheet { ExtensionSuite = ExtensionSuite.NavigationAndLayout },
+        new StyleSheet { ExtensionSuite = ExtensionSuite.GridView }
+    )
+    @Html.DevExpress().GetScripts(
+        new Script { ExtensionSuite = ExtensionSuite.NavigationAndLayout },
+        new Script { ExtensionSuite = ExtensionSuite.GridView }
+    )
 }
+
+<div class="clearfix">
+    <div class="mx-auto">
+
+        <div class="title text-center" style="margin-top:30px"><h3>Registration Form</h3></div>
+       
+
+        @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary("", new { @class = "text-danger" })
+
+
+            @Html.DevExpress().FormLayout(settings =>
+        {
+            settings.Name = "RegistrationForm";
+            //settings.Width = System.Web.UI.WebControls.Unit.Percentage(100);
+            var regForm = settings.Items.AddGroupItem(giSettings =>
+            {
+                giSettings.Caption = "";
+                giSettings.HorizontalAlign = FormLayoutHorizontalAlign.Center;
+            }
+            );
+
+
+
+            var userInfo = regForm.Items.AddGroupItem(giSettings =>
+            {
+                giSettings.Caption = "User Information";
+                giSettings.ColumnCount = 4;
+            }
+        );
+            userInfo.Items.Add(m => m.FirstName);
+            userInfo.Items.Add(m => m.LastName);
+            userInfo.Items.Add(m => m.Email);
+            userInfo.Items.Add(m => m.PhoneNumber);
+            userInfo.Items.Add(itemSettings =>
+            {
+                itemSettings.NestedExtensionType = FormLayoutNestedExtensionItemType.DateEdit;
+                itemSettings.FieldName = "BirthDate";
+            });
+            userInfo.Items.Add(m => m.Address);
+            userInfo.Items.Add(m => m.City);
+            userInfo.Items.Add(m => m.Country, i =>
+            {
+                i.NestedExtension().ComboBox(s =>
+                {
+                    s.ControlStyle.CssClass = "maxWidth";
+                    s.Properties.DropDownStyle = DropDownStyle.DropDownList;
+                    s.Properties.DataSource = list.Select( y => y.CountryName);
+                });
+            });
+
+
+            var companyInfo = regForm.Items.AddGroupItem(giSettings =>
+            {
+                giSettings.Caption = "Company Information";
+                giSettings.ColumnCount = 4;
+            }
+        );
+            companyInfo.Items.Add(m => m.CompanyName);
+            companyInfo.Items.Add(m => m.Vat);
+            companyInfo.Items.Add(m => m.CompanyPhoneNumber);
+            companyInfo.Items.Add(m => m.CompanyAddress);
+
+            settings.Items.Add(i =>
+            {
+                i.Caption = "";
+                i.NestedExtension().Button(b =>
+                {
+
+                    b.Name = "btn";
+                    b.Text = "Register";
+                    b.UseSubmitBehavior = true;
+                });
+            });
+
+            var credentialInfo = regForm.Items.AddGroupItem(gi =>
+            {
+                gi.Caption = "Account Information";
+                gi.ColumnCount = 3;
+            });
+            credentialInfo.Items.Add(m => m.UserName);
+            credentialInfo.Items.Add(m => m.Password);
+            credentialInfo.Items.Add(m => m.ConfirmPassword);
+
+        }).GetHtml()
+        }
+    </div>
+</div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

@@ -10,6 +10,7 @@ namespace CUFE.Controllers
 {
     public class BlogsController : BaseXpoController
     {
+        
         // GET: Blogs
         public ActionResult GridViewPartial()
         {

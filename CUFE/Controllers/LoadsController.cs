@@ -15,6 +15,10 @@ namespace CUFE.Controllers
 {
     public class LoadsController : Controller
     {
+        public ActionResult Index()
+        {
+            return View();
+        }
         public ActionResult GridViewPartial()
         {
             using (UnitOfWork uow = new UnitOfWork())
