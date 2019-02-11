@@ -10,6 +10,7 @@ namespace CUFE.Controllers
 {
     public class HomeController : BaseXpoController
     {
+        UnitOfWork _unitOfWork = new UnitOfWork();
         public ActionResult Index()
         {
             //using (UnitOfWork uow = new UnitOfWork())
@@ -43,7 +44,20 @@ namespace CUFE.Controllers
 
         public ActionResult Blogs()
         {
+            var model = _unitOfWork.Query<Blog>();
+            ViewBag.Blogs = model.ToList();
             return View();
         }
+
+        [HttpPost]
+        public ActionResult Message()
+        {
+            ViewBag.Title = "Registration Information Received!";
+            ViewBag.Message = "Dear Blanco, Thank You for Registering with us. Your request has been received and You will receive a verification call between 2 business days. upon verfication you will be able to use your account.";
+            ViewBag.errorMessage = "Das ist Error Message";
+            return View("Message");
+        }
+
+        
     }
 }

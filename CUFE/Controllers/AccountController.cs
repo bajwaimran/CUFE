@@ -18,6 +18,7 @@ namespace CUFE.Controllers
     [Authorize]
     public class AccountController : Controller
     {
+        UnitOfWork _unitOfWork = new UnitOfWork();
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
 
@@ -155,11 +156,10 @@ namespace CUFE.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
-            using (UnitOfWork uow = new UnitOfWork())
-            {
-                ViewBag.CountryList = uow.Query<Country>().ToList();
+            
+                ViewBag.CountryList = _unitOfWork.Query<Country>().ToList();
                 return View();
-            }
+            
         }
 
         //
@@ -171,6 +171,7 @@ namespace CUFE.Controllers
         {
             using (UnitOfWork uow = new UnitOfWork())
             {
+                ViewBag.CountryList = _unitOfWork.Query<Country>().ToList();
                 if (ModelState.IsValid)
                 {
                     var company = new Company(uow) { Vat = model.Vat, CompanyName = model.CompanyName, Address = model.CompanyAddress, Email = model.Email, Phone = model.CompanyPhoneNumber };

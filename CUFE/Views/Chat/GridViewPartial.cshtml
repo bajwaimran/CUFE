@@ -4,7 +4,7 @@
         settings.Name = "GridView";
         settings.CallbackRouteValues = new { Controller = "Chat", Action = "GridViewPartial" };
 
-        settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "Chat", Action = "GridViewPartial" };
+        settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "Chat", Action = "Add" };
         settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "Chat", Action = "GridViewPartial" };
         settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "Chat", Action = "GridViewPartial" };
 
@@ -39,8 +39,13 @@
             c.FieldName = "RoomName";
 
         });
-        
 
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "Active";
+            c.ColumnType = MVCxGridViewColumnType.CheckBox;
+
+        });
 
 
         settings.SettingsPager.Visible = true;

@@ -11,7 +11,7 @@ using DevExpress.Data.Filtering;
 namespace CUFE.Controllers
 {
     [Authorize]
-    public class ChatController : Controller
+    public class ChatController : BaseXpoController
     {
         // GET: Chat
         public ActionResult Index()
@@ -43,6 +43,30 @@ namespace CUFE.Controllers
                 return PartialView("GridViewPartial", model.ToList());
             }
             
+        }
+
+        public ActionResult Add([ModelBinder(typeof(XpoModelBinder))]CUFE.Models.ChatModels.GroupChat item )
+        {
+            using (UnitOfWork unitOfWork = new UnitOfWork())
+            {
+                var model = unitOfWork.Query<GroupChat>();
+                if (ModelState.IsValid)
+                {
+                    
+                    new GroupChat(unitOfWork)
+                    {
+                        RoomName = item.RoomName
+                    };                    
+                    unitOfWork.CommitChanges();
+                }
+                else
+                {
+                    ViewData["EditError"] = "Please, correct all errors.";
+                }
+                return PartialView("GridViewPartial", model.ToList());
+
+
+            }
         }
 
 

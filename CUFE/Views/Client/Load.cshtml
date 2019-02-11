@@ -6,6 +6,35 @@
     Layout = "~/Views/Shared/_LayoutBackend.cshtml";
     int companyId = int.Parse(User.Identity.GetCompanyId());
 }
+
+<script>
+   
+   
+    function sendMessage(s, e) {
+        var message = $.connection.chatHub;
+        $.connection.hub.start().done(function () {
+
+            var controls = ASPxClientControl.GetControlCollection();
+            var msg = controls.GetByName('Message').GetValue();
+            var usr = $('#loadUserEmail').val();
+            message.server.sendMessageByEmailId(usr, msg);
+            controls.GetByName('Message').SetValue("");
+            PopupControl.Hide();
+        });
+        
+    }
+
+    //$(function () {
+    //    var srv = $.connection.chatHub;
+    //    srv.client.notify = function (message) {
+    //        toastr['info'](message);
+    //    }
+    //})
+</script>
+
+
+
+<input type="hidden" id="loadUserEmail" value="@Model.ContactPersonEmail" />
 <div class="row">
     <div class="col-md-12">
         <div class="card bg-secondary">
@@ -69,7 +98,7 @@
             <input type="hidden" name="wp.1" value="@Model.StartLocationName"><br>
             <input type="hidden" name="wp.2" value="@Model.EndLocationName"><br>
 
-            <input id="submit" type="button" name="submit" value="Calculate Distance" style="width:150px">
+            @*<input id="submit" type="button" name="submit" value="Calculate Distance" style="width:150px">*@
         </form>
 
         @{
@@ -90,4 +119,89 @@
 
 
 </div>
+@using (Html.BeginForm())
+{
+    @Html.DevExpress().PopupControl(settings => {
+    settings.Name = "PopupControl";
+    settings.HeaderText = "Send Message";
+    settings.ShowOnPageLoad = false;
+    settings.CloseAction = CloseAction.CloseButton;
+    settings.SettingsAdaptivity.Mode = PopupControlAdaptivityMode.Always;
+    settings.SettingsAdaptivity.VerticalAlign = PopupAdaptiveVerticalAlign.WindowCenter;
+    settings.SettingsAdaptivity.MaxWidth = System.Web.UI.WebControls.Unit.Pixel(700);
+    settings.AllowDragging = false;
+    settings.ShowFooter = true;
+    settings.Styles.Content.Paddings.Padding = 0;
+    settings.Styles.Content.Paddings.PaddingTop = 12;
+    settings.SetFooterTemplateContent(c => {
+        @Html.DevExpress().FormLayout(formLayoutsettings => {
+            formLayoutsettings.Name = "footerFormLayout";
+            formLayoutsettings.Width = System.Web.UI.WebControls.Unit.Percentage(100);
+            formLayoutsettings.ControlStyle.CssClass = "clearPaddings";
+            formLayoutsettings.Styles.LayoutItem.CssClass = "clearPaddings";
+            formLayoutsettings.Styles.LayoutGroup.CssClass = "clearPaddings";
+            formLayoutsettings.Items.AddGroupItem(g => {
+                g.GroupBoxDecoration = GroupBoxDecoration.None;
+                g.Paddings.Padding = System.Web.UI.WebControls.Unit.Pixel(0);
+                g.Items.Add(i => {
+                    i.ShowCaption = DefaultBoolean.False;
+                }).SetNestedContent(() => {
+                    ViewContext.Writer.Write("<div class='buttonsContainer'>");
+                    Html.DevExpress().Button(s => {
+                        s.Name = "Submit";
+                        s.Width = System.Web.UI.WebControls.Unit.Pixel(100);
+                        s.ControlStyle.CssClass = "submitButton";
+                        s.Text = "Send Message";
+                        s.ClientSideEvents.Click = "sendMessage";
+                        //s.UseSubmitBehavior = true;
+                    }).Render();
+                    Html.DevExpress().Button(s => {
+                        s.Name = "Cancel";
+                        s.Width = System.Web.UI.WebControls.Unit.Pixel(100);
+                        s.ControlStyle.CssClass = "cancelButton";
+                        s.Text = "Cancel";
+                        s.UseSubmitBehavior = false;
+                        s.ClientSideEvents.Click = "function(s, e){ PopupControl.Hide(); }";
+                    }).Render();
+                    ViewContext.Writer.Write("</div>");
+                });
+            });
+        }).Render();
+    });
+    settings.SetContent(() => {
+        @Html.DevExpress().FormLayout(formLayoutsettings => {
+            formLayoutsettings.Name = "detailFormLayout";
+            formLayoutsettings.SettingsAdaptivity.AdaptivityMode = FormLayoutAdaptivityMode.SingleColumnWindowLimit;
+            formLayoutsettings.SettingsAdaptivity.SwitchToSingleColumnAtWindowInnerWidth = 576;
 
+            formLayoutsettings.Items.AddGroupItem(g => {
+                g.Caption = "Contact Details";
+                g.ColCount = 2;
+                g.Paddings.Padding = System.Web.UI.WebControls.Unit.Pixel(0);
+                g.Paddings.PaddingTop = System.Web.UI.WebControls.Unit.Pixel(10);
+                g.GroupBoxDecoration = GroupBoxDecoration.HeadingLine;
+                g.GroupBoxStyle.Caption.Font.Bold = true;
+                g.GroupBoxStyle.Caption.Font.Size = 16;
+                g.GroupBoxStyle.Caption.CssClass = "groupCaption";
+                g.Items.Add(m => m.ConactPersonName, i => {
+                    i.NestedExtension().TextBox(s => {
+                        s.ShowModelErrors = true;
+                        s.Properties.ValidationSettings.Display = Display.Dynamic;
+                    });
+                });
+
+                g.Items.Add( m=> m.ContactPersonPhone);
+                //g.Items.Add(m => m.Notes);
+                g.Items.Add(c =>
+                {
+                    c.Name = "Message";
+                    c.Caption = "Message";
+                    c.Width = System.Web.UI.WebControls.Unit.Percentage(100);
+                    //c.Height = System.Web.UI.WebControls.Unit.Pixel(200);
+                });
+
+            });
+        }).Render();
+    });
+}).GetHtml()
+}

@@ -4,11 +4,11 @@
     var grid = Html.DevExpress().GridView(settings =>
     {
         settings.Name = "GridView";
-        settings.CallbackRouteValues = new { Controller = "Chats", Action = "GridViewPartial" };
+        settings.CallbackRouteValues = new { Controller = "Chat", Action = "GridViewPartial" };
 
-        settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "Chats", Action = "Add" };
-        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "Chats", Action = "Update" };
-        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "Chats", Action = "Delete" };
+        settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "Chat", Action = "Add" };
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "Chat", Action = "Update" };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "Chat", Action = "Delete" };
 
         settings.SettingsSearchPanel.CustomEditorName = "tbSearch";
         settings.Settings.ShowTitlePanel = true;
@@ -39,6 +39,12 @@
         settings.Columns.Add(c =>
         {
             c.FieldName = "RoomName";
+
+        });
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "Active";
+            c.ColumnType = MVCxGridViewColumnType.CheckBox;
 
         });
         settings.Columns.Add(c =>

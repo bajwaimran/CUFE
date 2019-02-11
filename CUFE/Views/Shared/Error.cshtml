@@ -1,9 +1,25 @@
 ﻿@model System.Web.Mvc.HandleErrorInfo
 
 @{
+    Layout = "~/Views/Shared/_LayoutBusiness.cshtml";
     ViewBag.Title = "Error";
 }
 
-<h1 class="text-danger">Error.</h1>
-<h2 class="text-danger">An error occurred while processing your request.</h2>
-
+<div id="about" class="about-area area-padding">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="section-headline text-center">
+                    <h2>@ViewBag.Title</h2>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <!-- single-well start-->
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <p class="text-danger text-center">@ViewBag.errorMessage</p>
+                <h6 class=" text-center">@ViewBag.Message</h6>
+            </div>
+        </div>
+    </div>
+</div>

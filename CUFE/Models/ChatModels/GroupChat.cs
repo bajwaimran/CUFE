@@ -18,6 +18,13 @@ namespace CUFE.Models.ChatModels
             set => SetPropertyValue(nameof(RoomName), ref roomName, value);
         }
 
+        bool active;
+        public bool Active
+        {
+            get => active;
+            set => SetPropertyValue(nameof(Active), ref active, value);
+        }
+
         [Association("ChatUser-GroupChats")]
         public XPCollection<ChatUser> ChatUsers
         {
@@ -35,5 +42,7 @@ namespace CUFE.Models.ChatModels
                 return GetCollection<GroupChatMessage>("GroupChatMessages");
             }
         }
+
+
     }
 }

@@ -233,6 +233,7 @@
     <Compile Include="Controllers\FreightsController.cs" />
     <Compile Include="Controllers\LoadsController.cs" />
     <Compile Include="Controllers\MapsController.cs" />
+    <Compile Include="Controllers\MessagesController.cs" />
     <Compile Include="Controllers\NotificationsController.cs" />
     <Compile Include="Controllers\RolesController.cs" />
     <Compile Include="Helpers\FastController.cs" />
@@ -269,6 +270,7 @@
     <Compile Include="Models\Load.cs" />
     <Compile Include="Models\LoadType.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\Message.cs" />
     <Compile Include="Models\Notification.cs" />
     <Compile Include="Models\Truck.cs" />
     <Compile Include="Models\TruckType.cs" />
@@ -3920,8 +3922,8 @@
     <Content Include="Views\Account\ExternalLoginFailure.cshtml" />
     <Content Include="Views\Account\ForgotPassword.cshtml" />
     <Content Include="Views\Account\ForgotPasswordConfirmation.cshtml" />
-    <Content Include="Views\Account\Login.cshtml" />
-    <Content Include="Views\Account\Register.cshtml" />
+    <Content Include="Views\Account\old-Login.cshtml" />
+    <Content Include="Views\Account\devExRegister.cshtml" />
     <Content Include="Views\Account\ResetPassword.cshtml" />
     <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
     <Content Include="Views\Account\SendCode.cshtml" />
@@ -3990,6 +3992,10 @@
     <Content Include="Views\Freights\Index.cshtml" />
     <Content Include="Views\Loads\Index.cshtml" />
     <Content Include="Views\Shared\_LayoutFrontendGridView.cshtml" />
+    <Content Include="Views\Account\Register.cshtml" />
+    <Content Include="Views\Account\Login.cshtml" />
+    <Content Include="Views\Messages\_GridViewPartial.cshtml" />
+    <Content Include="Views\Admin\Messages.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

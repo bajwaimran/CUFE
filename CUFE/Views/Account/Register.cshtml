@@ -1,112 +1,162 @@
-﻿@using CUFE.Models
-@model CUFE.Models.RegisterViewModel
+﻿@model CUFE.Models.RegisterViewModel
 @{
     ViewBag.Title = "Register";
     Layout = "~/Views/Shared/_LayoutBusiness.cshtml";
-    List<Country> list = ViewBag.CountryList;
-}
-@section devexpress{
-
-    @Html.DevExpress().GetStyleSheets(
-        new StyleSheet { ExtensionSuite = ExtensionSuite.NavigationAndLayout },
-        new StyleSheet { ExtensionSuite = ExtensionSuite.GridView }
-    )
-    @Html.DevExpress().GetScripts(
-        new Script { ExtensionSuite = ExtensionSuite.NavigationAndLayout },
-        new Script { ExtensionSuite = ExtensionSuite.GridView }
-    )
+    List<CUFE.Models.Country> list = ViewBag.CountryList;
 }
 
-<div class="clearfix">
-    <div class="mx-auto">
-
-        <div class="title text-center" style="margin-top:30px"><h3>Registration Form</h3></div>
-       
-
-        @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-        {
-            @Html.AntiForgeryToken()
-            @Html.ValidationSummary("", new { @class = "text-danger" })
 
 
-            @Html.DevExpress().FormLayout(settings =>
-        {
-            settings.Name = "RegistrationForm";
-            //settings.Width = System.Web.UI.WebControls.Unit.Percentage(100);
-            var regForm = settings.Items.AddGroupItem(giSettings =>
+
+
+<!-- Start contact Area -->
+<div id="contact" class="contact-area">
+    <div class="contact-inner area-padding">
+        <div class="contact-overly"></div>
+        <div class="container ">
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="section-headline text-center">
+                        <h2>Register</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <!-- Start contact icon column -->
+                <div class="col-md-4 col-sm-4 col-xs-12">
+                    <div class="contact-icon text-center">
+                        <div class="single-icon">
+                            <i class="fa fa-mobile"></i>
+                            <p>
+                                Call: +49 7251 97600<br>
+                                <span>Monday-Friday (9am-5pm)</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Start contact icon column -->
+                <div class="col-md-4 col-sm-4 col-xs-12">
+                    <div class="contact-icon text-center">
+                        <div class="single-icon">
+                            <i class="fa fa-envelope-o"></i>
+                            <p>
+                                Email: info@cargo-europe.de<br>
+                                <span>Web: www.cargo-europe.de</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Start contact icon column -->
+                <div class="col-md-4 col-sm-4 col-xs-12">
+                    <div class="contact-icon text-center">
+                        <div class="single-icon">
+                            <i class="fa fa-map-marker"></i>
+                            <p>
+                                Location: Am Mantel, Bruchsal<br>
+                                <span>76646, DE</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @using (Html.BeginForm("Register", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
             {
-                giSettings.Caption = "";
-                giSettings.HorizontalAlign = FormLayoutHorizontalAlign.Center;
+
+                @Html.AntiForgeryToken()
+                <div class="row">
+                    <!-- Start Google Map -->
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <div class="form contact-form">
+                            @Html.ValidationSummary("", new { @class = "text-danger" })
+                            <div id="sendmessage"></div>
+                            <div id="errormessage"></div>
+
+                            <div class="form-group">
+                                @*<input type="text" name="name" class="form-control" id="name" placeholder="Your Name" data-rule="minlen:4" data-msg="Please enter at least 4 chars" />*@
+                                @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control", @id = "firstName", placeholder = "First Name" })
+                                <div class="validation"></div>
+                            </div>
+                            <div class="form-group">
+                                @*<input type="email" class="form-control" name="email" id="email" placeholder="Your Email" data-rule="email" data-msg="Please enter a valid email" />*@
+                                @Html.TextBoxFor(m => m.LastName, new { @class = "form-control", placeholder = "Last Name", required = "" })
+                                <div class="validation"></div>
+                            </div>
+                            <div class="form-group">
+                                @*<input type="text" name="name" class="form-control" id="name" placeholder="Your Name" data-rule="minlen:4" data-msg="Please enter at least 4 chars" />*@
+                                @Html.TextBoxFor(m => m.Email, new { @type = "email", @class = "form-control", placeholder = "Email", required = "", @id = "userEmail" })
+                                <div class="validation"></div>
+                            </div>
+                            <div class="form-group">
+                                @Html.TextBoxFor(m => m.BirthDate, new { @class = "form-control", placeholder = "Date of Birth", required = "", @type = "date" })
+                                <div class="validation"></div>
+                            </div>
+                            <div class="form-group">
+                                @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "form-control", placeholder = "Phone number" })
+                                <div class="validation"></div>
+                            </div>
+                            <div class="form-group">
+                                @Html.TextBoxFor(m => m.Address, new { @class = "form-control", placeholder = "Address" })
+                                <div class="validation"></div>
+                            </div>
+                            <div class="form-group">
+                                @Html.TextBoxFor(m => m.City, new { @class = "form-control", placeholder = "City", required = "" })
+                                <div class="validation"></div>
+                            </div>
+                            <div class="form-group">
+                                @Html.DropDownListFor(m => m.Country, new SelectList(list, "CountryName", "CountryName"), new { @class = "form-control", required = "" })
+                                <div class="validation"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End Google Map -->
+                    <!-- Start  contact -->
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <div class="form contact-form">
+                            <div class="form-group">
+                                @Html.TextBoxFor(m => m.CompanyName, new { @class = "form-control", placeholder = "Company Name", required = "" })
+                                <div class="validation"></div>
+                            </div>
+                            <div class="form-group">
+                                @Html.TextBoxFor(m => m.CompanyAddress, new { @class = "form-control", placeholder = "Company Address", required = "" })
+                                <div class="validation"></div>
+                            </div>
+                            <div class="form-group">
+                                @Html.TextBoxFor(m => m.Vat, new { @class = "form-control", placeholder = "Company TAX Id", required = "" })
+                                <div class="validation"></div>
+                            </div>
+                            <div class="form-group">
+                                @Html.TextBoxFor(m => m.CompanyPhoneNumber, new { @class = "form-control", placeholder = "Company Phone" })
+                                <div class="validation"></div>
+                            </div>                           
+                            <div class="form-group">
+                                @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Password", required = "" })
+                                <div class="validation"></div>
+                            </div>
+                            <div class="form-group">
+                                @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control", placeholder = "Confirm Password", required = "" })
+                                <div class="validation"></div>
+                            </div>
+                            @Html.TextBoxFor(m => m.UserName, new { @type = "hidden", @class = "form-control", placeholder = "Required username", @id = "userName" })
+                            <div class="text-center"><button type="submit">Register</button></div>
+                        </div>
+                    </div>
+                    <!-- End Left contact -->
+                </div>
             }
-            );
-
-
-
-            var userInfo = regForm.Items.AddGroupItem(giSettings =>
-            {
-                giSettings.Caption = "User Information";
-                giSettings.ColumnCount = 4;
-            }
-        );
-            userInfo.Items.Add(m => m.FirstName);
-            userInfo.Items.Add(m => m.LastName);
-            userInfo.Items.Add(m => m.Email);
-            userInfo.Items.Add(m => m.PhoneNumber);
-            userInfo.Items.Add(itemSettings =>
-            {
-                itemSettings.NestedExtensionType = FormLayoutNestedExtensionItemType.DateEdit;
-                itemSettings.FieldName = "BirthDate";
-            });
-            userInfo.Items.Add(m => m.Address);
-            userInfo.Items.Add(m => m.City);
-            userInfo.Items.Add(m => m.Country, i =>
-            {
-                i.NestedExtension().ComboBox(s =>
-                {
-                    s.ControlStyle.CssClass = "maxWidth";
-                    s.Properties.DropDownStyle = DropDownStyle.DropDownList;
-                    s.Properties.DataSource = list.Select( y => y.CountryName);
-                });
-            });
-
-
-            var companyInfo = regForm.Items.AddGroupItem(giSettings =>
-            {
-                giSettings.Caption = "Company Information";
-                giSettings.ColumnCount = 4;
-            }
-        );
-            companyInfo.Items.Add(m => m.CompanyName);
-            companyInfo.Items.Add(m => m.Vat);
-            companyInfo.Items.Add(m => m.CompanyPhoneNumber);
-            companyInfo.Items.Add(m => m.CompanyAddress);
-
-            settings.Items.Add(i =>
-            {
-                i.Caption = "";
-                i.NestedExtension().Button(b =>
-                {
-
-                    b.Name = "btn";
-                    b.Text = "Register";
-                    b.UseSubmitBehavior = true;
-                });
-            });
-
-            var credentialInfo = regForm.Items.AddGroupItem(gi =>
-            {
-                gi.Caption = "Account Information";
-                gi.ColumnCount = 3;
-            });
-            credentialInfo.Items.Add(m => m.UserName);
-            credentialInfo.Items.Add(m => m.Password);
-            credentialInfo.Items.Add(m => m.ConfirmPassword);
-
-        }).GetHtml()
-        }
+        </div>
     </div>
 </div>
 
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
+
+
+@section scripts{
+    <script>
+        $( "#userEmail" ).change(function() {
+            var str = $( "#userEmail" ).val();
+            $('#userName').val(str);
+            console.log(str);
+        });
+    </script>
+    
+
 }

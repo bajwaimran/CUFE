@@ -54,6 +54,9 @@ namespace CUFE.Controllers
         {
             return View();
         }
-
+        public ActionResult Messages()
+        {
+            return View();
+        }
     }
 }

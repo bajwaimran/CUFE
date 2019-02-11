@@ -3,11 +3,11 @@
     var grid = Html.DevExpress().GridView(settings =>
     {
         settings.Name = "GridView";
-        settings.CallbackRouteValues = new { Controller = "Blogs", Action = "GridViewPartial" };
+        settings.CallbackRouteValues = new { Controller = "Countries", Action = "GridViewPartialCountry" };
 
-        settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "Blogs", Action = "Add" };
-        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "Blogs", Action = "Update" };
-        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "Blogs", Action = "Delete" };
+        settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "Countries", Action = "GridViewPartialAddNew" };
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "Countries", Action = "GridViewPartialUpdate" };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "Countries", Action = "GridViewPartialDelete" };
 
         settings.SettingsSearchPanel.CustomEditorName = "tbSearch";
         settings.Settings.ShowTitlePanel = true;
@@ -16,7 +16,7 @@
             Html.DevExpress().Label(label =>
             {
 
-                label.Text = "Blogs Management";
+                label.Text = "Website Messages";
                 label.Style["font-weight"] = "bold";
 
             }).Render();
@@ -37,21 +37,25 @@
         settings.KeyFieldName = "Oid";
         settings.Columns.Add(c =>
         {
-            c.FieldName = "Title";
+            c.FieldName = "Name";
 
         });
         settings.Columns.Add(c =>
         {
-            c.FieldName = "ShortDescription";
-
+            c.FieldName = "Email";
         });
         settings.Columns.Add(c =>
         {
-            c.FieldName = "Article";
+            c.FieldName = "Subject";
         });
         settings.Columns.Add(c =>
         {
-            c.FieldName = "CreatedBy";
+            c.FieldName = "Text";
+        });
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "Timestamp";
+            c.ColumnType = MVCxGridViewColumnType.DateEdit;
         });
 
 
