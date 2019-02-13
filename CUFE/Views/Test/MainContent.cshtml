@@ -1,0 +1,10 @@
+﻿ 
+@if (ViewBag.IsGridView != null)
+{
+    Html.RenderAction("GridView_Master");
+}
+else
+{
+    Html.RenderAction("CardView_Master");
+}
+@Html.Partial("DetailCallbackPanel");

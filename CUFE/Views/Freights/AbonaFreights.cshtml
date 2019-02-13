@@ -1,0 +1,197 @@
+﻿@{
+    var grid = Html.DevExpress().GridView(settings =>
+    {
+        settings.Name = "GridView";
+        settings.KeyFieldName = "Oid";
+
+        settings.CallbackRouteValues = new { Controller = "Freights", Action = "AbonaFreights" };
+        settings.CustomActionRouteValues = new { Controller = "Freights", Action = "AbonaFreights" };
+        settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "Freights", Action = "AbonaFreights" };
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "Freights", Action = "AbonaFreights" };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "Freights", Action = "AbonaFreights" };
+
+        settings.EnablePagingGestures = AutoBoolean.False;
+
+        settings.ControlStyle.CssClass = "grid-view";
+        settings.Width = System.Web.UI.WebControls.Unit.Percentage(100);
+
+        settings.Styles.Cell.Wrap = DefaultBoolean.False;
+        settings.Styles.PagerBottomPanel.CssClass = "pager";
+        settings.Styles.FocusedRow.CssClass = "focused";
+
+        settings.SettingsBehavior.AllowFocusedRow = true;
+        settings.SettingsBehavior.AllowSelectByRowClick = true;
+        settings.SettingsBehavior.AllowEllipsisInText = true;
+        settings.SettingsBehavior.AllowDragDrop = false;
+
+        settings.SettingsSearchPanel.CustomEditorName = "tbSearch";
+        settings.Settings.ShowTitlePanel = true;
+        settings.SetTitlePanelTemplateContent(content =>
+        {
+            Html.DevExpress().Label(label =>
+            {
+
+                label.Text = "Abona Freights";
+                label.Style["font-weight"] = "bold";
+
+            }).Render();
+
+        });
+
+
+
+
+
+        //settings.SettingsEditing.Mode = GridViewEditingMode.EditFormAndDisplayRow;
+        settings.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+        settings.SettingsEditing.EditFormColumnCount = 2;
+
+        //settings.Settings.VerticalScrollBarMode = ScrollBarMode.Hidden;
+        //settings.Settings.HorizontalScrollBarMode = ScrollBarMode.Auto;
+        settings.Settings.ShowHeaderFilterButton = true;
+
+        settings.SettingsPager.PageSize = 15;
+        settings.SettingsPager.EnableAdaptivity = true;
+        settings.SettingsPager.PageSizeItemSettings.Visible = true;
+
+        settings.SettingsExport.EnableClientSideExportAPI = true;
+        settings.SettingsExport.ExportSelectedRowsOnly = true;
+
+        settings.SettingsPopup.EditForm.SettingsAdaptivity.MaxWidth = 800;
+        settings.SettingsPopup.EditForm.SettingsAdaptivity.Mode = PopupControlAdaptivityMode.Always;
+        settings.SettingsPopup.EditForm.SettingsAdaptivity.VerticalAlign = PopupAdaptiveVerticalAlign.WindowCenter;
+
+        //settings.SettingsBehavior.ConfirmDelete = true;
+
+        //settings.CommandColumn.Visible = true;
+        //settings.CommandColumn.ShowNewButton = true;
+        //settings.CommandColumn.ShowDeleteButton = true;
+        //settings.CommandColumn.ShowEditButton = true;
+
+        settings.CommandColumn.Visible = true;
+        settings.CommandColumn.ShowSelectCheckbox = true;
+        settings.CommandColumn.SelectAllCheckboxMode = GridViewSelectAllCheckBoxMode.AllPages;
+        settings.CommandColumn.VisibleIndex = 0;
+        settings.CommandColumn.Width = System.Web.UI.WebControls.Unit.Pixel(52);
+
+        settings.SettingsBehavior.AllowDragDrop = false;
+
+        //selection related 
+        settings.CommandColumn.ShowSelectCheckbox = true;
+        settings.CommandColumn.ShowClearFilterButton = true;
+        //settings.CommandColumn.SelectAllCheckboxMode = ViewBag.SelectAllCheckBoxMode;
+
+
+
+
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "MandantName";
+            c.EditorProperties().HyperLink(hyperLinkSettings =>
+            {
+                hyperLinkSettings.TextField = "MandantName";
+                hyperLinkSettings.NavigateUrlFormatString = "GridView/GridViewDetailsPage?id={0}";
+            });
+
+        });
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "OrderOid";
+
+        });
+
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "OrderNoCw";
+
+        });
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "OrderDate";
+
+        });
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "CustomerName";
+
+        });
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "FromDate";
+
+        });
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "FromNation";
+
+        });
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "ToDate";
+
+        });
+
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "ToNation";
+
+        });
+
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "Price";
+
+        });
+
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "RecommandedPrice";
+
+        });
+
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "KMDistanz";
+
+        });
+
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "freight";
+
+        });
+
+
+
+
+        settings.SettingsPager.Visible = true;
+        settings.Settings.ShowGroupPanel = true;
+        settings.Settings.ShowFilterRow = true;
+        settings.SettingsBehavior.AllowSelectByRowClick = true;
+
+        settings.SettingsAdaptivity.AdaptivityMode = GridViewAdaptivityMode.Off;
+        settings.SettingsAdaptivity.AdaptiveColumnPosition = GridViewAdaptiveColumnPosition.Right;
+        settings.SettingsAdaptivity.AdaptiveDetailColumnCount = 1;
+        settings.SettingsAdaptivity.AllowOnlyOneAdaptiveDetailExpanded = false;
+        settings.SettingsAdaptivity.HideDataCellsAtWindowInnerWidth = 0;
+
+        //settings.ClientSideEvents.SelectionChanged = "SelectionChanged";
+
+        //settings.ClientSideEvents.Init = "onGridViewInit";
+        //settings.ClientSideEvents.SelectionChanged = "onGridViewSelectionChanged";
+        //settings.ClientSideEvents.BeginCallback = "onGridViewBeginCallback";
+
+        //settings.CellEditorInitialize = (s, e) =>
+        //{
+        //    ((ASPxEdit)e.Editor).ValidationSettings.Display = Display.Dynamic;
+        //};
+
+    });
+    if (ViewData["EditError"] != null)
+    {
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+@grid.Bind(Model).GetHtml()
+
+

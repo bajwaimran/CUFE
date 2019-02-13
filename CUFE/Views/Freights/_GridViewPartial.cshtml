@@ -1,15 +1,31 @@
 ﻿@{
     var grid = Html.DevExpress().GridView(settings =>
     {
-        settings.Name = "GridView";
+        settings.Name = "gridView";
         settings.Width = System.Web.UI.WebControls.Unit.Percentage(100);
         settings.CallbackRouteValues = new { Controller = "Freights", Action = "GridViewPartial" };
 
         settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "Freights", Action = "GridViewPartialAddNew" };
         settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "Freights", Action = "GridViewPartialUpdate" };
         settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "Freights", Action = "GridViewPartialDelete" };
+        //settings.CallbackRouteValues = new { Controller = "Freights", Action = "Content" };
+
+        settings.EnablePagingGestures = AutoBoolean.False;
+
+        settings.ControlStyle.CssClass = "grid-view";
+        settings.Width = System.Web.UI.WebControls.Unit.Percentage(100);
+
         settings.SettingsEditing.Mode = GridViewEditingMode.EditFormAndDisplayRow;
         settings.SettingsBehavior.ConfirmDelete = true;
+
+        settings.Styles.Cell.Wrap = DefaultBoolean.False;
+        settings.Styles.PagerBottomPanel.CssClass = "pager";
+        settings.Styles.FocusedRow.CssClass = "focused";
+
+        settings.SettingsBehavior.AllowFocusedRow = true;
+        settings.SettingsBehavior.AllowSelectByRowClick = true;
+        settings.SettingsBehavior.AllowEllipsisInText = true;
+        settings.SettingsBehavior.AllowDragDrop = false;
 
         settings.SettingsSearchPanel.CustomEditorName = "tbSearch";
         settings.Settings.ShowTitlePanel = true;
@@ -76,6 +92,17 @@
             });
         });
         settings.Settings.ShowHeaderFilterButton = true;
+
+        //settings.ClientSideEvents.SelectionChanged = "OnSelectedIndexChanged";
+        //settings.ClientSideEvents.RowClick = "function(s, e){ alert(); }";
+        //settings.ClientSideEvents.RowClick = "OnSelectedIndexChanged";
+        //settings.ClientSideEvents.RowClick = "rowClick";
+        //settings.ClientSideEvents.FocusedRowChanged = "OnSelectedIndexChanged";
+        //settings.ClientSideEvents.BeginCallback = "GridOnBeginCallback";
+        //settings.ClientSideEvents.Init = "employeesGrid_Init";
+        //settings.ClientSideEvents.FocusedRowChanged = "employeesGrid_FocusedRowChanged";
+        //settings.ClientSideEvents.SelectionChanged = "employeesGrid_FocusedRowChanged";
+        //settings.ClientSideEvents.EndCallback = "employeesGrid_EndCallback";
     });
     if (ViewData["EditError"] != null)
     {

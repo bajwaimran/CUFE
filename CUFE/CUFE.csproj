@@ -225,17 +225,20 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\BlogsController.cs" />
     <Compile Include="Controllers\ChatController.cs" />
-    <Compile Include="Controllers\ChatsController.cs" />
     <Compile Include="Controllers\ClientController.cs" />
     <Compile Include="Controllers\CommonController.cs" />
     <Compile Include="Controllers\CompanyController.cs" />
     <Compile Include="Controllers\CountriesController.cs" />
     <Compile Include="Controllers\FreightsController.cs" />
+    <Compile Include="Controllers\LagersController.cs" />
     <Compile Include="Controllers\LoadsController.cs" />
     <Compile Include="Controllers\MapsController.cs" />
     <Compile Include="Controllers\MessagesController.cs" />
     <Compile Include="Controllers\NotificationsController.cs" />
     <Compile Include="Controllers\RolesController.cs" />
+    <Compile Include="Controllers\TestController.cs" />
+    <Compile Include="DomainObjects\Enums.cs" />
+    <Compile Include="DomainObjects\FreightExchangeOrders.cs" />
     <Compile Include="Helpers\FastController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoadTypesController.cs" />
@@ -267,6 +270,7 @@
     <Compile Include="Models\Country.cs" />
     <Compile Include="Models\Freight.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\Lager.cs" />
     <Compile Include="Models\Load.cs" />
     <Compile Include="Models\LoadType.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
@@ -280,6 +284,7 @@
     <Compile Include="Startup.cs" />
     <Compile Include="XPO\BaseXpoController.cs" />
     <Compile Include="XPO\IXpoController.cs" />
+    <Compile Include="XPO\MasterXpoHelper.cs" />
     <Compile Include="XPO\XpoHelper.cs" />
     <Compile Include="XPO\XpoModelBinder.cs" />
   </ItemGroup>
@@ -3711,6 +3716,7 @@
     <Content Include="Content\eBusiness\lib\wow\wow.js" />
     <Content Include="Content\eBusiness\lib\wow\wow.min.js" />
     <Content Include="Content\eBusiness\Readme.txt" />
+    <Content Include="Content\GridView.js" />
     <Content Include="Content\images\logo-cargoeurope.svg" />
     <Content Include="Content\images\logo-horizontal.svg" />
     <Content Include="Content\images\user-male-icon.png" />
@@ -3965,12 +3971,8 @@
     <Content Include="Views\Freights\GridViewPartial.cshtml" />
     <Content Include="Views\Client\Freights.cshtml" />
     <Content Include="Views\Client\Dashboard.cshtml" />
-    <Content Include="Views\Chats\Index.cshtml" />
     <Content Include="Views\Client\Groups.cshtml" />
-    <Content Include="Views\Chats\_GridViewPartial.cshtml" />
-    <Content Include="Views\Chats\ManageGroup.cshtml" />
     <Content Include="Views\Client\ManageGroup.cshtml" />
-    <Content Include="Views\Chats\_RoomMemberPartial.cshtml" />
     <Content Include="Views\Admin\Roles.cshtml" />
     <Content Include="Views\Roles\_GridViewPartial.cshtml" />
     <Content Include="Views\Client\Chat.cshtml" />
@@ -3981,7 +3983,6 @@
     <Content Include="Views\Client\Search.cshtml" />
     <Content Include="Views\Client\AdvancedSearch.cshtml" />
     <Content Include="Views\Admin\GroupMembers.cshtml" />
-    <Content Include="Views\Chats\_GroupMembersPartialView.cshtml" />
     <Content Include="Views\Client\ChatGroups.cshtml" />
     <Content Include="Views\Admin\Notifications.cshtml" />
     <Content Include="Views\Notifications\_GridViewPartial.cshtml" />
@@ -3989,13 +3990,33 @@
     <Content Include="Views\Client\Freight.cshtml" />
     <Content Include="Views\Shared\_LayoutBusiness.cshtml" />
     <Content Include="Views\Home\Blogs.cshtml" />
-    <Content Include="Views\Freights\Index.cshtml" />
+    <Content Include="Views\Freights\old-Index.cshtml" />
     <Content Include="Views\Loads\Index.cshtml" />
     <Content Include="Views\Shared\_LayoutFrontendGridView.cshtml" />
     <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Messages\_GridViewPartial.cshtml" />
     <Content Include="Views\Admin\Messages.cshtml" />
+    <Content Include="Views\Lagers\GridViewPartial.cshtml" />
+    <Content Include="Views\Client\Lagers.cshtml" />
+    <Content Include="Views\Admin\Lagers.cshtml" />
+    <Content Include="Views\Freights\AbonaFreights.cshtml" />
+    <Content Include="Views\Client\Abona.cshtml" />
+    <Content Include="Views\Freights\DetailCallbackPanel.cshtml" />
+    <Content Include="Views\Freights\CardView_Detail.cshtml" />
+    <Content Include="Views\Freights\GridView_Detail.cshtml" />
+    <Content Include="Views\Test\Index.cshtml" />
+    <Content Include="Views\Test\GridView_Master.cshtml" />
+    <Content Include="Views\Test\CardView_Master.cshtml" />
+    <Content Include="Views\Test\GridView_Detail.cshtml" />
+    <Content Include="Views\Test\CardView_Detail.cshtml" />
+    <Content Include="Views\Test\DetailCallbackPanel.cshtml" />
+    <Content Include="Views\Test\MainContent.cshtml" />
+    <Content Include="Views\Test\Callback.cshtml" />
+    <Content Include="Views\Freights\Content.cshtml" />
+    <Content Include="Views\Freights\Index.cshtml" />
+    <Content Include="Views\Freights\Details.cshtml" />
+    <Content Include="Views\Client\LoadDetails.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

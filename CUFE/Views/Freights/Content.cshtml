@@ -1,0 +1,10 @@
+﻿@model CUFE.Models.Freight
+@Html.DevExpress().CallbackPanel( cbpSettings =>
+{
+    cbpSettings.Name = "DetailsCallbackPanel";
+    cbpSettings.CallbackRouteValues = new { Controller = "Freights", Action = "Content" };
+    cbpSettings.SetContent(()=> {
+        Html.RenderAction("GridView_Detail");
+    });
+}
+    ).GetHtml()

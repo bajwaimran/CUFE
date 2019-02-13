@@ -1,0 +1,29 @@
+﻿
+@{
+    ViewBag.Title = "Callback";
+    Layout = "~/Views/Shared/_LayoutFrontendGridView.cshtml";
+}
+
+@section devexpress{
+
+    @Html.DevExpress().GetStyleSheets(
+        new StyleSheet { ExtensionSuite = ExtensionSuite.NavigationAndLayout },
+        new StyleSheet { ExtensionSuite = ExtensionSuite.GridView }
+    )
+    @Html.DevExpress().GetScripts(
+        new Script { ExtensionSuite = ExtensionSuite.NavigationAndLayout },
+        new Script { ExtensionSuite = ExtensionSuite.GridView }
+    )
+
+    <script type="text/javascript" src="@Url.Content("~/Content/GridView.js")"></script>
+}
+    <div class="blog-page area-padding">
+        @Html.DevExpress().RoundPanel(settings => {
+    settings.Name = "roundPanel";
+    settings.Width = System.Web.UI.WebControls.Unit.Percentage(100);
+    settings.HeaderText = "Freight Information:";
+    settings.SetContent(() => {
+        //Html.RenderPartial("ExamplePartial", Model as Employee);
+    });
+}).GetHtml()
+    </div>

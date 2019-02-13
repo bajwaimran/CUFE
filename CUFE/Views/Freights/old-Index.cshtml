@@ -1,0 +1,218 @@
+﻿@using DevExpress.Web.Mvc.UI;
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutFrontendGridView.cshtml";
+}
+@section devexpress{
+    @Scripts.Render("~/bundles/jquery")
+    @Html.DevExpress().GetStyleSheets(
+        new StyleSheet { ExtensionSuite = ExtensionSuite.NavigationAndLayout },
+        new StyleSheet { ExtensionSuite = ExtensionSuite.GridView }
+    )
+    @Html.DevExpress().GetScripts(
+        new Script { ExtensionSuite = ExtensionSuite.NavigationAndLayout },
+        new Script { ExtensionSuite = ExtensionSuite.GridView }
+    )
+
+    @*<script type="text/javascript" src="@Url.Content("~/Content/GridView.js")"></script>*@
+}
+<script type="text/javascript">
+    var freightId = null;
+
+    var updateTimerID = -1;
+    var updateTimeout = 300;
+    var searchBoxTimer = -1;
+    var cardClassName = "dvCard";
+    var cardViewFocusClassName = "focusCard";
+
+    function getCurrentPage() {
+        var pageName = DevAVPageName;
+        switch (pageName) {
+            case "Dashboard":
+                return dashboardPage;
+            case "Employees":
+                return employeePage;
+            case "Customers":
+                return customerPage;
+            case "Products":
+                return productPage;
+            case "Tasks":
+                return taskPage;
+        }
+    };
+    var page = getCurrentPage();
+
+    var syncHash = {};
+
+    function employeesGrid_Init(s, e) {
+        //setToolbarCWItemEnabled(true);
+        console.log("employeesGrid_Init");
+        updateDetailInfo(s);
+    }
+
+    function employeesGrid_EndCallback(s, e) {
+        console.log("employeesGrid_EndCallback");
+        updateDetailInfo(s);
+    }
+    function setToolbarCWItemEnabled(enabled) {
+        console.log("setToolbarCWItemEnabled");
+        var item = ToolbarMenu.GetItemByName("ColumnsCustomization");
+        if (!item)
+            return;
+        item.SetEnabled(enabled);
+        item.SetChecked(false);
+    }
+    function employeesGrid_FocusedRowChanged(s, e) {
+        console.log("employeesGrid_FocusedRowChanged");
+        updateDetailInfo(s);
+    }
+
+    function updateDetailInfo(sender) {
+        console.log("updateDetailInfo");
+        UpdateSelectedItemIDValue();
+
+        if (DetailsCallbackPanel.cpSkipUpdateDetails) {
+            DetailsCallbackPanel.cpSkipUpdateDetails = false;
+            return;
+        }
+        if (updateTimerID > -1)
+            window.clearTimeout(updateTimerID);
+        updateTimerID = window.setTimeout(function () {
+            window.clearTimeout(updateTimerID);
+            callbackHelper.DoCallback(DetailsCallbackPanel, "", sender);
+        }, updateTimeout);
+    };
+
+    function UpdateSelectedItemIDValue() {
+        var selectedItemID = page.GetSelectedItemID && page.GetSelectedItemID();
+        if (selectedItemID !== undefined)
+            setSyncValue("SelectedItemID", selectedItemID);
+    }
+
+    var employeePage = (function () {
+        function toolbarMenu_ItemClick(s, e) {
+            var employeeID = getSelectedEmployeeID();
+            var name = e.item.name;
+            switch (name) {
+                case "GridView":
+                    if (isGridViewMode())
+                        return;
+                    setViewMode(name);
+                    callbackHelper.DoCallback(MainCallbackPanel, "", s);
+                    break;
+                case "CardsView":
+                    if (!isGridViewMode())
+                        return;
+                    setViewMode(name);
+                    callbackHelper.DoCallback(MainCallbackPanel, "", s);
+                    break;
+                case "ColumnsCustomization":
+                    if (EmployeesGrid.IsCustomizationWindowVisible())
+                        EmployeesGrid.HideCustomizationWindow();
+                    else
+                        EmployeesGrid.ShowCustomizationWindow(e.htmlElement);
+                    break;
+                case "New":
+                case "Delete":
+                case "Meeting":
+                case "Task":
+                    break;
+            }
+        }
+
+
+
+
+
+    function GridOnBeginCallback(s, e) {
+        //Pass all selected keys to GridView callback action
+        e.customArgs["Oid"] = freightId;
+    }
+
+
+
+
+
+    function OnSelectedIndexChanged(s, e) {
+        var keys = gridView.GetSelectedKeysOnPage();
+        if (keys === undefined || keys.length == 0) {
+            // array empty or does not exist
+        } else {
+            freightId = keys[0];
+            if (freightId != "") {
+                console.log(freightId);
+                e.customArgs["Oid"] = freightId;
+                //debugger;
+                console.log(freightContent);
+                //if (!freightContent.InCallback())
+                    freightContent.PerformCallback();
+            }
+        }
+        
+        //freightContent.PerformCallback();
+        //SelectedRows.AddItem(freightId);
+
+        //console.log(s.GetRowKey(s.GetFocusedRowIndex()));
+        //debugger
+        //alert(gridView.GetSelectedKeysOnPage());
+        //alert(s.GetRowKey(s.GetFocusedRowIndex()));
+        //debugger;
+        //console.log(s);
+        //console.log(s.GetRowKey(s.GetFocusedRowIndex()));
+
+        //var key;
+        //var keys = gridView.GetSelectedKeysOnPage();
+        //console.log(keys);
+        //foreach(var item in keys) {
+        //    key = item
+        //}
+        //e.customArgs["Oid"] = key;
+        //s.GetSelectedFieldValues('Oid', changeSession);
+        //console.log("Focused row index: " + s.id);
+
+    }
+
+    function OnBeginCallback(s, e) {
+        e.customArgs["Oid"] = freightId;
+        freightId = null;
+        console.log("callback begin");
+    }
+    function OnEndCallback(s, e) {
+        if (freightId != null)
+            freightContent.PerformCallback();
+    }
+    //function rowClick(s, e) {
+    //    debugger;
+    //    window.setTimeout(function () {
+    //        var currentRow = s.GetFocusedRowIndex();
+    //        alert(currentRow);
+    //    }, 100);
+    //}
+
+    function changeSession(selectedvalue) {
+        for (var i = 0; i < selectedvalue.length; i++) {
+            console.log(selectedvalue[i]);
+            freightId = selectedvalue[i];
+        }
+        if (!freightContent.InCallback())
+            freightContent.PerformCallback();
+    }
+
+
+
+</script>
+<div class="blog-page area-padding">
+
+    @Html.Action("GridViewPartial", "Freights")
+
+    @Html.DevExpress().RoundPanel(settings => {
+    settings.Name = "roundPanel";
+    settings.Width = System.Web.UI.WebControls.Unit.Percentage(100);
+    settings.HeaderText = "Freight Information:";
+    settings.SetContent(() => {
+        Html.RenderPartial("Content");
+    });
+}).GetHtml()
+
+</div>
+

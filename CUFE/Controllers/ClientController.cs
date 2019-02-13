@@ -49,6 +49,12 @@ namespace CUFE.Controllers
         {
             return View();
         }
+        public ActionResult LoadDetails()
+        {
+            int freightID = !string.IsNullOrEmpty(Request.Params["FreightID"]) ? int.Parse(Request.Params["FreightID"]) : uow.Query<Freight>().First().Oid;
+            var model = uow.FindObject<Freight>(CriteriaOperator.Parse("Oid==?", freightID));
+            return PartialView("LoadDetails", model);
+        }
         [Authorize(Roles = "Admin, User")]
         public ActionResult AddLoad()
         {
@@ -77,6 +83,7 @@ namespace CUFE.Controllers
             var model = uow.FindObject<Freight>(CriteriaOperator.Parse("Oid==?", id));
             return View(model);
         }
+           
         /*USER MANAGEMENT RELATED METHODS*/
         [Authorize(Roles = "Admin")]
         public ActionResult Users()
@@ -125,7 +132,16 @@ namespace CUFE.Controllers
         {
             return View();
         }
+
+        public ActionResult Lagers()
+        {
+            return View();
+        }
         
+        public ActionResult Abona()
+        {
+            return View();
+        }
 
     }
 }

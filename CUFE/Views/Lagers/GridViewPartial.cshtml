@@ -1,19 +1,12 @@
 ﻿@{
-
-    List<CUFE.Models.XpoApplicationUser> userList = ViewBag.Users;
-}
-@{
     var grid = Html.DevExpress().GridView(settings =>
-            {
-                settings.Name = "GridView";
-                settings.CallbackRouteValues = new
-                {
-                    Controller = "Chats",
-                    Action = "Members", };
+    {
+        settings.Name = "GridView";
+        settings.CallbackRouteValues = new { Controller = "Lagers", Action = "GridViewPartial" };
 
-        settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "Chats", Action = "Add" };
-        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "Chats", Action = "Update" };
-        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "Chats", Action = "Delete" };
+        settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "Lagers", Action = "Add" };
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "Lagers", Action = "Update" };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "Lagers", Action = "Delete" };
 
         settings.SettingsSearchPanel.CustomEditorName = "tbSearch";
         settings.Settings.ShowTitlePanel = true;
@@ -22,7 +15,7 @@
             Html.DevExpress().Label(label =>
             {
 
-                label.Text = "Chat Groups Management";
+                label.Text = "Lager Management";
                 label.Style["font-weight"] = "bold";
 
             }).Render();
@@ -43,11 +36,38 @@
         settings.KeyFieldName = "Oid";
         settings.Columns.Add(c =>
         {
-            c.FieldName = "Users";
+            c.FieldName = "Address";
+
+        });
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "Capacity";
 
         });
 
-        
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "Width";
+
+        });
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "Height";
+
+        });
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "Length";
+
+        });
+
+
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "Active";
+            c.ColumnType = MVCxGridViewColumnType.CheckBox;
+
+        });
 
 
         settings.SettingsPager.Visible = true;

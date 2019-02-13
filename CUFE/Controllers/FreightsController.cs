@@ -9,15 +9,76 @@ using System.Threading.Tasks;
 using CUFE.Models.ViewModels;
 using System.Linq;
 using System;
+using WaWiXPO.Helper.Master;
+using System.Collections.Generic;
 
 namespace CUFE.Controllers
 {
     public class FreightsController : Controller
     {
+        private UnitOfWork _abonaUnitOfWork;
+        UnitOfWork uow = new UnitOfWork();
+
+        const string
+            SelectedItemIDKey = "Oid",
+            SearchTextKey = "SearchText";
+        protected int SelectedItemID
+        {
+            get
+            {
+                var id = Request.Params[SelectedItemIDKey];
+                if (string.IsNullOrEmpty(id))
+                    return DefaultSelectedItemID;
+                return Convert.ToInt32(id);
+            }
+        }
+        protected virtual void EnsureViewBagInfo()
+        {
+            ViewBag.Title = string.Format("{0} - DevAV Demo | ASP.NET Controls by DevExpress", ControllerName);
+            ViewBag.PageLogoImageUrl = string.Format("/Content/Images/LogoMenuIcons/{0}.png", ControllerName);
+            ViewBag.ToolbarMenuXPath = string.Format("Pages/{0}/Item", ControllerName);
+            ViewBag.ShowSearchBox = ShowSearchBox;
+            //ViewBag.IsGridView = DemoUtils.IsEmployeeGridViewMode; //Should be virtual or abstract. 
+            ViewBag.ControllerName = ControllerName;
+            ViewBag.SearchText = SearchText;
+        }
+
+        protected override void OnActionExecuting(ActionExecutingContext filterContext)
+        {
+            EnsureViewBagInfo();
+            base.OnActionExecuting(filterContext);
+        }
+        public  string ControllerName { get { return "Freights"; } }
+        public  bool ShowSearchBox { get { return true; } }
+        protected string SearchText { get { return Request != null ? Request.Params[SearchTextKey] : string.Empty; } }
+        protected  int DefaultSelectedItemID { get { return (int)uow.Query<Freight>().First().Oid; } }
+
+        protected Freight SelectedEmployee { get { return uow.FindObject<Freight>(CriteriaOperator.Parse("Oid==?", SelectedItemID)); } }
+        protected List<Freight> Freights { get { return uow.Query<Freight>().ToList(); } }
+
+
+
+
+
+        public FreightsController()
+        {
+            string connectionString = "XpoProvider = MSSqlServer;data source=WAWIDEV;user id=WaWiXPO;password=wawixpo;initial catalog=WaWiXPO;Persist Security Info=true;";
+            MasterXpoHelper.InitiateDataLayer(connectionString);
+            _abonaUnitOfWork = WaWiXPO.Helper.Master.MasterXpoHelper.GetNewUnitOfWork();
+        }
+
         public ActionResult Index()
         {
             return View();
         }
+
+        public ActionResult Details()
+        {
+            int freightID = !string.IsNullOrEmpty(Request.Params["FreightID"]) ? int.Parse(Request.Params["FreightID"]) : uow.Query<Freight>().First().Oid;
+            var model = uow.FindObject<Freight>(CriteriaOperator.Parse("Oid==?", freightID));
+            return PartialView("Details", model);
+        }
+        
         public ActionResult GridViewPartial()
         {
             using (UnitOfWork uow = new UnitOfWork())
@@ -108,6 +169,35 @@ namespace CUFE.Controllers
             }
         }
 
+        public ActionResult AbonaFreights()
+        {
+            
+            var model = _abonaUnitOfWork.Query<FreightExchangeDemo.FreightExchangeOrders>();
+            return PartialView("AbonaFreights", model.ToList());
+        }
+
+        public ActionResult Content()
+        {
+            
+            int Oid;
+            if(Request.Params["Oid"] == null)
+            {
+                Oid = uow.Query<Freight>().First().Oid;
+            }
+            else
+            {
+                Oid =  int.Parse(Request.Params["Oid"]);
+            }
+            
+            //int Oid = (!string.IsNullOrEmpty(Request.Params["Oid"])) ? int.Parse(Request.Params["Oid"]) : uow.Query<Freight>().First().Oid;
+            var model = uow.FindObject<Freight>(CriteriaOperator.Parse("Oid==?", Oid));
+            return PartialView("Content", model);
+        }
+
+        public ActionResult GridView_Detail()
+        {
+            return PartialView(SelectedEmployee);
+        }
         
     }
 }

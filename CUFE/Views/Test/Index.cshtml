@@ -3,8 +3,9 @@
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_LayoutFrontendGridView.cshtml";
 }
+
 @section devexpress{
-    @Scripts.Render("~/bundles/jquery")
+
     @Html.DevExpress().GetStyleSheets(
         new StyleSheet { ExtensionSuite = ExtensionSuite.NavigationAndLayout },
         new StyleSheet { ExtensionSuite = ExtensionSuite.GridView }
@@ -16,12 +17,20 @@
 
     @*<script type="text/javascript" src="@Url.Content("~/Content/GridView.js")"></script>*@
 }
-
 <div class="blog-page area-padding">
 
-    @Html.Action("GridViewPartial", "Freights")   
+    @Html.DevExpress().CallbackPanel(settings =>
+{
+    settings.Name = "MainCallbackPanel";
+    settings.CallbackRouteValues = new { Controller = "Freights", Action = "Index" };
+    settings.ControlStyle.CssClass = "mainCallbackPanel";
+
+    settings.SetContent(()=> {
+        Html.RenderPartial("MainContent");
+    });
+    settings.ClientSideEvents.EndCallback = "DevAV.MainCallbackPanel_EndCallback";
+}
+    ).GetHtml()
 
 </div>
-
-
 

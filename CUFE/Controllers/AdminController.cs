@@ -58,5 +58,10 @@ namespace CUFE.Controllers
         {
             return View();
         }
+
+        public ActionResult Lagers()
+        {
+            return View();
+        }
     }
 }

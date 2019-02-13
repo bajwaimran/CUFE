@@ -2,7 +2,7 @@
 @{
     var grid = Html.DevExpress().GridView(settings =>
     {
-        settings.Name = "GridView";
+        settings.Name = "gridView";
         settings.Width = System.Web.UI.WebControls.Unit.Percentage(100);
         settings.CallbackRouteValues = new { Controller = "Loads", Action = "MyGridViewPartial" };
 
@@ -18,10 +18,8 @@
         {
             Html.DevExpress().Label(label =>
             {
-
                 label.Text = "Loads Management";
                 label.Style["font-weight"] = "bold";
-
             }).Render();
 
         });
@@ -80,6 +78,7 @@
             });
         });
         settings.Settings.ShowHeaderFilterButton = true;
+        settings.ClientSideEvents.SelectionChanged = "OnListBoxIndexChanged";
     });
     if (ViewData["EditError"] != null)
     {
