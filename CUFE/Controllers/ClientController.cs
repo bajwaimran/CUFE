@@ -51,8 +51,8 @@ namespace CUFE.Controllers
         }
         public ActionResult LoadDetails()
         {
-            int freightID = !string.IsNullOrEmpty(Request.Params["FreightID"]) ? int.Parse(Request.Params["FreightID"]) : uow.Query<Freight>().First().Oid;
-            var model = uow.FindObject<Freight>(CriteriaOperator.Parse("Oid==?", freightID));
+            int freightID = !string.IsNullOrEmpty(Request.Params["FreightID"]) ? int.Parse(Request.Params["FreightID"]) : uow.Query<Load>().First().Oid;
+            var model = uow.FindObject<Load>(CriteriaOperator.Parse("Oid==?", freightID));
             return PartialView("LoadDetails", model);
         }
         [Authorize(Roles = "Admin, User")]
@@ -71,6 +71,12 @@ namespace CUFE.Controllers
         public ActionResult Freights()
         {
             return View();
+        }
+        public ActionResult FreightDetails()
+        {
+            int freightID = !string.IsNullOrEmpty(Request.Params["FreightID"]) ? int.Parse(Request.Params["FreightID"]) : uow.Query<Freight>().First().Oid;
+            var model = uow.FindObject<Freight>(CriteriaOperator.Parse("Oid==?", freightID));
+            return PartialView("FreightDetails", model);
         }
         [Authorize(Roles = "Admin, User")]
         public ActionResult AddFreight()

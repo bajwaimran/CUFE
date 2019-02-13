@@ -30,7 +30,7 @@
         <li><a href="@Url.Action("Freights","Client")"><i class="fa fa-truck"></i><span>My Freights</span></a></li>
         <li><a href="@Url.Action("AddFreight","Client")"><i class="fa fa-plus-square-o"></i><span>Add New Freight</span></a></li>
 
-        <li><a href="@Url.Action("Lagers","Client")"><i class="icon-badge"></i>Lager Management</a></li>
+        <li><a href="@Url.Action("Lagers","Client")"><i class="icon-badge"></i><span>Lager Management</span></a></li>
 
         <li><a href="@Url.Action("TrucksManagement","Client")"><i class="fa fa-truck"></i><span>Vehicles</span></a></li>
         @*<li><a href="#"><i class="fa fa-shopping-cart"></i><span>My Orders</span></a></li>*@
@@ -42,14 +42,14 @@
 
         <li><a href="@Url.Action("Chat","Client")"><i class="icon-bubbles"></i><span>Chat</span></a></li>
         <li><a href="@Url.Action("Groups","Client")"><i class="icon-bubbles"></i><span>Group Chat</span></a></li>
-        <li><a href="@Url.Action("ChatGroups","Client")"><i class="icon-badge"></i>Manage Groups</a></li>
+        <li><a href="@Url.Action("ChatGroups","Client")"><i class="icon-badge"></i><span>Manage Groups</span></a></li>
 
 
-    }
+}
 
-    if (User.IsInRole("User"))
-    {
-        <li class="heading">User Menu</li>
+if (User.IsInRole("User"))
+{
+<li class="heading">User Menu</li>
         <li><a href="@Url.Action("Dashboard","Client")"><i class="icon-home"></i><span>Dashboard</span></a></li>
         <li><a href="@Url.Action("Search","Client")"><i class="fa fa-search"></i><span>Search</span></a></li>
         <li><a href="@Url.Action("AdvancedSearch","Client")"><i class="fa fa-search"></i><span>Search*</span></a></li>

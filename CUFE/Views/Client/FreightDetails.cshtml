@@ -1,0 +1,138 @@
+﻿@Html.DevExpress().CallbackPanel(
+    settings => {
+        settings.Name = "cbpExample";
+        settings.CallbackRouteValues = new { Controller = "Client", Action = "FreightDetails" };
+        settings.Width = System.Web.UI.WebControls.Unit.Percentage(100);
+        settings.Height = 250;
+
+        settings.SetContent(() =>
+        {
+
+            //Html.DevExpress().BinaryImage(
+            //    imageSettings => {
+            //        imageSettings.ControlStyle.CssClass = "custom-image";
+            //        imageSettings.Name = "Photo";
+            //        imageSettings.Width = 160;
+            //        imageSettings.Height = 170;
+            //    })
+            //    .Bind(((System.Data.Linq.Binary)DataBinder.Eval(Model, "Photo")).ToArray())
+            //    .Render();
+
+            Html.DevExpress().FormLayout(flSettings => {
+                flSettings.Name = "descriptionForm";
+                flSettings.ControlStyle.CssClass = "custom-form-layout";
+                flSettings.ColCount = 5;
+                flSettings.Items.Add(item =>
+                {
+                    item.FieldName = "StartDate";
+                    //item.SetNestedContent(String.Format("{0:d}", DataBinder.Eval(Model, "BirthDate")));
+                });
+                flSettings.Items.Add(item => {
+                    item.FieldName = "StartLocationName";
+                    //item.SetNestedContent(DemosHelper.GetFieldText(Model, "FirstName"));
+                });
+                flSettings.Items.Add(item =>
+                {
+                    item.FieldName = "StartLocationZip";
+                    //item.SetNestedContent(String.Format("{0:d}", DataBinder.Eval(Model, "BirthDate")));
+                });
+                flSettings.Items.Add(item =>
+                {
+                    item.FieldName = "StartCity";
+                    //item.SetNestedContent(String.Format("{0:d}", DataBinder.Eval(Model, "BirthDate")));
+                });
+                flSettings.Items.Add(item =>
+                {
+                    item.FieldName = "startLocationCountry";
+                    //item.SetNestedContent(String.Format("{0:d}", DataBinder.Eval(Model, "BirthDate")));
+                });
+                flSettings.Items.Add(item =>
+                {
+                    item.FieldName = "EndDate";
+                    //item.SetNestedContent(DemosHelper.GetFieldText(Model, "City"));
+                });
+                flSettings.Items.Add(item =>
+                {
+                    //item.Name = "EndLocationName";
+                    item.FieldName = "EndLocationName";
+                    //item.SetNestedContent(DemosHelper.GetFieldText(Model, "LastName"));
+                });
+                flSettings.Items.Add(item =>
+                {
+                    //item.Name = "EndLocationName";
+                    item.FieldName = "EndLocationZip";
+                    //item.SetNestedContent(DemosHelper.GetFieldText(Model, "LastName"));
+                });
+                flSettings.Items.Add(item =>
+                {
+                    //item.Name = "EndLocationName";
+                    item.FieldName = "EndCity";
+                    //item.SetNestedContent(DemosHelper.GetFieldText(Model, "LastName"));
+                });
+                flSettings.Items.Add(item =>
+                {
+                    //item.Name = "EndLocationName";
+                    item.FieldName = "EndLocationCountry";
+                    //item.SetNestedContent(DemosHelper.GetFieldText(Model, "LastName"));
+                });
+
+                flSettings.Items.Add(item =>
+                {
+                    //item.Name = "EndLocationName";
+                    item.FieldName = "OfferredPrice";
+                    //item.SetNestedContent(DemosHelper.GetFieldText(Model, "LastName"));
+                });
+                //flSettings.Items.Add(item =>
+                //{
+                //    //item.Name = "EndLocationName";
+                //    item.FieldName = "TruckTypeNeeded";
+                //    //item.SetNestedContent(DemosHelper.GetFieldText(Model, "LastName"));
+                //});
+
+                //flSettings.Items.Add(item =>
+                //{
+                //    //item.Name = "EndLocationName";
+                //    item.FieldName = "LoadVolume";
+                //    //item.SetNestedContent(DemosHelper.GetFieldText(Model, "LastName"));
+                //});
+                //flSettings.Items.Add(item =>
+                //{
+                //    //item.Name = "EndLocationName";
+                //    item.FieldName = "Height";
+                //    //item.SetNestedContent(DemosHelper.GetFieldText(Model, "LastName"));
+                //});
+                //flSettings.Items.Add(item =>
+                //{
+                //    //item.Name = "EndLocationName";
+                //    item.FieldName = "Width";
+                //    //item.SetNestedContent(DemosHelper.GetFieldText(Model, "LastName"));
+                //});
+                //flSettings.Items.Add(item =>
+                //{
+                //    //item.Name = "EndLocationName";
+                //    item.FieldName = "LoadType";
+                //    //item.SetNestedContent(DemosHelper.GetFieldText(Model, "LastName"));
+                //});
+
+                flSettings.Items.Add(item =>
+                {
+                    //item.Name = "EndLocationName";
+                    item.FieldName = "ConactPersonName";
+                    //item.SetNestedContent(DemosHelper.GetFieldText(Model, "LastName"));
+                });
+                flSettings.Items.Add(item =>
+                {
+                    //item.Name = "EndLocationName";
+                    item.FieldName = "Notes";
+                    item.Visible = true;
+                    //item.SetNestedContent(DemosHelper.GetFieldText(Model, "LastName"));
+                });
+
+            }).GetHtml();
+        });
+
+        settings.ClientSideEvents.BeginCallback = "OnBeginCallback";
+        settings.ClientSideEvents.EndCallback = "OnEndCallback";
+    }
+).GetHtml()
+

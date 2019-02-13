@@ -3,5 +3,14 @@
     ViewBag.Title = "My Freights";
     Layout = "~/Views/Shared/_LayoutBackend.cshtml";
 }
-
+<script src="~/Scripts/FreightScripts.js"></script>
 @Html.Action("MyGridViewPartial", "Freights")
+
+@Html.DevExpress().RoundPanel(settings => {
+    settings.Name = "roundPanel";
+    settings.Width = System.Web.UI.WebControls.Unit.Percentage(100);
+    settings.HeaderText = "Freight Details:";
+    settings.SetContent(() => {
+        Html.RenderPartial("FreightDetails");
+    });
+}).GetHtml()

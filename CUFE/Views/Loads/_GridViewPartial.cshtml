@@ -1,4 +1,6 @@
-﻿
+﻿@{
+    IEnumerable<CUFE.Models.Country> countries = CUFE.Helpers.FastController.AllCountries();
+}
 @{
     var grid = Html.DevExpress().GridView(settings =>
     {
@@ -9,8 +11,25 @@
         settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "Loads", Action = "MyGridViewPartial" };
         settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "Loads", Action = "MyGridViewPartial" };
         settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "Loads", Action = "MyGridViewPartial" };
+
+
+
+        settings.EnablePagingGestures = AutoBoolean.False;
+
+        settings.ControlStyle.CssClass = "grid-view";
+        settings.Width = System.Web.UI.WebControls.Unit.Percentage(100);
+
         settings.SettingsEditing.Mode = GridViewEditingMode.EditFormAndDisplayRow;
         settings.SettingsBehavior.ConfirmDelete = true;
+
+        settings.Styles.Cell.Wrap = DefaultBoolean.False;
+        settings.Styles.PagerBottomPanel.CssClass = "pager";
+        settings.Styles.FocusedRow.CssClass = "focused";
+
+        settings.SettingsBehavior.AllowFocusedRow = true;
+        settings.SettingsBehavior.AllowSelectByRowClick = true;
+        settings.SettingsBehavior.AllowEllipsisInText = true;
+        settings.SettingsBehavior.AllowDragDrop = false;
 
         settings.SettingsSearchPanel.CustomEditorName = "tbSearch";
         settings.Settings.ShowTitlePanel = true;
@@ -24,15 +43,16 @@
 
         });
 
-        
+
         if (User.IsInRole("Admin"))
         {
             settings.CommandColumn.Visible = true;
             settings.CommandColumn.ShowDeleteButton = true;
             settings.CommandColumn.ShowEditButton = true;
+            settings.CommandColumn.ShowNewButtonInHeader = true;
         }
-        
-        
+
+
 
         settings.KeyFieldName = "Oid";
 
@@ -61,22 +81,95 @@
             C.Settings.AutoFilterCondition = AutoFilterCondition.Equals;
             C.Width = System.Web.UI.WebControls.Unit.Pixel(150);
         });
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "StartLocationCountry";
+            //c.PropertiesEdit.DisplayFormatString = "{0:C}";
+            c.SetEditItemTemplateContent(i =>
+            {
+                var extension = Html.DevExpress().ComboBox(comboBoxSettings =>
+                {
+                    comboBoxSettings.Name = "StartLocationCountry";
+                    ComboBoxProperties comboBoxProperties = comboBoxSettings.Properties;
+                    comboBoxProperties.TextField = "CountryName";
+                    comboBoxProperties.ValueField = "CountryName";
+                    comboBoxProperties.ValueType = typeof(string);
+                    comboBoxProperties.DropDownStyle = DropDownStyle.DropDown;
+                }
+                    ).BindList(countries).Bind(i.DataItem, "StartLocationCountry");
+                extension.Render();
+
+            });
+
+        });
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "StartCity";
+        });
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "StartLocationZip";
+        });
+        //settings.Columns.Add("StartLocationCountry");
+        //settings.Columns.Add("EndLocationCountry");
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "EndLocationCountry";
+            //c.PropertiesEdit.DisplayFormatString = "{0:C}";
+            c.SetEditItemTemplateContent(i =>
+            {
+                var extension = Html.DevExpress().ComboBox(comboBoxSettings =>
+                {
+                    comboBoxSettings.Name = "EndLocationCountry";
+                    ComboBoxProperties comboBoxProperties = comboBoxSettings.Properties;
+                    comboBoxProperties.TextField = "CountryName";
+                    comboBoxProperties.ValueField = "CountryName";
+                    comboBoxProperties.ValueType = typeof(string);
+                    comboBoxProperties.DropDownStyle = DropDownStyle.DropDown;
+                }
+                    ).BindList(countries).Bind(i.DataItem, "EndLocationCountry");
+                extension.Render();
+
+            });
+
+        });
+
+
+        
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "EndCity";
+        });
         settings.Columns.Add("StartLocationName");
-        settings.Columns.Add("StartLocationZip");
-        settings.Columns.Add("StartLocationCountry");
+        //settings.Columns.Add("StartLocationZip");
+
         settings.Columns.Add("EndLocationName");
         settings.Columns.Add("EndLocationZip");
-        settings.Columns.Add("EndLocationCountry");
-        settings.Columns.Add("OfferredPrice");
+
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "OfferredPrice";
+            c.PropertiesEdit.DisplayFormatString = "{0:C}";
+
+        });
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "LoadVolume";
+            c.Caption = "Volume(Kgs)";
+            //c.PropertiesEdit.DisplayFormatString = "c";
+
+        });
         settings.Columns.Add(c =>
         {
             c.UnboundType = DevExpress.Data.UnboundColumnType.String;
             c.Visible = true;
+            c.EditFormSettings.Visible = DefaultBoolean.False;
             c.SetDataItemTemplateContent(x =>
             {
                 ViewContext.Writer.Write(string.Format("<a href=\"/Client/Load/{0}\" class=\"button\" data-id='{0}' onclick=\"\">View</a>", x.KeyValue));
             });
         });
+
         settings.Settings.ShowHeaderFilterButton = true;
         settings.ClientSideEvents.SelectionChanged = "OnListBoxIndexChanged";
     });

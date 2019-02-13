@@ -3895,6 +3895,7 @@
     <Content Include="Content\eBusiness\lib\font-awesome\fonts\fontawesome-webfont.woff2" />
     <Content Include="Content\eBusiness\lib\font-awesome\fonts\FontAwesome.otf" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
+    <Content Include="Scripts\FreightScripts.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.js" />
@@ -3907,6 +3908,7 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\LoadScripts.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -3968,7 +3970,6 @@
     <Content Include="Views\Maps\Index.cshtml" />
     <Content Include="Views\Freights\_GridViewPartial.cshtml" />
     <Content Include="Views\Freights\Add.cshtml" />
-    <Content Include="Views\Freights\GridViewPartial.cshtml" />
     <Content Include="Views\Client\Freights.cshtml" />
     <Content Include="Views\Client\Dashboard.cshtml" />
     <Content Include="Views\Client\Groups.cshtml" />
@@ -3990,7 +3991,6 @@
     <Content Include="Views\Client\Freight.cshtml" />
     <Content Include="Views\Shared\_LayoutBusiness.cshtml" />
     <Content Include="Views\Home\Blogs.cshtml" />
-    <Content Include="Views\Freights\old-Index.cshtml" />
     <Content Include="Views\Loads\Index.cshtml" />
     <Content Include="Views\Shared\_LayoutFrontendGridView.cshtml" />
     <Content Include="Views\Account\Register.cshtml" />
@@ -4002,9 +4002,6 @@
     <Content Include="Views\Admin\Lagers.cshtml" />
     <Content Include="Views\Freights\AbonaFreights.cshtml" />
     <Content Include="Views\Client\Abona.cshtml" />
-    <Content Include="Views\Freights\DetailCallbackPanel.cshtml" />
-    <Content Include="Views\Freights\CardView_Detail.cshtml" />
-    <Content Include="Views\Freights\GridView_Detail.cshtml" />
     <Content Include="Views\Test\Index.cshtml" />
     <Content Include="Views\Test\GridView_Master.cshtml" />
     <Content Include="Views\Test\CardView_Master.cshtml" />
@@ -4013,10 +4010,9 @@
     <Content Include="Views\Test\DetailCallbackPanel.cshtml" />
     <Content Include="Views\Test\MainContent.cshtml" />
     <Content Include="Views\Test\Callback.cshtml" />
-    <Content Include="Views\Freights\Content.cshtml" />
     <Content Include="Views\Freights\Index.cshtml" />
-    <Content Include="Views\Freights\Details.cshtml" />
     <Content Include="Views\Client\LoadDetails.cshtml" />
+    <Content Include="Views\Client\FreightDetails.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

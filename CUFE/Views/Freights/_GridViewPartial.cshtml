@@ -93,16 +93,8 @@
         });
         settings.Settings.ShowHeaderFilterButton = true;
 
-        //settings.ClientSideEvents.SelectionChanged = "OnSelectedIndexChanged";
-        //settings.ClientSideEvents.RowClick = "function(s, e){ alert(); }";
-        //settings.ClientSideEvents.RowClick = "OnSelectedIndexChanged";
-        //settings.ClientSideEvents.RowClick = "rowClick";
-        //settings.ClientSideEvents.FocusedRowChanged = "OnSelectedIndexChanged";
-        //settings.ClientSideEvents.BeginCallback = "GridOnBeginCallback";
-        //settings.ClientSideEvents.Init = "employeesGrid_Init";
-        //settings.ClientSideEvents.FocusedRowChanged = "employeesGrid_FocusedRowChanged";
-        //settings.ClientSideEvents.SelectionChanged = "employeesGrid_FocusedRowChanged";
-        //settings.ClientSideEvents.EndCallback = "employeesGrid_EndCallback";
+        settings.ClientSideEvents.SelectionChanged = "OnListBoxIndexChanged";
+
     });
     if (ViewData["EditError"] != null)
     {
