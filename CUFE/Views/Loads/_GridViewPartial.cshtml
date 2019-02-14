@@ -1,5 +1,7 @@
 ﻿@{
     IEnumerable<CUFE.Models.Country> countries = CUFE.Helpers.FastController.AllCountries();
+    CUFE.Controllers.GeoCoordinatesController geoCoordinatesController = new CUFE.Controllers.GeoCoordinatesController();
+    List<CUFE.Models.GeoCoordinate> geoCoordinates = geoCoordinatesController.AllCoordinates();
 }
 @{
     var grid = Html.DevExpress().GridView(settings =>
@@ -73,18 +75,21 @@
             c.ColumnType = MVCxGridViewColumnType.DateEdit;
             c.Settings.AutoFilterCondition = AutoFilterCondition.Equals;
             c.Width = System.Web.UI.WebControls.Unit.Pixel(150);
+            c.EditFormSettings.VisibleIndex = 1;
         });
-        settings.Columns.Add(C =>
+        settings.Columns.Add(c =>
         {
-            C.FieldName = "EndDate";
-            C.ColumnType = MVCxGridViewColumnType.DateEdit;
-            C.Settings.AutoFilterCondition = AutoFilterCondition.Equals;
-            C.Width = System.Web.UI.WebControls.Unit.Pixel(150);
+            c.FieldName = "EndDate";
+            c.ColumnType = MVCxGridViewColumnType.DateEdit;
+            c.Settings.AutoFilterCondition = AutoFilterCondition.Equals;
+            c.Width = System.Web.UI.WebControls.Unit.Pixel(150);
+            c.EditFormSettings.VisibleIndex = 5;
         });
         settings.Columns.Add(c =>
         {
             c.FieldName = "StartLocationCountry";
             //c.PropertiesEdit.DisplayFormatString = "{0:C}";
+            c.EditFormSettings.VisibleIndex = 2;
             c.SetEditItemTemplateContent(i =>
             {
                 var extension = Html.DevExpress().ComboBox(comboBoxSettings =>
@@ -95,6 +100,7 @@
                     comboBoxProperties.ValueField = "CountryName";
                     comboBoxProperties.ValueType = typeof(string);
                     comboBoxProperties.DropDownStyle = DropDownStyle.DropDown;
+                    comboBoxProperties.ClientSideEvents.SelectedIndexChanged = "setStartCountryName";
                 }
                     ).BindList(countries).Bind(i.DataItem, "StartLocationCountry");
                 extension.Render();
@@ -105,10 +111,13 @@
         settings.Columns.Add(c =>
         {
             c.FieldName = "StartCity";
+            c.EditFormSettings.VisibleIndex = 4;
         });
         settings.Columns.Add(c =>
         {
             c.FieldName = "StartLocationZip";
+            c.EditFormSettings.VisibleIndex = 3;
+
         });
         //settings.Columns.Add("StartLocationCountry");
         //settings.Columns.Add("EndLocationCountry");
@@ -116,6 +125,7 @@
         {
             c.FieldName = "EndLocationCountry";
             //c.PropertiesEdit.DisplayFormatString = "{0:C}";
+            c.EditFormSettings.VisibleIndex = 6;
             c.SetEditItemTemplateContent(i =>
             {
                 var extension = Html.DevExpress().ComboBox(comboBoxSettings =>
@@ -126,6 +136,7 @@
                     comboBoxProperties.ValueField = "CountryName";
                     comboBoxProperties.ValueType = typeof(string);
                     comboBoxProperties.DropDownStyle = DropDownStyle.DropDown;
+                    comboBoxProperties.ClientSideEvents.SelectedIndexChanged = "setEndCountryName";
                 }
                     ).BindList(countries).Bind(i.DataItem, "EndLocationCountry");
                 extension.Render();
@@ -135,16 +146,22 @@
         });
 
 
-        
+
         settings.Columns.Add(c =>
         {
             c.FieldName = "EndCity";
+            c.EditFormSettings.VisibleIndex = 8;
         });
         settings.Columns.Add("StartLocationName");
         //settings.Columns.Add("StartLocationZip");
 
         settings.Columns.Add("EndLocationName");
-        settings.Columns.Add("EndLocationZip");
+        settings.Columns.Add(c => {
+            c.FieldName = "EndLocationZip";
+            c.EditFormSettings.VisibleIndex = 7;
+        }
+
+                );
 
         settings.Columns.Add(c =>
         {
@@ -161,6 +178,35 @@
         });
         settings.Columns.Add(c =>
         {
+            c.FieldName = "StartLat";
+            c.EditFormSettings.Visible = DefaultBoolean.True;
+            c.Visible = false;
+            c.EditFormSettings.VisibleIndex = 20;
+
+        });
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "StartLon";
+            c.EditFormSettings.Visible = DefaultBoolean.True;
+            c.Visible = false;
+            c.EditFormSettings.VisibleIndex = 21;
+        });
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "EndLat";
+            c.EditFormSettings.Visible = DefaultBoolean.True;
+            c.Visible = false;
+            c.EditFormSettings.VisibleIndex = 22;
+        });
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "EndLon";
+            c.EditFormSettings.Visible = DefaultBoolean.True;
+            c.Visible = false;
+            c.EditFormSettings.VisibleIndex = 23;
+        });
+        settings.Columns.Add(c =>
+        {
             c.UnboundType = DevExpress.Data.UnboundColumnType.String;
             c.Visible = true;
             c.EditFormSettings.Visible = DefaultBoolean.False;
@@ -170,8 +216,23 @@
             });
         });
 
+
+
         settings.Settings.ShowHeaderFilterButton = true;
         settings.ClientSideEvents.SelectionChanged = "OnListBoxIndexChanged";
+
+        settings.CellEditorInitialize += (s, e) => {
+            if (e.Column.FieldName == "StartLocationZip")
+            {
+                var tb = e.Editor as ASPxTextBox;
+                tb.ClientSideEvents.ValueChanged = "getStartCoordinates";
+            }
+            if (e.Column.FieldName == "EndLocationZip")
+            {
+                var tb = e.Editor as ASPxTextBox;
+                tb.ClientSideEvents.ValueChanged = "getEndCoordinates";
+            }
+        };
     });
     if (ViewData["EditError"] != null)
     {

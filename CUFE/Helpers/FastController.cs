@@ -91,5 +91,7 @@ namespace CUFE.Helpers
             UnitOfWork uow = new UnitOfWork();
             return uow.FindObject<Truck>(CriteriaOperator.Parse("Oid==?", oid));
         }
+
+        
     }
 }

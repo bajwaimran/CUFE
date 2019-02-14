@@ -230,6 +230,7 @@
     <Compile Include="Controllers\CompanyController.cs" />
     <Compile Include="Controllers\CountriesController.cs" />
     <Compile Include="Controllers\FreightsController.cs" />
+    <Compile Include="Controllers\GeoCoordinatesController.cs" />
     <Compile Include="Controllers\LagersController.cs" />
     <Compile Include="Controllers\LoadsController.cs" />
     <Compile Include="Controllers\MapsController.cs" />
@@ -269,6 +270,7 @@
     <Compile Include="Models\Company.cs" />
     <Compile Include="Models\Country.cs" />
     <Compile Include="Models\Freight.cs" />
+    <Compile Include="Models\GeoCoordinate.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\Lager.cs" />
     <Compile Include="Models\Load.cs" />
@@ -3896,6 +3898,7 @@
     <Content Include="Content\eBusiness\lib\font-awesome\fonts\FontAwesome.otf" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\FreightScripts.js" />
+    <Content Include="Scripts\GeoCodeScripts.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.js" />
@@ -4016,6 +4019,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\GeoCoordinates\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
