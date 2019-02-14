@@ -13,7 +13,11 @@ namespace CUFE.Controllers
     public class AdminController : BaseXpoController
     {
         // GET: Admin
-        //[Authorize(Roles = "SuperAdmin, Admin")]
+        [Authorize(Roles = "SuperAdmin")]
+        public ActionResult Index()
+        {
+            return View();
+        }
         public ActionResult UserManagement()
         {
             return View();

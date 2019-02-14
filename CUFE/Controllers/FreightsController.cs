@@ -14,7 +14,7 @@ using System.Collections.Generic;
 
 namespace CUFE.Controllers
 {
-    public class FreightsController : Controller
+    public class FreightsController : BaseXpoController
     {
         private UnitOfWork _abonaUnitOfWork;
         UnitOfWork uow = new UnitOfWork();
@@ -47,8 +47,81 @@ namespace CUFE.Controllers
                 int companyId = int.Parse(User.Identity.GetCompanyId());
                 var company = uow.FindObject<Company>(CriteriaOperator.Parse("Oid==?", companyId));
                 var model = company.Freights;
-                return PartialView("_GridViewPartial", model.ToList());
+                return PartialView("_MyGridViewPartial", model.ToList());
             }
+        }
+        public ActionResult GridViewPartialAddNew([ModelBinder(typeof(XpoModelBinder))]Freight item)
+        {
+            if (ModelState.IsValid)
+            {
+                string user = User.Identity.GetUserId();
+                int companyId = int.Parse(User.Identity.GetCompanyId());
+                var company = uow.FindObject<Company>(CriteriaOperator.Parse("Oid==?", companyId));
+                new Freight(uow)
+                {
+                   StartDate = item.StartDate,
+                   StartLocationCountry = item.StartLocationCountry,
+                   StartCity = item.StartCity,
+                   StartLocationName = item.StartLocationName,
+                   StartLat = item.StartLat,
+                   StartLon = item.StartLon,
+                   StartLocationZip = item.StartLocationZip,
+                   StartLocationCoordinates = item.StartLocationCoordinates,
+                   EndDate = item.EndDate,
+                   EndLocationCountry = item.EndLocationCountry,
+                   EndCity = item.EndCity,
+                   EndLocationZip = item.EndLocationZip,
+                   EndLocationName = item.EndLocationName,
+                   EndLat = item.EndLat,
+                   EndLon = item.EndLon,
+                   EndLocationCoordinates = item.EndLocationCoordinates,
+                   OfferredPrice = item.OfferredPrice,
+                   TruckId = item.TruckId,
+                   Company = company,
+                   ConactPersonName = item.ConactPersonName,
+                   ContactPersonEmail = item.ContactPersonEmail,
+                   ContactPersonPhone = item.ContactPersonPhone,
+                   Notes = item.Notes,
+                   CreatedOn = DateTime.Now,
+                   CompanyId = company.Oid,
+                   UserId = user
+                };
+                uow.CommitChanges();
+                
+                var model = company.Freights;
+                return PartialView("_MyGridViewPartial", model.ToList());
+            }
+            return null;
+        }
+
+        public ActionResult GridViewPartialUpdate([ModelBinder(typeof(XpoModelBinder))]Freight item)
+        {
+            int companyId = int.Parse(User.Identity.GetCompanyId());
+            var company = uow.FindObject<Company>(CriteriaOperator.Parse("Oid==?", companyId));
+            
+            if (ModelState.IsValid)
+            {
+                if (item.IsChanged)
+                    item.Save();
+            }
+            else
+            {
+
+            }
+            var model = company.Freights;
+            return PartialView("_MyGridViewPartial", model.ToList());
+        }
+        public ActionResult GridViewPartialDelete(int Oid)
+        {
+            int companyId = int.Parse(User.Identity.GetCompanyId());
+            var company = uow.FindObject<Company>(CriteriaOperator.Parse("Oid==?", companyId));
+            var item = uow.FindObject<Freight>(CriteriaOperator.Parse("Oid==?", Oid));
+            if (item != null)
+            {
+                uow.Delete(item);
+            }
+            var model = company.Freights;
+            return PartialView("_MyGridViewPartial", model.ToList());            
         }
         public ActionResult Add()
         {
@@ -98,7 +171,8 @@ namespace CUFE.Controllers
                         ContactPersonEmail = model.ContactPersonEmail,
                         UserId = userId,
                         TruckId = model.TruckId,
-                        CreatedOn = DateTime.Now
+                        CreatedOn = DateTime.Now,
+                        
                     };
                     company.Freights.Add(freight);
                     uow.CommitChanges();

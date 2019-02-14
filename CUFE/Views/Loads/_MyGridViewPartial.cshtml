@@ -2,6 +2,8 @@
     IEnumerable<CUFE.Models.Country> countries = CUFE.Helpers.FastController.AllCountries();
     CUFE.Controllers.GeoCoordinatesController geoCoordinatesController = new CUFE.Controllers.GeoCoordinatesController();
     List<CUFE.Models.GeoCoordinate> geoCoordinates = geoCoordinatesController.AllCoordinates();
+    List<CUFE.Models.TruckType> TruckTypes = CUFE.Helpers.FastController.GetAllTruckTypes();
+    List<CUFE.Models.LoadType> LoadTypes = CUFE.Helpers.FastController.GetAllLoadTypes();
 }
 @{
     var grid = Html.DevExpress().GridView(settings =>
@@ -10,9 +12,9 @@
         settings.Width = System.Web.UI.WebControls.Unit.Percentage(100);
         settings.CallbackRouteValues = new { Controller = "Loads", Action = "MyGridViewPartial" };
 
-        settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "Loads", Action = "MyGridViewPartial" };
-        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "Loads", Action = "MyGridViewPartial" };
-        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "Loads", Action = "MyGridViewPartial" };
+        settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "Loads", Action = "GridViewPartialAddNew" };
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "Loads", Action = "GridViewPartialUpdate" };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "Loads", Action = "GridViewPartialDelete" };
 
 
 
@@ -46,7 +48,7 @@
         });
 
 
-        if (User.IsInRole("SuperAdmin"))
+        if (User.IsInRole("Admin"))
         {
             settings.CommandColumn.Visible = true;
             settings.CommandColumn.ShowDeleteButton = true;
@@ -72,6 +74,7 @@
         settings.Columns.Add(c =>
         {
             c.FieldName = "StartDate";
+            c.Caption = "Origin Date";
             c.ColumnType = MVCxGridViewColumnType.DateEdit;
             c.Settings.AutoFilterCondition = AutoFilterCondition.Equals;
             c.Width = System.Web.UI.WebControls.Unit.Pixel(150);
@@ -80,16 +83,18 @@
         settings.Columns.Add(c =>
         {
             c.FieldName = "EndDate";
+            c.Caption = "Deadline Date";
             c.ColumnType = MVCxGridViewColumnType.DateEdit;
             c.Settings.AutoFilterCondition = AutoFilterCondition.Equals;
             c.Width = System.Web.UI.WebControls.Unit.Pixel(150);
-            c.EditFormSettings.VisibleIndex = 5;
+            c.EditFormSettings.VisibleIndex = 2;
         });
         settings.Columns.Add(c =>
         {
             c.FieldName = "StartLocationCountry";
+            c.Caption = "Origin Country";
             //c.PropertiesEdit.DisplayFormatString = "{0:C}";
-            c.EditFormSettings.VisibleIndex = 2;
+            c.EditFormSettings.VisibleIndex = 3;
             c.SetEditItemTemplateContent(i =>
             {
                 var extension = Html.DevExpress().ComboBox(comboBoxSettings =>
@@ -110,22 +115,33 @@
         });
         settings.Columns.Add(c =>
         {
-            c.FieldName = "StartCity";
+            c.FieldName = "StartLocationZip";
+            c.Caption = "Origin Zip";
             c.EditFormSettings.VisibleIndex = 4;
+
         });
         settings.Columns.Add(c =>
         {
-            c.FieldName = "StartLocationZip";
-            c.EditFormSettings.VisibleIndex = 3;
-
+            c.FieldName = "StartCity";
+            c.Caption = "Origin City";
+            c.EditFormSettings.VisibleIndex = 5;
         });
+
+        settings.Columns.Add( c =>
+        {
+            c.FieldName = "StartLocationName";
+            c.Caption = "Orgin Address";
+            c.VisibleIndex = 6;
+        });
+
         //settings.Columns.Add("StartLocationCountry");
         //settings.Columns.Add("EndLocationCountry");
         settings.Columns.Add(c =>
         {
             c.FieldName = "EndLocationCountry";
+            c.Caption = "Destination Country";
             //c.PropertiesEdit.DisplayFormatString = "{0:C}";
-            c.EditFormSettings.VisibleIndex = 6;
+            c.EditFormSettings.VisibleIndex = 7;
             c.SetEditItemTemplateContent(i =>
             {
                 var extension = Html.DevExpress().ComboBox(comboBoxSettings =>
@@ -144,44 +160,137 @@
             });
 
         });
-
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "EndLocationZip";
+            c.Caption = "Destination zip";
+            c.EditFormSettings.VisibleIndex = 8;
+        });
 
 
         settings.Columns.Add(c =>
         {
             c.FieldName = "EndCity";
-            c.EditFormSettings.VisibleIndex = 8;
+            c.Caption = "Destination City";
+            c.EditFormSettings.VisibleIndex = 9;
         });
-        settings.Columns.Add("StartLocationName");
+
         //settings.Columns.Add("StartLocationZip");
 
-        settings.Columns.Add("EndLocationName");
-        settings.Columns.Add(c => {
-            c.FieldName = "EndLocationZip";
-            c.EditFormSettings.VisibleIndex = 7;
-        }
-
-                );
-
+        settings.Columns.Add( c => {
+            c.FieldName = "EndLocationName";
+            c.Caption = "Destination Address";
+            c.VisibleIndex = 10;
+        });
         settings.Columns.Add(c =>
         {
-            c.FieldName = "OfferredPrice";
-            c.PropertiesEdit.DisplayFormatString = "{0:C}";
+            c.FieldName = "LoadType";
+            c.VisibleIndex = 11;
+            c.SetEditItemTemplateContent(i =>
+            {
+                var extension = Html.DevExpress().ComboBox(comboBoxSettings =>
+                {
+                    comboBoxSettings.Name = "LoadType";
+                    ComboBoxProperties comboBoxProperties = comboBoxSettings.Properties;
+                    comboBoxProperties.TextField = "Type";
+                    comboBoxProperties.ValueField = "Type";
+                    comboBoxProperties.ValueType = typeof(string);
+                    comboBoxProperties.DropDownStyle = DropDownStyle.DropDown;
+                    //comboBoxProperties.ClientSideEvents.SelectedIndexChanged = "setStartCountryName";
+                }
+                    ).BindList(LoadTypes).Bind(i.DataItem, "LoadType");
+                extension.Render();
 
+            });
         });
+
         settings.Columns.Add(c =>
         {
             c.FieldName = "LoadVolume";
             c.Caption = "Volume(Kgs)";
             //c.PropertiesEdit.DisplayFormatString = "c";
+            c.VisibleIndex = 12;
 
         });
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "TruckTypeNeeded";
+            c.VisibleIndex = 13;
+            c.SetEditItemTemplateContent(i =>
+            {
+                var extension = Html.DevExpress().ComboBox(comboBoxSettings =>
+                {
+                    comboBoxSettings.Name = "TruckTypeNeeded";
+                    ComboBoxProperties comboBoxProperties = comboBoxSettings.Properties;
+                    comboBoxProperties.TextField = "Type";
+                    comboBoxProperties.ValueField = "Type";
+                    comboBoxProperties.ValueType = typeof(string);
+                    comboBoxProperties.DropDownStyle = DropDownStyle.DropDown;
+                    //comboBoxProperties.ClientSideEvents.SelectedIndexChanged = "setStartCountryName";
+                }
+                    ).BindList(TruckTypes).Bind(i.DataItem, "TruckTypeNeeded");
+                extension.Render();
+
+            });
+        });
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "Width";
+            c.VisibleIndex = 14;
+        });
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "Height";
+            c.VisibleIndex = 15;
+        });
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "OfferredPrice";
+            c.PropertiesEdit.DisplayFormatString = "{0:C}";
+            c.VisibleIndex = 16;
+
+        });
+
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "ConactPersonName";
+            c.EditFormSettings.Visible = DefaultBoolean.True;
+            c.Visible = false;
+            c.VisibleIndex = 17;
+
+        });
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "ContactPersonPhone";
+            c.EditFormSettings.Visible = DefaultBoolean.True;
+            c.Visible = false;
+            c.VisibleIndex = 18;
+
+        });
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "ContactPersonEmail";
+            c.EditFormSettings.Visible = DefaultBoolean.True;
+            c.Visible = false;
+            c.VisibleIndex = 19;
+
+        });
+
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "Notes";
+            c.EditFormSettings.Visible = DefaultBoolean.True;
+            c.Visible = false;
+            c.VisibleIndex = 20;
+
+        });
+
         settings.Columns.Add(c =>
         {
             c.FieldName = "StartLat";
             c.EditFormSettings.Visible = DefaultBoolean.True;
             c.Visible = false;
-            c.EditFormSettings.VisibleIndex = 20;
+            c.EditFormSettings.VisibleIndex = 21;
 
         });
         settings.Columns.Add(c =>
@@ -189,27 +298,28 @@
             c.FieldName = "StartLon";
             c.EditFormSettings.Visible = DefaultBoolean.True;
             c.Visible = false;
-            c.EditFormSettings.VisibleIndex = 21;
+            c.EditFormSettings.VisibleIndex = 22;
         });
         settings.Columns.Add(c =>
         {
             c.FieldName = "EndLat";
             c.EditFormSettings.Visible = DefaultBoolean.True;
             c.Visible = false;
-            c.EditFormSettings.VisibleIndex = 22;
+            c.EditFormSettings.VisibleIndex = 23;
         });
         settings.Columns.Add(c =>
         {
             c.FieldName = "EndLon";
             c.EditFormSettings.Visible = DefaultBoolean.True;
             c.Visible = false;
-            c.EditFormSettings.VisibleIndex = 23;
+            c.EditFormSettings.VisibleIndex = 24;
         });
         settings.Columns.Add(c =>
         {
             c.UnboundType = DevExpress.Data.UnboundColumnType.String;
             c.Visible = true;
             c.EditFormSettings.Visible = DefaultBoolean.False;
+            c.VisibleIndex = 25;
             c.SetDataItemTemplateContent(x =>
             {
                 ViewContext.Writer.Write(string.Format("<a href=\"/Client/Load/{0}\" class=\"button\" data-id='{0}' onclick=\"\">View</a>", x.KeyValue));
@@ -221,7 +331,8 @@
         settings.Settings.ShowHeaderFilterButton = true;
         settings.ClientSideEvents.SelectionChanged = "OnListBoxIndexChanged";
 
-        settings.CellEditorInitialize += (s, e) => {
+        settings.CellEditorInitialize += (s, e) =>
+        {
             if (e.Column.FieldName == "StartLocationZip")
             {
                 var tb = e.Editor as ASPxTextBox;
@@ -240,3 +351,4 @@
     }
 }
 @grid.Bind(Model).GetHtml()
+

@@ -21,7 +21,7 @@ namespace CUFE.Controllers
         UnitOfWork _unitOfWork = new UnitOfWork();
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
-
+        private bool firstAdminLogin = true;
         public AccountController()
         {
         }
@@ -78,7 +78,7 @@ namespace CUFE.Controllers
             }
 
             //check if user is active or not
-            var user = await UserManager.FindByEmailAsync(model.Email);
+            var user = await UserManager.FindByEmailAsync(model.Email);            
             if (user != null)
             {
                 if (!await UserManager.IsEmailConfirmedAsync(user.Id))
@@ -532,6 +532,67 @@ namespace CUFE.Controllers
         {
             
             UserManager.AddToRole(user, role);
+        }
+
+        public ActionResult  CreateRoles()
+        {
+            using (UnitOfWork unitOfWork = new UnitOfWork())
+            {
+                int cnt = (int)unitOfWork.Evaluate<CUFE.Models.XpoApplicationRole>(CriteriaOperator.Parse("count"), null);
+                if(cnt == 0)
+                {
+                    new XpoApplicationRole(unitOfWork)
+                    {
+                        Name = "SuperAdmin"
+                    };
+                    new XpoApplicationRole(unitOfWork)
+                    {
+                        Name = "Admin"
+                    };
+                    new XpoApplicationRole(unitOfWork)
+                    {
+                        Name = "User"
+                    };
+                    new XpoApplicationRole(unitOfWork)
+                    {
+                        Name = "Driver"
+                    };
+                    try
+                    {
+                        unitOfWork.CommitChanges();
+                        return Content("All Roles has been created");
+                    }catch(Exception e)
+                    {
+                        return Content(e.Message);
+                    }
+                }
+                return Content("Roles already Exist");
+            }
+        }
+        [AllowAnonymous]
+        public ActionResult CreateDemoData()
+        {
+            CreateRoles();
+            string password = "Abona@2018";
+            var user = new ApplicationUser { UserName = "imran@abona.com", Email = "imran@abona.com", FirstName = "Imran", LastName = "Bajwa", EmailConfirmed = true };
+            var result =  UserManager.Create(user, password);
+            if (result.Succeeded)
+            {
+                UserManager.AddToRole(user.Id, "SuperAdmin");
+
+                return RedirectToAction("Login");
+
+                //await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+
+                // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
+                // Send an email with this link
+                // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+                // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+
+                //return RedirectToAction("Index", "Home");
+            }
+            return Content("unable to create super admin");
         }
     }
 }

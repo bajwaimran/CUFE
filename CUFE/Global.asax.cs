@@ -5,7 +5,9 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
-
+using DevExpress.Xpo;
+using CUFE.Helpers;
+using DevExpress.Data.Filtering;
 
 namespace CUFE
 {
@@ -18,7 +20,7 @@ namespace CUFE
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             XpoHelper.GetDataLayer();
-            ModelBinders.Binders.DefaultBinder = new DevExpress.Web.Mvc.DevExpressEditorsBinder();
+            ModelBinders.Binders.DefaultBinder = new DevExpress.Web.Mvc.DevExpressEditorsBinder();           
         }
     }
 }

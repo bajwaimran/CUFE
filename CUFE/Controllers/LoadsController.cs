@@ -13,8 +13,9 @@ using CUFE.Models.ViewModels;
 
 namespace CUFE.Controllers
 {
-    public class LoadsController : Controller
+    public class LoadsController : BaseXpoController
     {
+        UnitOfWork uow = new UnitOfWork();
         public ActionResult Index()
         {
             return View();
@@ -40,7 +41,7 @@ namespace CUFE.Controllers
                 int companyId = int.Parse(User.Identity.GetCompanyId());
                 var company = uow.FindObject<Company>(CriteriaOperator.Parse("Oid==?", companyId));
                 var model = company.Loads;
-                return PartialView("_GridViewPartial", model.ToList());
+                return PartialView("_MyGridViewPartial", model.ToList());
             }
         }
 
@@ -118,7 +119,88 @@ namespace CUFE.Controllers
         }
 
 
+        public ActionResult GridViewPartialAddNew([ModelBinder(typeof(XpoModelBinder))]Load item)
+        {
+            if (ModelState.IsValid)
+            {
+                string user = User.Identity.GetUserId();
+                int companyId = int.Parse(User.Identity.GetCompanyId());
+                var company = uow.FindObject<Company>(CriteriaOperator.Parse("Oid==?", companyId));
+                new Load(uow)
+                {
+                    StartDate = item.StartDate,
+                    StartCity = item.StartCity,
+                    StartLat = item.StartLat,
+                    StartLocationZip = item.StartLocationZip,
+                    StartLocationCountry = item.StartLocationCountry,
+                    StartLocationName = item.StartLocationName,
+                    StartLon = item.StartLon,
+                    StartLocationCoordinates = item.StartLocationCoordinates,
+                    EndCity = item.EndCity,
+                    EndDate = item.EndDate,
+                    EndLat = item.EndLat,
+                    EndLocationCoordinates = item.EndLocationCoordinates,
+                    EndLocationCountry = item.EndLocationCountry,
+                    EndLocationName = item.EndLocationName,
+                    EndLocationZip = item.EndLocationZip,
+                    EndLon = item.EndLon,
+                    OfferredPrice = item.OfferredPrice,
+                    TruckTypeNeeded = item.TruckTypeNeeded,
+                    ConactPersonName = item.ConactPersonName,
+                    ContactPersonEmail = item.ContactPersonEmail,
+                    ContactPersonPhone = item.ContactPersonPhone,
+                    CreatedOn = DateTime.Now,
+                    Company = company,
+                    UserId = user,
+                    Height = item.Height,
+                    Width = item.Width,
+                    LoadType = item.LoadType,
+                    LoadTypeId = item.LoadTypeId,
+                    LoadVolume = item.LoadVolume,
+                    Notes = item.Notes,
+                    CompanyId = company.Oid
+                };
+                uow.CommitChanges();
 
+                var model = company.Loads;
+                return PartialView("_MyGridViewPartial", model.ToList());
+            }
+            return null;
+        }
+
+        public ActionResult GridViewPartialUpdate([ModelBinder(typeof(XpoModelBinder))]Load item)
+        {
+            int companyId = int.Parse(User.Identity.GetCompanyId());
+            var company = uow.FindObject<Company>(CriteriaOperator.Parse("Oid==?", companyId));
+            var model = company.Loads;
+            if (ModelState.IsValid)
+            {
+                if (item.IsChanged)
+                    item.Save();
+
+                
+                return PartialView("_MyGridViewPartial", model.ToList());
+
+            }
+            else
+            {
+
+            }
+            return null;
+        }
+        public ActionResult GridViewPartialDelete(int Oid)
+        {
+            int companyId = int.Parse(User.Identity.GetCompanyId());
+            var company = uow.FindObject<Company>(CriteriaOperator.Parse("Oid==?", companyId));
+            var model = company.Loads;
+            var item = uow.FindObject<Load>(CriteriaOperator.Parse("Oid==?", Oid));
+            if(item != null)
+            {
+                uow.Delete(item);
+                
+            }
+            return PartialView("_MyGridViewPartial", model.ToList());
+        }
 
     }
 }

@@ -5,12 +5,21 @@
     {
     @Html.AntiForgeryToken()
 
-    <ul class="nav navbar-nav navbar-right">
+<ul class="nav navbar-nav navbar-right">
+    @if (User.IsInRole("SuperAdmin"))
+    {
+        <li>
+            @Html.ActionLink("Admin Panel", "Index", "Admin", routeValues: null, htmlAttributes: new { title = "Manage" })
+        </li>
+    }
+    else
+    {
         <li>
             @Html.ActionLink("Account", "Index", "Client", routeValues: null, htmlAttributes: new { title = "Manage" })
         </li>
-        <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
-    </ul>
+    }
+    <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+</ul>
     }
 }
 else

@@ -8,7 +8,8 @@ namespace CUFE.Models
         public Country(Session session): base(session) { }
 
         public override void AfterConstruction()
-        {
+        {           
+            
             base.AfterConstruction();
         }
         

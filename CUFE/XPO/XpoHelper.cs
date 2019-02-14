@@ -46,11 +46,12 @@ public static class XpoHelper
         //DevExpress.Xpo.Metadata.ReflectionClassInfo.SuppressSuspiciousMemberInheritanceCheck = true;
         //dict.GetDataStoreSchema(typeof(Inscripcion).Assembly);
         IDataLayer dl = new ThreadSafeDataLayer(dict, store);
-        //using (UnitOfWork uow = new UnitOfWork(dl)) {
-        //    int cnt = (int)uow.Evaluate<Manager>(CriteriaOperator.Parse("count"), null);
+        //using (UnitOfWork uow = new UnitOfWork(dl))
+        //{
+        //    int cnt = (int)uow.Evaluate<CUFE.Models.Country>(CriteriaOperator.Parse("count"), null);
         //    if (cnt == 0)
         //    {
-        //        new Manager(uow) { Name = "A" };
+        //        new CUFE.Models.Country(uow) { CountryName = "Germany" };
         //        uow.CommitChanges();
         //    }
         //}

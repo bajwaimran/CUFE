@@ -29,6 +29,25 @@ namespace CUFE.Models
         public bool IsLift { get; set; }
         public bool IsGps { get; set; }
         public int TruckType { get; set; }
+
+        decimal width;
+        decimal height;
+        decimal length;
+        public decimal Width
+        {
+            get => width;
+            set => SetPropertyValue(nameof(Width), ref width, value);
+        }
+        public decimal Height
+        {
+            get => height;
+            set => SetPropertyValue(nameof(Height), ref height, value);
+        }
+        public decimal Length
+        {
+            get => length;
+            set => SetPropertyValue(nameof(Length), ref length, value);
+        }
         //TruckType truckType;
         //[Association("TruckType-Trucks")]
         //public TruckType TruckType
@@ -37,7 +56,7 @@ namespace CUFE.Models
         //    set => SetPropertyValue(nameof(TruckType), ref truckType, value);
         //}
 
-        
+
         Company company;
 
         [Association("Company-Trucks")]

@@ -240,6 +240,7 @@
     <Compile Include="Controllers\TestController.cs" />
     <Compile Include="DomainObjects\Enums.cs" />
     <Compile Include="DomainObjects\FreightExchangeOrders.cs" />
+    <Compile Include="Helpers\DefaultData.cs" />
     <Compile Include="Helpers\FastController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoadTypesController.cs" />
@@ -4016,6 +4017,9 @@
     <Content Include="Views\Freights\Index.cshtml" />
     <Content Include="Views\Client\LoadDetails.cshtml" />
     <Content Include="Views\Client\FreightDetails.cshtml" />
+    <Content Include="Views\Freights\_MyGridViewPartial.cshtml" />
+    <Content Include="Views\Loads\_MyGridViewPartial.cshtml" />
+    <Content Include="Views\Admin\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
