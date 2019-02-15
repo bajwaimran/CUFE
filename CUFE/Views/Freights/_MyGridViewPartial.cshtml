@@ -17,19 +17,19 @@
         settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "Freights", Action = "GridViewPartialAddNew" };
         settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "Freights", Action = "GridViewPartialUpdate" };
         settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "Freights", Action = "GridViewPartialDelete" };
-//settings.CallbackRouteValues = new { Controller = "Freights", Action = "Content" };
+        //settings.CallbackRouteValues = new { Controller = "Freights", Action = "Content" };
 
-settings.EnablePagingGestures = AutoBoolean.False;
+        settings.EnablePagingGestures = AutoBoolean.False;
 
         settings.ControlStyle.CssClass = "grid-view";
         settings.Width = System.Web.UI.WebControls.Unit.Percentage(100);
 
         settings.SettingsEditing.Mode = GridViewEditingMode.EditFormAndDisplayRow;
-//settings.SettingsPopup.CustomizationWindow.HorizontalAlign = PopupHorizontalAlign.Center;
-//settings.SettingsPopup.CustomizationWindow.VerticalAlign = PopupVerticalAlign.WindowCenter;
-//settings.SettingsPopup.CustomizationWindow.Width = 220;
-//settings.SettingsPopup.CustomizationWindow.Height = 300;
-settings.SettingsBehavior.ConfirmDelete = true;
+        //settings.SettingsPopup.CustomizationWindow.HorizontalAlign = PopupHorizontalAlign.Center;
+        //settings.SettingsPopup.CustomizationWindow.VerticalAlign = PopupVerticalAlign.WindowCenter;
+        //settings.SettingsPopup.CustomizationWindow.Width = 220;
+        //settings.SettingsPopup.CustomizationWindow.Height = 300;
+        settings.SettingsBehavior.ConfirmDelete = true;
 
         settings.Styles.Cell.Wrap = DefaultBoolean.False;
         settings.Styles.PagerBottomPanel.CssClass = "pager";
@@ -69,16 +69,16 @@ settings.SettingsBehavior.ConfirmDelete = true;
         settings.Settings.ShowFilterRow = true;
         settings.SettingsBehavior.AllowSelectByRowClick = true;
 
-//settings.SettingsAdaptivity.AdaptivityMode = GridViewAdaptivityMode.HideDataCells;
-settings.SettingsAdaptivity.AdaptiveColumnPosition = GridViewAdaptiveColumnPosition.None;
+        //settings.SettingsAdaptivity.AdaptivityMode = GridViewAdaptivityMode.HideDataCells;
+        settings.SettingsAdaptivity.AdaptiveColumnPosition = GridViewAdaptiveColumnPosition.None;
         settings.SettingsAdaptivity.AdaptiveDetailColumnCount = 1;
         settings.SettingsAdaptivity.AllowOnlyOneAdaptiveDetailExpanded = true;
         settings.SettingsAdaptivity.HideDataCellsAtWindowInnerWidth = 0;
         settings.Columns.Add(c =>
         {
             c.FieldName = "TruckId";
-    //c.PropertiesEdit.DisplayFormatString = "{0:C}";
-    c.EditFormSettings.VisibleIndex = 0;
+            //c.PropertiesEdit.DisplayFormatString = "{0:C}";
+            c.EditFormSettings.VisibleIndex = 0;
             c.SetEditItemTemplateContent(i =>
             {
                 var extension = Html.DevExpress().ComboBox(comboBoxSettings =>
@@ -89,8 +89,8 @@ settings.SettingsAdaptivity.AdaptiveColumnPosition = GridViewAdaptiveColumnPosit
                     comboBoxProperties.ValueField = "Oid";
                     comboBoxProperties.ValueType = typeof(int);
                     comboBoxProperties.DropDownStyle = DropDownStyle.DropDown;
-            //comboBoxProperties.ClientSideEvents.SelectedIndexChanged = "setStartCountryName";
-        }
+                    //comboBoxProperties.ClientSideEvents.SelectedIndexChanged = "setStartCountryName";
+                }
                     ).BindList(Trucks).Bind(i.DataItem, "TruckId");
                 extension.Render();
 
@@ -108,8 +108,9 @@ settings.SettingsAdaptivity.AdaptiveColumnPosition = GridViewAdaptiveColumnPosit
         settings.Columns.Add(c =>
         {
             c.FieldName = "StartLocationCountry";
-    //c.PropertiesEdit.DisplayFormatString = "{0:C}";
-    c.EditFormSettings.VisibleIndex = 2;
+            c.Caption = "Origin Country";
+            //c.PropertiesEdit.DisplayFormatString = "{0:C}";
+            c.EditFormSettings.VisibleIndex = 2;
             c.SetEditItemTemplateContent(i =>
             {
                 var extension = Html.DevExpress().ComboBox(comboBoxSettings =>
@@ -138,34 +139,29 @@ settings.SettingsAdaptivity.AdaptiveColumnPosition = GridViewAdaptiveColumnPosit
         });
         settings.Columns.Add(c =>
         {
-            c.FieldName = "StartLocationName";
-            c.Caption = "Origin Address";
+            c.FieldName = "StartCity";
+            c.Caption = "Origin City";
             c.VisibleIndex = 4;
         });
         settings.Columns.Add(c =>
         {
-            c.FieldName = "EndCity";
-            c.Caption = "Destination City";
+            c.FieldName = "StartLocationName";
+            c.Caption = "Origin Address";
+            c.VisibleIndex = 5;
         });
-        settings.Columns.Add(c =>
-        {
-            c.FieldName = "EndLocationName";
-            c.Caption = "Destination Address";
-        });
-
         settings.Columns.Add(C =>
         {
             C.FieldName = "EndDate";
             C.ColumnType = MVCxGridViewColumnType.DateEdit;
             C.Settings.AutoFilterCondition = AutoFilterCondition.Equals;
             C.Width = System.Web.UI.WebControls.Unit.Pixel(150);
-            C.VisibleIndex = 5;
+            C.VisibleIndex = 6;
         });
         settings.Columns.Add(c =>
         {
             c.FieldName = "EndLocationCountry";
-    //c.PropertiesEdit.DisplayFormatString = "{0:C}";
-    c.EditFormSettings.VisibleIndex = 6;
+            //c.PropertiesEdit.DisplayFormatString = "{0:C}";
+            c.EditFormSettings.VisibleIndex = 7;
             c.SetEditItemTemplateContent(i =>
             {
                 var extension = Html.DevExpress().ComboBox(comboBoxSettings =>
@@ -188,7 +184,19 @@ settings.SettingsAdaptivity.AdaptiveColumnPosition = GridViewAdaptiveColumnPosit
         {
             c.FieldName = "EndLocationZip";
             c.Caption = "Destination Zip";
-            c.VisibleIndex = 7;
+            c.VisibleIndex = 8;
+        });
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "EndCity";
+            c.Caption = "Destination City";
+            c.VisibleIndex = 9;
+        });
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "EndLocationName";
+            c.Caption = "Destination Address";
+            c.VisibleIndex = 10;
         });
         settings.Columns.Add(c =>
         {
@@ -197,6 +205,10 @@ settings.SettingsAdaptivity.AdaptiveColumnPosition = GridViewAdaptiveColumnPosit
             c.VisibleIndex = 11;
 
         });
+
+
+
+
         settings.Columns.Add(c =>
         {
             c.FieldName = "ConactPersonName";
@@ -265,6 +277,7 @@ settings.SettingsAdaptivity.AdaptiveColumnPosition = GridViewAdaptiveColumnPosit
             c.UnboundType = DevExpress.Data.UnboundColumnType.String;
             c.Visible = true;
             c.EditFormSettings.Visible = DefaultBoolean.False;
+            c.VisibleIndex = 30;
             c.SetDataItemTemplateContent(x =>
             {
                 ViewContext.Writer.Write(string.Format("<a href=\"/Client/Freight/{0}\" class=\"button\" data-id='{0}' onclick=\"\">View</a>", x.KeyValue));

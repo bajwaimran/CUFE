@@ -21,7 +21,6 @@ namespace CUFE.Controllers
         UnitOfWork _unitOfWork = new UnitOfWork();
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
-        private bool firstAdminLogin = true;
         public AccountController()
         {
         }

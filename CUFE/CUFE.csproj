@@ -3897,6 +3897,7 @@
     <Content Include="Content\eBusiness\lib\font-awesome\fonts\fontawesome-webfont.woff" />
     <Content Include="Content\eBusiness\lib\font-awesome\fonts\fontawesome-webfont.woff2" />
     <Content Include="Content\eBusiness\lib\font-awesome\fonts\FontAwesome.otf" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\FreightScripts.js" />
     <Content Include="Scripts\GeoCodeScripts.js" />

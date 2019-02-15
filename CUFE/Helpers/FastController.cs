@@ -83,7 +83,9 @@ namespace CUFE.Helpers
         {
             UnitOfWork uow = new UnitOfWork();
             var user = uow.FindObject<ChatUser>(CriteriaOperator.Parse("UserName==?",username));
-            return user.Rooms.ToList();
+            if (user != null)
+                return user.Rooms.ToList();
+            else return null;
         }
 
         public static Truck TruckInfo(int oid)

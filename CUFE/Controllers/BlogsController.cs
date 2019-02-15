@@ -31,6 +31,7 @@ namespace CUFE.Controllers
                     //item.Session.CommitTransaction();
                     var country = new Blog(uow)
                     {
+                        Title = item.Title,
                         ShortDescription = item.ShortDescription,
                         Article = item.Article,
                         CreatedBy = item.CreatedBy,

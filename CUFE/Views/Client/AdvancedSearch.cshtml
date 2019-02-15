@@ -144,204 +144,213 @@
     </script>
 
 }
-<div id="ResizedDiv" style="width: 100%; margin-top:-30px;">
-    @Html.DevExpress().FormLayout(settings =>
-{
-    settings.Name = "searchForm";
-
-    settings.Width = System.Web.UI.WebControls.Unit.Percentage(100);
-    var groupItems = settings.Items.AddGroupItem(groupSettings =>
+    <div id="ResizedDiv" style="width: 100%; margin-top:-30px;">
+        @Html.DevExpress().FormLayout(settings =>
     {
+        settings.Name = "searchForm";
 
-        groupSettings.Caption = "Search form";
-        groupSettings.Width = System.Web.UI.WebControls.Unit.Percentage(100);
-        groupSettings.ColumnCount = 5;
-
-    });
-
-    //start location
-    groupItems.Items.Add(i =>
-    {
-        i.Caption = "Loading Country";
-        i.VerticalAlign = FormLayoutVerticalAlign.Middle;
-
-        i.NestedExtension().ComboBox(s =>
+        settings.Width = System.Web.UI.WebControls.Unit.Percentage(100);
+        var groupItems = settings.Items.AddGroupItem(groupSettings =>
         {
-            s.Name = "startcountry";
-            s.Properties.TextField = "CountryName";
-            s.Properties.ValueField = "CountryName";
-            s.Properties.ClearButton.DisplayMode = ClearButtonDisplayMode.OnHover;
-            s.Properties.DataSource = countries;
-        });
-    });
 
-    groupItems.Items.Add(i =>
-    {
-        i.Caption = "Loading Postcode";
-        i.VerticalAlign = FormLayoutVerticalAlign.Middle;
-        i.NestedExtension().TextBox(s =>
-        {
-            s.Name = "statzip";
+            groupSettings.Caption = "Search form";
+            groupSettings.Width = System.Web.UI.WebControls.Unit.Percentage(100);
+            groupSettings.ColumnCount = 5;
 
         });
-    });
 
-    groupItems.Items.Add(i =>
-    {
-        i.Caption = "Loading City";
-        i.VerticalAlign = FormLayoutVerticalAlign.Middle;
-        i.NestedExtension().TextBox(s =>
+        //start location
+        groupItems.Items.Add(i =>
         {
-            s.Name = "startlocation";
+            i.Caption = "Loading Country";
+            i.VerticalAlign = FormLayoutVerticalAlign.Middle;
 
-        });
-    });
-
-    groupItems.Items.Add(i =>
-    {
-        i.Caption = "Loading Date";
-        i.VerticalAlign = FormLayoutVerticalAlign.Middle;
-        i.NestedExtension().DateEdit(
-            s =>
+            i.NestedExtension().ComboBox(s =>
             {
-                s.Name = "startdate";
+                s.Name = "startcountry";
+                s.Properties.TextField = "CountryName";
+                s.Properties.ValueField = "CountryName";
+                s.Properties.ClearButton.DisplayMode = ClearButtonDisplayMode.OnHover;
+                s.Properties.DataSource = countries;
             });
-
-    });
-
-    groupItems.Items.Add(i =>
-    {
-        i.Caption = "Radius";
-        i.VerticalAlign = FormLayoutVerticalAlign.Middle;
-
-        i.NestedExtension().TrackBar(s =>
-        {
-            s.Name = "startradius";
-            s.Properties.SmallTickFrequency = 5;
-            s.Properties.LargeTickInterval = 10;
-            s.Properties.MaxValue = 100;
-            s.Position = 10;
-            s.Properties.ScalePosition = ScalePosition.RightOrBottom;
-        }
-        );
-    });
-
-
-    //unloading
-    groupItems.Items.Add(i =>
-    {
-        i.Caption = "Unloading Country";
-        i.VerticalAlign = FormLayoutVerticalAlign.Middle;
-
-        i.NestedExtension().ComboBox(s =>
-        {
-            s.Name = "endcountry";
-            s.Properties.TextField = "CountryName";
-            s.Properties.ValueField = "CountryName";
-            s.Properties.ClearButton.DisplayMode = ClearButtonDisplayMode.OnHover;
-            s.Properties.DataSource = countries;
         });
-    });
 
-    groupItems.Items.Add(i =>
-    {
-        i.Caption = "unloading Postcode";
-        i.VerticalAlign = FormLayoutVerticalAlign.Middle;
-        i.NestedExtension().TextBox(s =>
+        groupItems.Items.Add(i =>
         {
-            s.Name = "endzip";
-
-        });
-    });
-
-    groupItems.Items.Add(i =>
-    {
-        i.Caption = "unLoading City";
-        i.VerticalAlign = FormLayoutVerticalAlign.Middle;
-        i.NestedExtension().TextBox(s =>
-        {
-            s.Name = "endlocation";
-
-        });
-    });
-
-    groupItems.Items.Add(i =>
-    {
-        i.Caption = "Loading Date";
-        i.VerticalAlign = FormLayoutVerticalAlign.Middle;
-        i.NestedExtension().DateEdit(
-            s =>
+            i.Caption = "Loading Postcode";
+            i.VerticalAlign = FormLayoutVerticalAlign.Middle;
+            i.NestedExtension().TextBox(s =>
             {
-                s.Name = "enddate";
+                s.Name = "statzip";
+
             });
-
-    });
-
-    groupItems.Items.Add(i =>
-    {
-        i.Caption = "Radius";
-        i.VerticalAlign = FormLayoutVerticalAlign.Middle;
-
-        i.NestedExtension().TrackBar(s =>
-        {
-            s.Name = "endradius";
-            s.Properties.SmallTickFrequency = 5;
-            s.Properties.LargeTickInterval = 10;
-            s.Properties.MaxValue = 100;
-            s.Position = 10;
-            s.Properties.ScalePosition = ScalePosition.RightOrBottom;
-        }
-        );
-    });
-
-    groupItems.Items.Add(i =>
-    {
-        i.Caption = "Search Using Radius";
-        i.NestedExtension().CheckBox(c =>
-        {
-            c.Name = "withRadius";
         });
-    });
 
-    groupItems.Items.Add(i =>
-    {
-        i.Caption = "";
-        i.NestedExtension().Button(b =>
+        groupItems.Items.Add(i =>
         {
-            b.Name = "searchBtn";
-            b.Text = "Search Freights";
-            b.ClientSideEvents.Click = "btnOK_Click";
+            i.Caption = "Loading City";
+            i.VerticalAlign = FormLayoutVerticalAlign.Middle;
+            i.NestedExtension().TextBox(s =>
+            {
+                s.Name = "startlocation";
+
+            });
+        });
+
+        groupItems.Items.Add(i =>
+        {
+            i.Caption = "Loading Date";
+            i.VerticalAlign = FormLayoutVerticalAlign.Middle;
+            i.NestedExtension().DateEdit(
+                s =>
+                {
+                    s.Name = "startdate";
+                });
 
         });
-    });
 
-    groupItems.Items.Add(i =>
-    {
-        i.Caption = "";
-        i.NestedExtension().Button( b=>
+        groupItems.Items.Add(i =>
         {
-            b.Name = "searchLoadsBtn";
-            b.Text = "Search Loads";
-            b.ClientSideEvents.Click = "btnLoads_Click";
+            i.Caption = "Radius";
+            i.VerticalAlign = FormLayoutVerticalAlign.Middle;
+
+            i.NestedExtension().TrackBar(s =>
+            {
+                s.Name = "startradius";
+                s.Properties.SmallTickFrequency = 5;
+                s.Properties.LargeTickInterval = 10;
+                s.Properties.MaxValue = 100;
+                s.Position = 10;
+                s.Properties.ScalePosition = ScalePosition.RightOrBottom;
+            }
+            );
         });
-    });
 
 
-    groupItems.Items.Add(i =>
-    {
-        i.Caption = "";
-        i.NestedExtension().Button(b =>
+        //unloading
+        groupItems.Items.Add(i =>
         {
-            b.Name = "clearBtn";
-            b.Text = "Clear Search";
-            b.ClientSideEvents.Click = "rxVal_btn";
+            i.Caption = "Unloading Country";
+            i.VerticalAlign = FormLayoutVerticalAlign.Middle;
+
+            i.NestedExtension().ComboBox(s =>
+            {
+                s.Name = "endcountry";
+                s.Properties.TextField = "CountryName";
+                s.Properties.ValueField = "CountryName";
+                s.Properties.ClearButton.DisplayMode = ClearButtonDisplayMode.OnHover;
+                s.Properties.DataSource = countries;
+            });
         });
-    });
+
+        groupItems.Items.Add(i =>
+        {
+            i.Caption = "unloading Postcode";
+            i.VerticalAlign = FormLayoutVerticalAlign.Middle;
+            i.NestedExtension().TextBox(s =>
+            {
+                s.Name = "endzip";
+
+            });
+        });
+
+        groupItems.Items.Add(i =>
+        {
+            i.Caption = "unLoading City";
+            i.VerticalAlign = FormLayoutVerticalAlign.Middle;
+            i.NestedExtension().TextBox(s =>
+            {
+                s.Name = "endlocation";
+
+            });
+        });
+
+        groupItems.Items.Add(i =>
+        {
+            i.Caption = "Loading Date";
+            i.VerticalAlign = FormLayoutVerticalAlign.Middle;
+            i.NestedExtension().DateEdit(
+                s =>
+                {
+                    s.Name = "enddate";
+                });
+
+        });
+
+        groupItems.Items.Add(i =>
+        {
+            i.Caption = "Radius";
+            i.VerticalAlign = FormLayoutVerticalAlign.Middle;
+
+            i.NestedExtension().TrackBar(s =>
+            {
+                s.Name = "endradius";
+                s.Properties.SmallTickFrequency = 5;
+                s.Properties.LargeTickInterval = 10;
+                s.Properties.MaxValue = 100;
+                s.Position = 10;
+                s.Properties.ScalePosition = ScalePosition.RightOrBottom;
+            }
+            );
+        });
+
+        groupItems.Items.Add(i =>
+        {
+            i.Caption = "Search Using Radius";
+            i.NestedExtension().CheckBox(c =>
+            {
+                c.Name = "withRadius";
+            });
+        });
+
+        groupItems.Items.Add(i =>
+        {
+            i.Caption = "";
+            i.NestedExtension().Button(b =>
+            {
+                b.Name = "searchBtn";
+                b.Text = "Search Freights";
+                b.ClientSideEvents.Click = "btnOK_Click";
+
+            });
+        });
+
+        groupItems.Items.Add(i =>
+        {
+            i.Caption = "";
+            i.NestedExtension().Button( b=>
+            {
+                b.Name = "searchLoadsBtn";
+                b.Text = "Search Loads";
+                b.ClientSideEvents.Click = "btnLoads_Click";
+            });
+        });
 
 
-}).GetHtml()
+        groupItems.Items.Add(i =>
+        {
+            i.Caption = "";
+            i.NestedExtension().Button(b =>
+            {
+                b.Name = "clearBtn";
+                b.Text = "Clear Search";
+                b.ClientSideEvents.Click = "rxVal_btn";
+            });
+        });
 
-    @*@Html.DevExpress().Panel(settings =>
+
+    }).GetHtml()
+
+
+        @Html.DevExpress().RoundPanel(settings => {
+            settings.Name = "roundPanel";
+            settings.Width = System.Web.UI.WebControls.Unit.Percentage(100);
+            settings.HeaderText = "Search Results:";
+            settings.SetContent(() => {
+                //Html.RenderPartial("FreightDetails");
+            });
+        }).GetHtml()
+        @*@Html.DevExpress().Panel(settings =>
         {
             settings.Name = "freightsPanel";
             settings.SetContent(()=> {
@@ -362,7 +371,7 @@
 
 
 
-</div>
+    </div>
 
 @section scripts{
     <script>
