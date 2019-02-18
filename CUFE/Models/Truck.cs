@@ -19,16 +19,47 @@ namespace CUFE.Models
             base.AfterConstruction();
             // Place here your initialization code.
         }
-        
-        [Index(IsUnique = true)]
-        public string RegNo { get; set; }        
+
+        string regNo;
+        [Indexed(Unique = true)]
+        public string RegNo {
+            get => regNo;
+            set => SetPropertyValue(nameof(RegNo), ref regNo, value);
+        }        
         public decimal Capacity { get; set; }
-        public bool IsFrigo { get; set; }
-        public bool IsisoThermal { get; set; }
-        public bool IsAdr { get; set; }
-        public bool IsLift { get; set; }
-        public bool IsGps { get; set; }
-        public int TruckType { get; set; }
+
+        bool? isFrigo;
+     
+        public bool? IsFrigo {
+            get => isFrigo;
+            set => SetPropertyValue(nameof(IsFrigo), ref isFrigo, value);
+        }
+
+        bool? isisoThermal;
+        public bool? IsisoThermal {
+            get => isisoThermal;
+            set => SetPropertyValue(nameof(IsisoThermal), ref isisoThermal, value);
+        }
+        bool? isAdr;
+        public bool? IsAdr {
+            get => isAdr;
+            set  => SetPropertyValue(nameof(IsAdr), ref isAdr, value);
+        }
+        bool? isLift;
+        public bool? IsLift {
+            get => isLift;
+            set => SetPropertyValue(nameof(IsLift), ref isLift, value);
+        }
+        bool? isGps;
+        public bool? IsGps {
+            get => isGps;
+            set => SetPropertyValue(nameof(IsGps), ref isGps, value);
+        }
+
+        public int TruckType {
+            get;
+            set;
+        }
 
         decimal width;
         decimal height;

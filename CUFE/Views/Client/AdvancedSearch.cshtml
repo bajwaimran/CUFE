@@ -1,148 +1,12 @@
-﻿
+﻿@model IEnumerable<CUFE.Models.Freight>
 @{
     ViewBag.Title = "Advanced Search";
     Layout = "~/Views/Shared/_LayoutBackend.cshtml";
     IEnumerable<CUFE.Models.Country> countries = CUFE.Helpers.FastController.AllCountries();
 }
 @section head{
-    <script>
-    var slat;
-    var slon;
-    var elat;
-    var elon;
-    function btnOK_Click(s, e) {
-    var x = startcountry.GetText();
-    //alert('Wait... You are searching freights for ' + x);
-    //str = MVCxClientUtils.GetSerializedEditorValuesInContainer("searchForm");
-    //str = $("form").serialize();
-    var sd = startdate.GetText();
-    var ed = enddate.GetText();
-    if (startcountry.GetText() != null && startcountry.GetText() != '') {
-    str = "startcountry=" + startcountry.GetText();
-    if (endcountry.GetText() != null && endcountry.GetText() != '') {
-    str = str + "&endcountry=" + endcountry.GetText();
-    if (sd != '' && ed != '') {
-    str = str + "&startdate=" + sd + "&enddate=" + ed;
-    }
-    window.open("@Url.Action("Search", "Freights")" + "?" + str);
-    } else {
-    alert("Please select destination Country!");
-    }
-    }
-    //check if searched by city name
-    else if (startlocation.GetText() != null && startlocation.GetText() != '') {
-    str = "startlocation=" + startlocation.GetText();
-    if (endlocation.GetText() != null && endlocation.GetText() != '') {
-    str = str + "&endlocation=" + endlocation.GetText();
-    if (sd != '' && ed != '') {
-    str = str + "&startdate=" + sd + "&enddate=" + ed;
-    }
-    window.open("@Url.Action("Search", "Freights")" + "?" + str);
-    } else {
-    alert("Please enter destination city!");
-    }
-    }
-    //check by zip code
-    else if (statzip.GetText() != null && statzip.GetText() != '') {
-    str = "statzip=" + statzip.GetText();
-    if (endzip.GetText() != null && endzip.GetText() != '') {
-    str = str + "&endzip=" + endzip.GetText();
-    if (sd != '' && ed != '') {
-    str = str + "&startdate=" + sd + "&enddate=" + ed;
-    }
-    window.open("@Url.Action("Search", "Freights")" + "?" + str);
-    } else {
-    alert("Please enter destination Zip code!");
-    }
-    } else {
-    alert("Please enter a criteria to search!");
-    }
-
-
-    }
-
-    function btnLoads_Click(s, e) {
-    var sd = startdate.GetText();
-    var ed = enddate.GetText();
-
-    if (startcountry.GetText() != null && startcountry.GetText() != '') {
-    str = "startcountry=" + startcountry.GetText();
-    if (endcountry.GetText() != null && endcountry.GetText() != '') {
-    str = str + "&endcountry=" + endcountry.GetText();
-    if (sd != '' && ed != '') {
-    str = str + "&startdate=" + sd + "&enddate=" + ed;
-    }
-    window.open("@Url.Action("Search", "Loads")" + "?" + str);
-    } else {
-    alert("Please select destination Country!");
-    }
-    }
-    //check if searched by city name
-    else if (startlocation.GetText() != null && startlocation.GetText() != '') {
-    str = "startlocation=" + startlocation.GetText();
-    if (endlocation.GetText() != null && endlocation.GetText() != '') {
-    str = str + "&endlocation=" + endlocation.GetText();
-    if (sd != '' && ed != '') {
-    str = str + "&startdate=" + sd + "&enddate=" + ed;
-    }
-    window.open("@Url.Action("Search", "Loads")" + "?" + str);
-    } else {
-    alert("Please enter destination city!");
-    }
-    }
-    //check by zip code
-    else if (statzip.GetText() != null && statzip.GetText() != '') {
-    str = "statzip=" + statzip.GetText();
-    if (endzip.GetText() != null && endzip.GetText() != '') {
-    str = str + "&endzip=" + endzip.GetText();
-
-    if (sd != '' && ed != '') {
-    str = str + "&startdate=" + sd + "&enddate=" + ed;
-    }
-    //check if search using radius
-    console.log(withRadius.GetValue());
-    if (withRadius.GetValue() == true) {
-    getGeoCodeByZip(statzip.GetText(), endzip.GetText());
-    setTimeout(function () {
-    str = "startLat=" + slat + "&startLon=" + slon + "&endLat=" + elat + "&endLon=" + elon + "&startradius=" + startradius.GetValue() + "&endradius=" + endradius.GetValue();
-    window.open("@Url.Action("Search", "Loads")" + "?" + str);
-    }, 1000);
-
-    } else {
-
-    window.open("@Url.Action("Search", "Loads")" + "?" + str);
-    }
-
-    } else {
-    alert("Please enter destination Zip code!");
-    }
-    } else {
-    alert("Please enter a criteria to search!");
-    }
-
-        }
-
-
-
-
-        function rxVal_btn(s, e) {
-            console.log("you hit me again!!");
-            endlocation.SetValue("");
-            startlocation.SetValue("");
-            startcountry
-            endzip
-
-            startcountry.SetValue("");
-            statzip.SetValue("");
-            startlocation.SetValue("");
-            startdate.SetValue();
-            endcountry.SetValue();
-            endzip.SetValue("");
-            endlocation.SetValue("");
-            enddate.SetValue();
-        }
-    </script>
-
+    @*<script src="~/Scripts/SearchScripts.js"></script>*@
+    <script src="~/Scripts/AdvanceSearch.js"></script>
 }
     <div id="ResizedDiv" style="width: 100%; margin-top:-30px;">
         @Html.DevExpress().FormLayout(settings =>
@@ -172,6 +36,8 @@
                 s.Properties.ValueField = "CountryName";
                 s.Properties.ClearButton.DisplayMode = ClearButtonDisplayMode.OnHover;
                 s.Properties.DataSource = countries;
+                s.Properties.ClientSideEvents.ValueChanged = "setOriginCountry_Changed";
+                
             });
         });
 
@@ -182,6 +48,7 @@
             i.NestedExtension().TextBox(s =>
             {
                 s.Name = "statzip";
+                s.Properties.ClientSideEvents.ValueChanged = "setOriginZip_Changed";
 
             });
         });
@@ -193,6 +60,7 @@
             i.NestedExtension().TextBox(s =>
             {
                 s.Name = "startlocation";
+                s.Properties.ClientSideEvents.ValueChanged = "setOriginCity_Changed";
 
             });
         });
@@ -205,6 +73,7 @@
                 s =>
                 {
                     s.Name = "startdate";
+                    s.Properties.ClientSideEvents.ValueChanged = "setStartDate_Changed";
                 });
 
         });
@@ -222,6 +91,7 @@
                 s.Properties.MaxValue = 100;
                 s.Position = 10;
                 s.Properties.ScalePosition = ScalePosition.RightOrBottom;
+                s.Properties.ClientSideEvents.ValueChanged = "setOriginRad_Changed";
             }
             );
         });
@@ -240,6 +110,7 @@
                 s.Properties.ValueField = "CountryName";
                 s.Properties.ClearButton.DisplayMode = ClearButtonDisplayMode.OnHover;
                 s.Properties.DataSource = countries;
+                s.Properties.ClientSideEvents.ValueChanged = "setDestCountry_Changed";
             });
         });
 
@@ -250,6 +121,7 @@
             i.NestedExtension().TextBox(s =>
             {
                 s.Name = "endzip";
+                s.Properties.ClientSideEvents.ValueChanged = "setDestZip_Changed";
 
             });
         });
@@ -261,6 +133,7 @@
             i.NestedExtension().TextBox(s =>
             {
                 s.Name = "endlocation";
+                s.Properties.ClientSideEvents.ValueChanged = "setDestCity_Changed";
 
             });
         });
@@ -273,6 +146,7 @@
                 s =>
                 {
                     s.Name = "enddate";
+                    s.Properties.ClientSideEvents.ValueChanged = "setEndDate_Changed";
                 });
 
         });
@@ -290,6 +164,7 @@
                 s.Properties.MaxValue = 100;
                 s.Position = 10;
                 s.Properties.ScalePosition = ScalePosition.RightOrBottom;
+                s.Properties.ClientSideEvents.ValueChanged = "setDestRad_Changed";
             }
             );
         });
@@ -300,6 +175,7 @@
             i.NestedExtension().CheckBox(c =>
             {
                 c.Name = "withRadius";
+                c.Properties.ClientSideEvents.CheckedChanged = "setSearchWithRadius_Changed";
             });
         });
 
@@ -310,7 +186,8 @@
             {
                 b.Name = "searchBtn";
                 b.Text = "Search Freights";
-                b.ClientSideEvents.Click = "btnOK_Click";
+                //b.ClientSideEvents.Click = "btnOK_Click";
+                b.ClientSideEvents.Click = "searchFreights_Click";
 
             });
         });
@@ -322,7 +199,8 @@
             {
                 b.Name = "searchLoadsBtn";
                 b.Text = "Search Loads";
-                b.ClientSideEvents.Click = "btnLoads_Click";
+                //b.ClientSideEvents.Click = "btnLoads_Click";
+                b.ClientSideEvents.Click = "searchLoads_Click";
             });
         });
 
@@ -343,208 +221,12 @@
 
 
         @Html.DevExpress().RoundPanel(settings => {
-            settings.Name = "roundPanel";
-            settings.Width = System.Web.UI.WebControls.Unit.Percentage(100);
-            settings.HeaderText = "Search Results:";
-            settings.SetContent(() => {
-                //Html.RenderPartial("FreightDetails");
-            });
-        }).GetHtml()
-        @*@Html.DevExpress().Panel(settings =>
-        {
-            settings.Name = "freightsPanel";
-            settings.SetContent(()=> {
-                //ViewContext.Writer.Write(@"<h5>Latest Freights</h5>");
-                ViewContext.Writer.Write(@Html.Action("AllFreightsGridViewPartial", "Freights"));
-            });
-        }).GetHtml()
-
-
-        @Html.DevExpress().Panel(settings =>
-        {
-            settings.Name = "loadsPanel";
-            settings.SetContent(()=> {
-                //ViewContext.Writer.Write(@"<h5>Latest Loads</h5>");
-                ViewContext.Writer.Write(@Html.Action("GridViewPartial", "Loads"));
-            });
-        }).GetHtml()*@
-
-
-
+       settings.Name = "roundPanel";
+       settings.Width = System.Web.UI.WebControls.Unit.Percentage(100);
+       settings.HeaderText = "Search Results:";
+       settings.SetContent(() => {
+           Html.RenderPartial("Results");
+       });
+   }).GetHtml()
     </div>
 
-@section scripts{
-    <script>
-    var slat;
-    var slon;
-    var elat;
-    var elon;
-    function btnOK_Click(s, e) {
-        var x = startcountry.GetText();
-        //alert('Wait... You are searching freights for ' + x);
-        //str = MVCxClientUtils.GetSerializedEditorValuesInContainer("searchForm");
-        //str = $("form").serialize();
-        var sd = startdate.GetText();
-        var ed = enddate.GetText();
-        if (startcountry.GetText() != null && startcountry.GetText() != '') {
-            str = "startcountry=" + startcountry.GetText();
-            if (endcountry.GetText() != null && endcountry.GetText() != '') {
-                str = str + "&endcountry=" + endcountry.GetText();
-                if (sd != '' && ed != '') {
-                    str = str + "&startdate=" + sd + "&enddate=" + ed;
-                }
-                window.open("@Url.Action("Search", "Freights")" + "?" + str);
-            } else {
-                alert("Please select destination Country!");
-            }
-        }
-        //check if searched by city name
-        else if (startlocation.GetText() != null && startlocation.GetText() != '') {
-            str = "startlocation=" + startlocation.GetText();
-            if (endlocation.GetText() != null && endlocation.GetText() != '') {
-                str = str + "&endlocation=" + endlocation.GetText();
-                if (sd != '' && ed != '') {
-                    str = str + "&startdate=" + sd + "&enddate=" + ed;
-                }
-                window.open("@Url.Action("Search", "Freights")" + "?" + str);
-            } else {
-                alert("Please enter destination city!");
-            }
-        }
-        //check by zip code
-        else if (statzip.GetText() != null && statzip.GetText() != '') {
-            str = "statzip=" + statzip.GetText();
-            if (endzip.GetText() != null && endzip.GetText() != '') {
-                str = str + "&endzip=" + endzip.GetText();
-                if (sd != '' && ed != '') {
-                    str = str + "&startdate=" + sd + "&enddate=" + ed;
-                }
-                window.open("@Url.Action("Search", "Freights")" + "?" + str);
-            } else {
-                alert("Please enter destination Zip code!");
-            }
-        } else {
-            alert("Please enter a criteria to search!");
-        }
-
-
-    }
-
-    function btnLoads_Click(s, e) {
-        var sd = startdate.GetText();
-        var ed = enddate.GetText();
-
-        if (startcountry.GetText() != null && startcountry.GetText() != '') {
-            str = "startcountry=" + startcountry.GetText();
-            if (endcountry.GetText() != null && endcountry.GetText() != '') {
-                str = str + "&endcountry=" + endcountry.GetText();
-                if (sd != '' && ed != '') {
-                    str = str + "&startdate=" + sd + "&enddate=" + ed;
-                }
-                window.open("@Url.Action("Search","Loads")" + "?" + str);
-            } else {
-                alert("Please select destination Country!");
-            }
-        }
-        //check if searched by city name
-        else if (startlocation.GetText() != null && startlocation.GetText() != '') {
-            str = "startlocation=" + startlocation.GetText();
-            if (endlocation.GetText() != null && endlocation.GetText() != '') {
-                str = str + "&endlocation=" + endlocation.GetText();
-                if (sd != '' && ed != '') {
-                    str = str + "&startdate=" + sd + "&enddate=" + ed;
-                }
-                window.open("@Url.Action("Search","Loads")" + "?" + str);
-            } else {
-                alert("Please enter destination city!");
-            }
-        }
-        //check by zip code
-        else if (statzip.GetText() != null && statzip.GetText() != '') {
-            str = "statzip=" + statzip.GetText();
-            if (endzip.GetText() != null && endzip.GetText() != '') {
-                str = str + "&endzip=" + endzip.GetText();
-
-                if (sd != '' && ed != '') {
-                    str = str + "&startdate=" + sd + "&enddate=" + ed;
-                }
-                //check if search using radius
-                console.log(withRadius.GetValue());
-                if (withRadius.GetValue() == true) {
-                    getGeoCodeByZip(statzip.GetText(), endzip.GetText());
-                    setTimeout(function () {
-                        str = "startLat=" + slat + "&startLon=" + slon + "&endLat=" + elat + "&endLon=" + elon + "&startradius=" + startradius.GetValue() + "&endradius=" + endradius.GetValue();
-                        window.open("@Url.Action("Search","Loads")" + "?" + str);
-                    }, 1000);
-
-                } else {
-
-                    window.open("@Url.Action("Search","Loads")" + "?" + str);
-                }
-
-            } else {
-                alert("Please enter destination Zip code!");
-            }
-        } else {
-            alert("Please enter a criteria to search!");
-        }
-
-    }
-
-
-    function getGeoCodeByZip(zip1, zip2) {
-        //var newurl = "https://dev.virtualearth.net/REST/v1/Locations?postalCode" + zip + "&key=ApuZ25zP2JplCbiYUnTc6nQ-g4MJwgU7L9XaK0HzD0tsiFLpiZg4d_fH0JaqV_LR";
-        var newurl = "http://dev.virtualearth.net/REST/v1/Locations?postalCode="+ zip1  +"&key=ApuZ25zP2JplCbiYUnTc6nQ-g4MJwgU7L9XaK0HzD0tsiFLpiZg4d_fH0JaqV_LR";
-        $.when($.getJSON(newurl)
-            .done(function (json) {
-                console.log(json.resourceSets[0].resources[0].name);
-                console.log(json.resourceSets[0].resources[0].geocodePoints);
-                console.log(json.resourceSets[0].resources[0].geocodePoints[0].coordinates);
-                slat = json.resourceSets[0].resources[0].geocodePoints[0].coordinates[0];
-                slon = json.resourceSets[0].resources[0].geocodePoints[0].coordinates[1];
-                console.log("latitude: " + slat);
-                console.log("Longitude: " + slon);
-            })
-            .fail(function (jqXHR, textStatus, error) {
-                alert("error in origin");
-            }));
-
-        var secondUrl = "http://dev.virtualearth.net/REST/v1/Locations?postalCode=" + zip2 + "&key=ApuZ25zP2JplCbiYUnTc6nQ-g4MJwgU7L9XaK0HzD0tsiFLpiZg4d_fH0JaqV_LR";
-        $.when($.getJSON(secondUrl)
-            .done(function (json) {
-
-                elat = json.resourceSets[0].resources[0].geocodePoints[0].coordinates[0];
-                elon = json.resourceSets[0].resources[0].geocodePoints[0].coordinates[1];
-                console.log("latitude: " + elat);
-                console.log("Longitude: " + elon);
-            })
-            .fail(function (jqXHR, textStatus, error) {
-                alert("error for destination");
-            }));
-    }
-    </script>
-    <script type="text/javascript">
-        var str;
-        MVCxClientGlobalEvents.ControlsInitialized.AddHandler(function () {
-            startcountry.ValueChanged.AddHandler(OnDemoOptionChanged);
-            endcountry.ValueChanged.AddHandler(OnDemoOptionChanged);
-
-            function OnDemoOptionChanged() {
-                //$("form").submit();
-
-                var sl = startcountry.GetText();
-                //alert(sl);
-            };
-        });
-        function onBeginCallback(s, e) {
-            str = MVCxClientUtils.GetSerializedEditorValuesInContainer("searchForm");
-            e.customArgs = str;
-
-
-        }
-
-       
-    </script>
-
-
-}

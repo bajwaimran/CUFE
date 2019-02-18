@@ -224,5 +224,19 @@ namespace CUFE.Models
             get => company;
             set => SetPropertyValue(nameof(Company), ref company, value);
         }
+
+        bool? imported;
+        public bool? Imported
+        {
+            get => imported;
+            set => SetPropertyValue(nameof(Imported), ref imported, value);
+        }
+
+        int? abonaOid;
+        public int? AbonaOid
+        {
+            get => abonaOid;
+            set => SetPropertyValue(nameof(AbonaOid), ref abonaOid, value);
+        }
     }
 }

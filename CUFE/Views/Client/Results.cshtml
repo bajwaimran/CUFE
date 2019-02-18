@@ -1,0 +1,80 @@
+﻿
+
+@Html.DevExpress().CallbackPanel(
+    settings => {
+        settings.Name = "cbpExample";
+        settings.CallbackRouteValues = new { Controller = "Client", Action = "Results" };
+        settings.Width = System.Web.UI.WebControls.Unit.Percentage(100);
+        settings.Height = 250;
+
+        settings.SetContent(() =>
+        {
+            if (ViewBag.ResultType == "Freights")
+            {
+                //show freights result
+                var grid = Html.DevExpress().GridView(gridviewSettings =>
+                {
+                    gridviewSettings.Name = "freightsGridView";
+                    gridviewSettings.KeyFieldName = "Oid";
+                    gridviewSettings.Columns.Add("StartLocationCountry");
+                    gridviewSettings.Columns.Add("StartLocationZip");
+                    gridviewSettings.Columns.Add("StartCity");
+                    gridviewSettings.Columns.Add("StartDate");
+                    gridviewSettings.Columns.Add("EndLocationCountry");
+                    gridviewSettings.Columns.Add("EndLocationZip");
+                    gridviewSettings.Columns.Add("EndCity");
+                    gridviewSettings.Columns.Add("EndDate");
+                    gridviewSettings.Columns.Add(c =>
+                    {
+                        c.UnboundType = DevExpress.Data.UnboundColumnType.String;
+                        c.SetDataItemTemplateContent(x =>
+                        {
+                            ViewContext.Writer.Write(string.Format("<a href=\"/Client/Freight/{0}\" target=\"_blank\" class=\"button\" data-id='{0}' onclick=\"\">View</a>", x.KeyValue));
+                        });
+                    });
+                }).Bind(Model);
+                grid.Render();
+            }
+
+            else if(ViewBag.ResultType == "Loads")
+            {
+                //show loads results
+                var grid = Html.DevExpress().GridView(gridviewSettings =>
+                {
+                    gridviewSettings.Name = "loadsGridView";
+                    gridviewSettings.KeyFieldName = "Oid";
+                    gridviewSettings.Columns.Add("StartLocationCountry");
+                    gridviewSettings.Columns.Add("StartLocationZip");
+                    gridviewSettings.Columns.Add("StartCity");
+                    gridviewSettings.Columns.Add("StartDate");
+                    gridviewSettings.Columns.Add("EndLocationCountry");
+                    gridviewSettings.Columns.Add("EndLocationZip");
+                    gridviewSettings.Columns.Add("EndCity");
+                    gridviewSettings.Columns.Add("EndDate");
+                    gridviewSettings.Columns.Add(c =>
+                    {
+                        c.UnboundType = DevExpress.Data.UnboundColumnType.String;
+                        c.SetDataItemTemplateContent(x =>
+                        {
+                            ViewContext.Writer.Write(string.Format("<a href=\"/Client/Load/{0}\" target=\"_blank\" class=\"button\" data-id='{0}' onclick=\"\">View</a>", x.KeyValue));
+                        });
+                    });
+                }).Bind(Model);
+                grid.Render();
+            }
+            else
+            {
+                Html.DevExpress().Label(lable =>
+                {
+                    lable.Name = "lable";
+                    lable.Text = ViewBag.ResultType;
+                }).Render();
+            }
+        });
+
+        settings.ClientSideEvents.BeginCallback = "OnBeginCallback";
+        settings.ClientSideEvents.EndCallback = "OnEndCallback";
+    }
+).GetHtml()
+
+

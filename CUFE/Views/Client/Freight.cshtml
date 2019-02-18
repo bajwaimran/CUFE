@@ -6,6 +6,8 @@
     Layout = "~/Views/Shared/_LayoutBackend.cshtml";
     CUFE.Models.Truck TruckInfo = CUFE.Helpers.FastController.TruckInfo(Model.TruckId);
     int companyId = int.Parse(User.Identity.GetCompanyId());
+
+    bool frigo = TruckInfo.IsFrigo ?? false;
 }
 
 <script>
@@ -55,23 +57,24 @@
                         </tr>
                         <tr>
                             <th>Frigo</th>
-                            <td>@Html.CheckBox("isfrgi", TruckInfo.IsFrigo, new { disabled = "" })</td>
+
+                            <td>@Html.CheckBox("isfrgi", frigo, new { disabled = "" })</td>
                         </tr>
                         <tr>
                             <th>ADR</th>
-                            <td>@Html.CheckBox("isfrgi", TruckInfo.IsAdr, new { disabled = "" })</td>
+                            <td>@Html.CheckBox("isfrgi", TruckInfo.IsAdr ?? false, new { disabled = "" })</td>
                         </tr>
                         <tr>
                             <th>GPS</th>
-                            <td>@Html.CheckBox("isfrgi", TruckInfo.IsGps, new { disabled = "" })</td>
+                            <td>@Html.CheckBox("isfrgi", TruckInfo.IsGps ?? false, new { disabled = "" })</td>
                         </tr>
                         <tr>
                             <th>Iso Thermal</th>
-                            <td>@Html.CheckBox("isfrgi", TruckInfo.IsisoThermal, new { disabled = "" })</td>
+                            <td>@Html.CheckBox("isfrgi", TruckInfo.IsisoThermal ?? false, new { disabled = "" })</td>
                         </tr>
                         <tr>
                             <th>Lift</th>
-                            <td>@Html.CheckBox("isfrgi", TruckInfo.IsLift, new { disabled = "" })</td>
+                            <td>@Html.CheckBox("isfrgi", TruckInfo.IsLift ?? false, new { disabled = "" })</td>
                         </tr>
                     </table>
 

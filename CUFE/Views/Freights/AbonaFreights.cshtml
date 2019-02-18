@@ -83,7 +83,11 @@
 
 
 
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "Oid";
 
+        });
         settings.Columns.Add(c =>
         {
             c.FieldName = "MandantName";
@@ -185,6 +189,7 @@
         //{
         //    ((ASPxEdit)e.Editor).ValidationSettings.Display = Display.Dynamic;
         //};
+        settings.ClientSideEvents.SelectionChanged = "grid_SelectionChanged";
 
     });
     if (ViewData["EditError"] != null)

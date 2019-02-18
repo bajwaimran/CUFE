@@ -18,6 +18,7 @@ namespace CUFE.Controllers
     {
         private UnitOfWork _abonaUnitOfWork;
         UnitOfWork uow = new UnitOfWork();
+        private double R = 6371;
         public FreightsController()
         {
             string connectionString = "XpoProvider = MSSqlServer;data source=WAWIDEV;user id=WaWiXPO;password=wawixpo;initial catalog=WaWiXPO;Persist Security Info=true;";
@@ -199,6 +200,98 @@ namespace CUFE.Controllers
             
             var model = _abonaUnitOfWork.Query<FreightExchangeDemo.FreightExchangeOrders>();
             return PartialView("AbonaFreights", model.ToList());
+        }
+
+
+        // search methods
+
+
+
+        
+        //returns maximum longitude
+        public double MaxLon(double lon, int rad, double lat)
+        {
+            double max = rad / R;
+            double maxLon = lon + (180 / Math.PI) * (Math.Asin(max) / Math.Cos((180 / Math.PI) * lat));
+            return maxLon;
+        }
+        //returns minimum longitude
+        public double MinLon(double lon, int rad, double lat)
+        {
+            double max = rad / R;
+            double minLon = lon - (180 / Math.PI) * ((Math.Asin(max) / Math.Cos((180 / Math.PI) * lat)));
+            return minLon;
+        }
+        //returns maximum latitude
+        public double MaxLat(double lat, int rad)
+        {
+            double max = rad / R;
+            double maxLat = lat + (180 / Math.PI) * max;
+            return maxLat;
+        }
+        //returns minimum latitude
+        public double MinLat(double lat, int rad)
+        {
+            double max = rad / R;
+            double minLat = lat - (180 / Math.PI) * max;
+            return minLat;
+        }
+        public ActionResult Import(string Oids)
+        {
+            
+            List<string> numbers = Oids.Split(',').ToList<string>();
+            //return Content(Oids.ToString());
+            //int[] Oids = new int[]
+            //{
+            //    1,2,3,4,5,6
+            //};
+
+            XPCollection<FreightExchangeDemo.FreightExchangeOrders> model = new XPCollection<FreightExchangeDemo.FreightExchangeOrders>(_abonaUnitOfWork, new InOperator("Oid", numbers));
+
+            foreach (var item in model)
+            {
+                //check if already imported
+                var freight = uow.FindObject<Freight>(CriteriaOperator.Parse("AbonaOid==?",item.Oid));
+                if(freight == null)
+                {
+                    new Freight(uow)
+                    {
+                        StartDate = item.FromDate,
+                        StartLocationCountry = item.FromNation,
+                        StartLocationZip = item.FromZip,
+                        StartCity = item.FromCity,
+                        StartLocationName = item.FromCity,
+                        EndDate = item.ToDate,
+                        EndLocationCountry = item.ToNation,
+                        EndLocationZip = item.ToZip,
+                        EndCity = item.ToCity,
+                        EndLocationName = item.ToCity,
+                        OfferredPrice = item.Price,
+                        ConactPersonName = item.Manager,
+                        ContactPersonPhone = item.ManagerPhone,
+                        ContactPersonEmail = item.ManagerPhone,
+                        AbonaOid = item.Oid,
+                        Imported = true
+                    };
+                }
+                
+
+            }
+
+            try
+            {
+                uow.CommitChanges();
+                ViewBag.Title = "Import";
+                ViewBag.Message = string.Format("You have successfully imported {0} Freights. Clik on Freight menu to check all freights", model.Count);
+                return View("Message");
+            }catch(Exception e)
+            {
+                ViewBag.Title = "Import";
+                ViewBag.errorMessage = string.Format("Error Occurred: {0}",e.Message);
+                return View("Message");
+            }
+
+
         }
     }
 }

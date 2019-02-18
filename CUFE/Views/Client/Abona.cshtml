@@ -16,6 +16,36 @@
     )
 }
 
+<script>
+    var Oids;
+    function grid_SelectionChanged(s, e) {
+        s.GetSelectedFieldValues("Oid", GetSelectedFieldValuesCallback);
+    }
+    function GetSelectedFieldValuesCallback(values) {
+        Oids = values.toString();
+        console.log(Oids);
+        $('#oids').val(Oids);
+    }
+
+    function importFreights_Click(s, e) {
+
+        
+    }
+</script>
+@Html.BeginForm("Import", "Freights")
+<input type="hidden" id="oids" name="Oids" />
 <div class="blog-page area-padding">
     @Html.Action("AbonaFreights", "Freights")
+    @Html.DevExpress().Button(btn =>
+{
+    btn.Name = "Import";
+    btn.Text = "Import";
+    //btn.ClientSideEvents.Click = "importFreights_Click";
+    btn.UseSubmitBehavior = true;
+}).GetHtml()
 </div>
+
+
+
+
+

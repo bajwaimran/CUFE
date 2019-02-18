@@ -8,7 +8,7 @@
         <li>
             <a href=""><span class="icon-home"></span></a>
         </li>
-
+        <li><a href="@Url.Action("Abona","Client")"><i class="icon-badge"></i>Abona Freights</a></li>
         <li><a href="@Url.Action("Blogs","Admin")"><i class="fa fa-caret-right"></i> Blogs </a></li>
         @*<li><a href="@Url.Action("AddNewBlog","Admin")"><i class="fa fa-caret-right"></i> New Blog </a></li>*@
         <li><a href="@Url.Action("Notifications","Admin")"><i class="fa fa-caret-right"></i>Manage Notifications</a></li>
@@ -45,11 +45,11 @@
         @*<li><a href="@Url.Action("ChatGroups","Client")"><i class="icon-badge"></i><span>Manage Groups</span></a></li>*@
 
 
-}
+    }
 
-if (User.IsInRole("User"))
-{
-<li class="heading">User Menu</li>
+    if (User.IsInRole("User"))
+    {
+        <li class="heading">User Menu</li>
         <li><a href="@Url.Action("Dashboard","Client")"><i class="icon-home"></i><span>Dashboard</span></a></li>
         <li><a href="@Url.Action("Search","Client")"><i class="fa fa-search"></i><span>Search</span></a></li>
         <li><a href="@Url.Action("AdvancedSearch","Client")"><i class="fa fa-search"></i><span>Search*</span></a></li>
