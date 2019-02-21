@@ -82,6 +82,14 @@
             c.FieldName = "IsGps";
             c.ColumnType = MVCxGridViewColumnType.CheckBox;
         });
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "Length";
+        });
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "Width";
+        });
 
     });
     if (ViewData["EditError"] != null)

@@ -279,6 +279,7 @@
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Message.cs" />
     <Compile Include="Models\Notification.cs" />
+    <Compile Include="Models\Order.cs" />
     <Compile Include="Models\Truck.cs" />
     <Compile Include="Models\TruckType.cs" />
     <Compile Include="Models\ViewModels\FreightAddViewModel.cs" />
