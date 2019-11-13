@@ -17,9 +17,9 @@ namespace CUFE.Controllers
         public TrucksController()
         {
             UnitOfWork uow = new UnitOfWork();
-            
+
             truckTypeList = uow.Query<TruckType>().ToList();
-            
+
         }
         public ActionResult GridviewPartial()
         {

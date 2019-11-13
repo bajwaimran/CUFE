@@ -8,27 +8,15 @@ using DevExpress.Xpo;
 using DX.Data.Xpo.Identity;
 using DX.Data.Xpo.Identity.Persistent;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace CUFE.Models
 {
     // You can add profile data for the user by adding more properties to your ApplicationUser class, please visit https://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
-    public class ApplicationUser : XPIdentityUser<string, XpoApplicationUser>
+    public class ApplicationUser : XPIdentityUser<string>
     {
-        public ApplicationUser() :
-        base()
+        public ApplicationUser() : base()
         {
         }
-        public ApplicationUser(XpoApplicationUser source) :
-        base(source)
-        {
-        }
-
-        public ApplicationUser(XpoApplicationUser source, int loadingFlags) :
-            base(source, loadingFlags)
-        {
-        }
-
 
 
         //custom properties for ApplicationUser
@@ -50,36 +38,35 @@ namespace CUFE.Models
 
         //public XPCollection<Connection> Connections { get; set; }
         public XPCollection<SentMessage> SentMessages { get; set; }
-        public override void Assign(object source, int loadingFlags)
-        {
-            
-            XpoApplicationUser src = source as XpoApplicationUser;
-            if (src != null)
-            {
-                // additional properties here
-                this.CompanyId = src.CompanyId;
-                this.FirstName = src.FirstName;
-                this.LastName = src.LastName;
+        //public void Assign(object source, int loadingFlags)
+        //{
 
-                this.Address1 = src.Address1;
-                this.Address2 = src.Address2;
-                this.City = src.City;
-                this.Province = src.Province;
-                this.Country = src.Country;
-                this.Birthdate = src.Birthdate;
-                this.Languages = src.Languages;
-                this.Photo = src.Photo;
-                this.Profile = src.Profile;
-                this.Notes = src.Notes;
-                this.Role = src.Role;
-                //this.Connections = src.Connections;
-                //this.SentMessages = src.SentMessages;
-                // etc.				
-            }
-            base.Assign(source, loadingFlags);
-        }
+        //    XpoApplicationUser src = source as XpoApplicationUser;
+        //    if (src != null)
+        //    {
+        //        // additional properties here
+        //        this.CompanyId = src.CompanyId;
+        //        this.FirstName = src.FirstName;
+        //        this.LastName = src.LastName;
 
-        
+        //        this.Address1 = src.Address1;
+        //        this.Address2 = src.Address2;
+        //        this.City = src.City;
+        //        this.Province = src.Province;
+        //        this.Country = src.Country;
+        //        this.Birthdate = src.Birthdate;
+        //        this.Languages = src.Languages;
+        //        this.Photo = src.Photo;
+        //        this.Profile = src.Profile;
+        //        this.Notes = src.Notes;
+        //        this.Role = src.Role;
+        //        //this.Connections = src.Connections;
+        //        //this.SentMessages = src.SentMessages;
+        //        // etc.				
+        //    }
+        //}
+
+
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
@@ -94,18 +81,6 @@ namespace CUFE.Models
         }
     }
 
-    //public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
-    //{
-    //    public ApplicationDbContext()
-    //        : base("DefaultConnection", throwIfV1Schema: false)
-    //    {
-    //    }
-
-    //    public static ApplicationDbContext Create()
-    //    {
-    //        return new ApplicationDbContext();
-    //    }
-    //}
 
     public class ApplicationDbContext
     {
@@ -163,7 +138,7 @@ namespace CUFE.Models
             get => adrress2;
             set => SetPropertyValue(nameof(Address2), ref adrress2, value);
         }
-        
+
         string city;
         public string City
         {
@@ -171,7 +146,7 @@ namespace CUFE.Models
             set => SetPropertyValue(nameof(City), ref city, value);
         }
 
-        
+
         string province;
         public string Province
         {
@@ -256,48 +231,79 @@ namespace CUFE.Models
 
 
         }
-        public override void Assign(object source, int loadingFlags)
-        {
-            base.Assign(source, loadingFlags);
-            ApplicationUser src = source as ApplicationUser;
-            if (src != null)
-            {
-                // additional properties here
-                this.CompanyId = src.CompanyId;
-                this.FirstName = src.FirstName;
-                this.LastName = src.LastName;
+        //public void Assign(object source, int loadingFlags)
+        //{
+        //    ApplicationUser src = source as ApplicationUser;
+        //    if (src != null)
+        //    {
+        //        // additional properties here
+        //        this.CompanyId = src.CompanyId;
+        //        this.FirstName = src.FirstName;
+        //        this.LastName = src.LastName;
 
-                this.Address1 = src.Address1;
-                this.Address2 = src.Address2;
-                this.City = src.City;
-                this.Province = src.Province;
-                this.Country = src.Country;
-                this.Birthdate = src.Birthdate;
-                this.Languages = src.Languages;
-                this.Photo = src.Photo;
-                this.Profile = src.Profile;
-                this.Notes = src.Notes;
-                this.Role = src.Role;
-                //this.Connections = src.Connections;
-                this.SentMessages = src.SentMessages;
-                this.Notes = src.Notes;
-            }
-        }
+        //        this.Address1 = src.Address1;
+        //        this.Address2 = src.Address2;
+        //        this.City = src.City;
+        //        this.Province = src.Province;
+        //        this.Country = src.Country;
+        //        this.Birthdate = src.Birthdate;
+        //        this.Languages = src.Languages;
+        //        this.Photo = src.Photo;
+        //        this.Profile = src.Profile;
+        //        this.Notes = src.Notes;
+        //        this.Role = src.Role;
+        //        //this.Connections = src.Connections;
+        //        this.SentMessages = src.SentMessages;
+        //        this.Notes = src.Notes;
+        //    }
+        //}
     }
 
-    public class ApplicationRole : XPIdentityRole<XpoApplicationRole>
+    public class ApplicationUserMapper : XPUserMapper<ApplicationUser, XpoApplicationUser>
     {
-        public ApplicationRole(XpoApplicationRole source, int loadingFlags) : base(source, loadingFlags)
+        public override XpoApplicationUser Assign(ApplicationUser source, XpoApplicationUser destination)
+        {
+            var result = base.Assign(source, destination);
+            source.CompanyId = destination.CompanyId;
+            source.FirstName = destination.FirstName;
+            source.LastName = destination.LastName;
+            source.Address1 = destination.Address1;
+            source.Address2 = destination.Address2;
+            source.City = destination.City;
+            source.Province = destination.Province;
+            source.Country = destination.Country;
+            source.Birthdate = destination.Birthdate;
+            source.Languages = destination.Languages;
+            source.Photo = destination.Photo;
+            source.Profile = destination.Profile;
+            source.Notes = destination.Notes;
+            source.Role = destination.Role;
+            source.SentMessages = destination.SentMessages;
+            source.Notes = destination.Notes;
+            return result;
+        }
+
+        public override string Map(string sourceField)
+        {
+            return base.Map(sourceField);
+        }
+
+        public override Func<XpoApplicationUser, ApplicationUser> CreateModel => base.CreateModel;
+    }
+
+    public class ApplicationRole : XPIdentityRole<string>
+    {
+        public ApplicationRole(XpoApplicationRole source, int loadingFlags) : base()
         { }
 
-        public ApplicationRole(XpoApplicationRole source) : base(source)
+        public ApplicationRole(XpoApplicationRole source) : base()
         { }
 
         public ApplicationRole()
         { }
-        public override void Assign(object source, int loadingFlags)
+        public void Assign(object source, int loadingFlags)
         {
-            base.Assign(source, loadingFlags);
+            //base.Assign(source, loadingFlags);
             //XpoApplicationRole src = source as XpoApplicationRole;
             //if (src != null)
             //{
@@ -315,9 +321,9 @@ namespace CUFE.Models
         public XpoApplicationRole(Session session) : base(session)
         {
         }
-        public override void Assign(object source, int loadingFlags)
+        public void Assign(object source, int loadingFlags)
         {
-            base.Assign(source, loadingFlags);
+            //base.Assign(source, loadingFlags);
             //ApplicationUser src = source as ApplicationUser;
             //if (src != null)
             //{

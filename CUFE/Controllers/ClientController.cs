@@ -1,19 +1,16 @@
-﻿using System.Web;
-using System.Web.Mvc;
-using DevExpress.Xpo;
-using DevExpress.Data.Filtering;
-using Microsoft.AspNet.Identity;
-using CUFE.Extensions;
+﻿using CUFE.Extensions;
 using CUFE.Models;
-using System.Threading.Tasks;
-using CUFE.Models.ViewModels;
-using System.Linq;
-using System;
 using CUFE.Models.ChatModels;
+using DevExpress.Data.Filtering;
+using DevExpress.Xpo;
+using Microsoft.AspNet.Identity;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Web.Mvc;
 
 namespace CUFE.Controllers
 {
-    
+
     public class ClientController : Controller
     {
         private UnitOfWork uow = new UnitOfWork();
@@ -21,7 +18,7 @@ namespace CUFE.Controllers
         [Authorize(Roles = "Admin, User")]
         public ActionResult Index()
         {
-            return RedirectToAction("Dashboard") ;
+            return RedirectToAction("Dashboard");
         }
         [Authorize(Roles = "Admin, User")]
         public ActionResult Dashboard()
@@ -106,21 +103,25 @@ namespace CUFE.Controllers
                 double emaxlat = freightsController.MaxLat(elat, erad);
                 double eminlon = freightsController.MinLon(elon, erad, elat);
                 double emaxlon = freightsController.MaxLon(elon, erad, elat);
-               
-                criteria = CriteriaOperator.Parse("StartLat >= ? and StartLat <= ? and StartLon >= ? and StartLon <= ? and EndLat >= ? and EndLat <= ? and EndLon >= ? and EndLon >= ?", 
-                    sminlat, smaxlat, sminlon, smaxlon, eminlat, emaxlat,eminlon, emaxlon);
-            }else if(!string.IsNullOrEmpty(Request.Params["OriginZip"]) && !string.IsNullOrEmpty(Request.Params["DestZip"]))
+
+                criteria = CriteriaOperator.Parse("StartLat >= ? and StartLat <= ? and StartLon >= ? and StartLon <= ? and EndLat >= ? and EndLat <= ? and EndLon >= ? and EndLon >= ?",
+                    sminlat, smaxlat, sminlon, smaxlon, eminlat, emaxlat, eminlon, emaxlon);
+            }
+            else if (!string.IsNullOrEmpty(Request.Params["OriginZip"]) && !string.IsNullOrEmpty(Request.Params["DestZip"]))
             {
                 string OriginZip = Request.Params["OriginZip"];
                 string DestZip = Request.Params["DestZip"];
                 criteria = CriteriaOperator.Parse("StartLocationZip == ? and EndLocationZip== ? and StartLocationCountry== ? and EndLocationCountry == ?", OriginZip, DestZip, OriginCountry, DestCountry);
-                
-            }else if(!string.IsNullOrEmpty(Request.Params["OriginCity"]) && !string.IsNullOrEmpty(Request.Params["DestCity"]))
+
+            }
+            else if (!string.IsNullOrEmpty(Request.Params["OriginCity"]) && !string.IsNullOrEmpty(Request.Params["DestCity"]))
             {
                 string OriginCity = Request.Params["OriginCity"];
                 string DestCity = Request.Params["DestCity"];
-                criteria = CriteriaOperator.Parse("StartLocationCountry== ? and EndLocationCountry == ? and StartCity==? and EndCity==?",OriginCountry, DestCountry,OriginCity, DestCity);
-            } else{
+                criteria = CriteriaOperator.Parse("StartLocationCountry== ? and EndLocationCountry == ? and StartCity==? and EndCity==?", OriginCountry, DestCountry, OriginCity, DestCity);
+            }
+            else
+            {
                 criteria = CriteriaOperator.Parse("StartLocationCountry== ? and EndLocationCountry == ? ", OriginCountry, DestCountry);
             }
             var model = uow.GetObjects(uow.GetClassInfo(typeof(Freight)), criteria, sortProps, 50, false, false);
@@ -138,7 +139,7 @@ namespace CUFE.Controllers
             var model = uow.FindObject<Freight>(CriteriaOperator.Parse("Oid==?", id));
             return View(model);
         }
-           
+
         /*USER MANAGEMENT RELATED METHODS*/
         [Authorize(Roles = "Admin")]
         public ActionResult Users()
@@ -177,7 +178,7 @@ namespace CUFE.Controllers
             if (!string.IsNullOrEmpty(Request.Params["search"]))
             {
                 string search = Request.Params["search"];
-                if(search == "Freights")
+                if (search == "Freights")
                 {
                     ViewBag.ResultType = "Freights";
                     var model = uow.Query<Freight>();
@@ -189,9 +190,9 @@ namespace CUFE.Controllers
                     var model = uow.Query<Load>();
                     return PartialView(model.ToList());
                 }
-                
+
             }
-            
+
             ViewBag.Message = "Nothing";
             return PartialView();
         }
@@ -226,11 +227,11 @@ namespace CUFE.Controllers
         {
             return View();
         }
-        
+
         public ActionResult Abona()
         {
             return View();
         }
-        
+
     }
 }

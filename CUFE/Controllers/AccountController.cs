@@ -25,7 +25,7 @@ namespace CUFE.Controllers
         {
         }
 
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
+        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
         {
             UserManager = userManager;
             SignInManager = signInManager;
@@ -37,9 +37,9 @@ namespace CUFE.Controllers
             {
                 return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
             }
-            private set 
-            { 
-                _signInManager = value; 
+            private set
+            {
+                _signInManager = value;
             }
         }
 
@@ -54,7 +54,7 @@ namespace CUFE.Controllers
                 _userManager = value;
             }
         }
-        
+
         //
         // GET: /Account/Login
         [AllowAnonymous]
@@ -77,7 +77,7 @@ namespace CUFE.Controllers
             }
 
             //check if user is active or not
-            var user = await UserManager.FindByEmailAsync(model.Email);            
+            var user = await UserManager.FindByEmailAsync(model.Email);
             if (user != null)
             {
                 if (!await UserManager.IsEmailConfirmedAsync(user.Id))
@@ -136,7 +136,7 @@ namespace CUFE.Controllers
             // If a user enters incorrect codes for a specified amount of time then the user account 
             // will be locked out for a specified amount of time. 
             // You can configure the account lockout settings in IdentityConfig
-            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent:  model.RememberMe, rememberBrowser: model.RememberBrowser);
+            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent: model.RememberMe, rememberBrowser: model.RememberBrowser);
             switch (result)
             {
                 case SignInStatus.Success:
@@ -155,10 +155,10 @@ namespace CUFE.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
-            
-                ViewBag.CountryList = _unitOfWork.Query<Country>().ToList();
-                return View();
-            
+
+            ViewBag.CountryList = _unitOfWork.Query<Country>().ToList();
+            return View();
+
         }
 
         //
@@ -529,16 +529,16 @@ namespace CUFE.Controllers
 
         public void RoleMapping(string user, string role)
         {
-            
+
             UserManager.AddToRole(user, role);
         }
 
-        public ActionResult  CreateRoles()
+        public ActionResult CreateRoles()
         {
             using (UnitOfWork unitOfWork = new UnitOfWork())
             {
                 int cnt = (int)unitOfWork.Evaluate<CUFE.Models.XpoApplicationRole>(CriteriaOperator.Parse("count"), null);
-                if(cnt == 0)
+                if (cnt == 0)
                 {
                     new XpoApplicationRole(unitOfWork)
                     {
@@ -560,7 +560,8 @@ namespace CUFE.Controllers
                     {
                         unitOfWork.CommitChanges();
                         return Content("All Roles has been created");
-                    }catch(Exception e)
+                    }
+                    catch (Exception e)
                     {
                         return Content(e.Message);
                     }
@@ -572,9 +573,15 @@ namespace CUFE.Controllers
         public ActionResult CreateDemoData()
         {
             CreateRoles();
+            //int cnt = (int)unitOfWork.Evaluate<CUFE.Models.XpoApplicationRole>(CriteriaOperator.Parse("count"), null);
+            var x = UserManager.FindByEmail("i.munawer@abona-erp.com");
+            if (x.Email != null)
+            {
+                return Content("User Already Registered");
+            }
             string password = "Abona@2018";
-            var user = new ApplicationUser { UserName = "imran@abona.com", Email = "imran@abona.com", FirstName = "Imran", LastName = "Bajwa", EmailConfirmed = true };
-            var result =  UserManager.Create(user, password);
+            var user = new ApplicationUser { UserName = "i.munawer@abona-erp.com", Email = "imran@abona.com", FirstName = "Imran", LastName = "Bajwa", EmailConfirmed = true };
+            var result = UserManager.Create(user, password);
             if (result.Succeeded)
             {
                 UserManager.AddToRole(user.Id, "SuperAdmin");
@@ -593,5 +600,17 @@ namespace CUFE.Controllers
             }
             return Content("unable to create super admin");
         }
+        public string CUFEResetAdminPassword()
+        {
+            var user = UserManager.FindByEmail("i.munawer@abona-erp.com");
+            if (user != null)
+            {
+                user.PasswordHash = UserManager.PasswordHasher.HashPassword("Abona@2018");
+                UserManager.Update(user);
+                return "Password reset";
+            }
+            return "User not found";
+        }
+
     }
 }

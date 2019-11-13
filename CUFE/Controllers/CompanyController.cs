@@ -18,24 +18,24 @@ namespace CUFE.Controllers
             return View();
         }
 
-        
+
 
         [ValidateInput(false)]
         public ActionResult GridView1Partial()
         {
-            using(UnitOfWork uow = new UnitOfWork())
+            using (UnitOfWork uow = new UnitOfWork())
             {
                 var model = uow.Query<Company>();
                 return PartialView("~/Views/Admin/_GridView1Partial.cshtml", model.ToList());
             }
-            
+
         }
 
         [HttpPost, ValidateInput(false)]
         public ActionResult GridView1PartialAddNew([ModelBinder(typeof(XpoModelBinder))]Company item)
         {
-           
-            using(UnitOfWork uow = new UnitOfWork())
+
+            using (UnitOfWork uow = new UnitOfWork())
             {
                 var model = uow.Query<Company>();
                 if (ModelState.IsValid)
@@ -47,15 +47,15 @@ namespace CUFE.Controllers
                         Email = item.Email,
                         Phone = item.Phone,
                         Vat = item.Vat,
-                        Fax = item.Fax,                       
+                        Fax = item.Fax,
                     };
-                    uow.CommitChanges();                    
+                    uow.CommitChanges();
                 }
                 else
                     ViewData["EditError"] = "Please, correct all errors.";
                 return PartialView("~/Views/Admin/_GridView1Partial.cshtml", model.ToList());
             }
-            
+
         }
         [HttpPost, ValidateInput(false)]
         public ActionResult GridView1PartialUpdate([ModelBinder(typeof(XpoModelBinder))]Company item)
@@ -63,19 +63,19 @@ namespace CUFE.Controllers
             if (item.IsChanged)
                 item.Save();
             //item.Session.CommitTransaction();
-            
+
             using (UnitOfWork uow = new UnitOfWork())
             {
                 var model = uow.Query<Company>();
                 return PartialView("~/Views/Admin/_GridView1Partial.cshtml", model.ToList());
             }
-            
+
         }
         [HttpPost, ValidateInput(false)]
         public ActionResult GridView1PartialDelete(System.Int32 Oid)
         {
-            
-            using(UnitOfWork uow = new UnitOfWork())
+
+            using (UnitOfWork uow = new UnitOfWork())
             {
                 var model = uow.Query<Company>();
                 var modelItem = model.First(m => m.Oid == Oid);
@@ -84,7 +84,7 @@ namespace CUFE.Controllers
                 return PartialView("~/Views/Admin/_GridView1Partial.cshtml", model.ToList());
 
             }
-            
+
         }
     }
 }

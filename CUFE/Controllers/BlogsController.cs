@@ -10,8 +10,13 @@ namespace CUFE.Controllers
 {
     public class BlogsController : BaseXpoController
     {
-        
+
         // GET: Blogs
+
+        public ActionResult Index()
+        {
+            return View();
+        }
         public ActionResult GridViewPartial()
         {
             using (UnitOfWork uow = new UnitOfWork())
@@ -48,13 +53,13 @@ namespace CUFE.Controllers
 
         public ActionResult Update([ModelBinder(typeof(XpoModelBinder))]Blog item)
         {
-            
+
             using (UnitOfWork uow = new UnitOfWork())
             {
                 var model = uow.Query<Blog>();
                 if (item.IsChanged)
                     item.Save();
-                
+
                 return PartialView("_GridViewPartial", model.ToList());
             }
 

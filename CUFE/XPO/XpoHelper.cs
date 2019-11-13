@@ -2,6 +2,7 @@
 using DevExpress.Xpo.DB;
 using DevExpress.Xpo.Metadata;
 using DevExpress.Data.Filtering;
+using CUFE.Models;
 
 public static class XpoHelper
 {
@@ -43,15 +44,37 @@ public static class XpoHelper
         string conn = System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
         XPDictionary dict = new ReflectionDictionary();
         IDataStore store = XpoDefault.GetConnectionProvider(conn, AutoCreateOption.DatabaseAndSchema);
-        //DevExpress.Xpo.Metadata.ReflectionClassInfo.SuppressSuspiciousMemberInheritanceCheck = true;
+        DevExpress.Xpo.Metadata.ReflectionClassInfo.SuppressSuspiciousMemberInheritanceCheck = true;
         //dict.GetDataStoreSchema(typeof(Inscripcion).Assembly);
         IDataLayer dl = new ThreadSafeDataLayer(dict, store);
+        //XpoDefault.DataLayer = XpoDefault.GetDataLayer(conn, AutoCreateOption.DatabaseAndSchema);
         //using (UnitOfWork uow = new UnitOfWork(dl))
         //{
-        //    int cnt = (int)uow.Evaluate<CUFE.Models.Country>(CriteriaOperator.Parse("count"), null);
+        //    int cnt = (int)uow.Evaluate<CUFE.Models.XpoApplicationRole>(CriteriaOperator.Parse("count"), null);
         //    if (cnt == 0)
         //    {
-        //        new CUFE.Models.Country(uow) { CountryName = "Germany" };
+        //        new XpoApplicationRole(uow)
+        //        {
+        //            Name = "SuperAdmin"
+        //        };
+        //        new XpoApplicationRole(uow)
+        //        {
+        //            Name = "Admin"
+        //        };
+        //        new XpoApplicationRole(uow)
+        //        {
+        //            Name = "User"
+        //        };
+        //        uow.CommitChanges();
+        //    }
+        //    cnt = (int)uow.Evaluate<CUFE.Models.XpoApplicationUser>(CriteriaOperator.Parse("count"), null);
+        //    if (cnt == 0)
+        //    {
+        //        var user = new XpoApplicationUser(uow)
+        //        {
+        //            Email = "i.munawer@abona-erp.com",
+        //            EmailConfirmed = true
+        //        };
         //        uow.CommitChanges();
         //    }
         //}
